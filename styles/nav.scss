@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;800&family=Raleway:wght@200;400;600&display=swap');
+
+$blue: #0054f1;
+
+.nav {
+	background-color: $blue;
+	justify-content: center;
+
+	.nav-link {
+		border-bottom: 3px solid transparent;
+		color: #fefefe;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.125rem;
+		font-weight: 600;
+		padding: 0.875rem 1.125rem 0.688rem;
+
+		&.active {
+			border-bottom-color: #fff;
+		}
+
+		&:hover {
+			border-bottom-color: #fff;
+			color: #fff;
+			text-shadow: 0 0 1px lighten($blue, 10%);
+		}
+	}
+}
