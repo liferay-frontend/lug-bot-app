@@ -1,1 +1,13 @@
 @import 'atlas';
+@import 'variables';
+@import 'footer';
+@import 'nav';
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;800&family=Raleway:wght@200;400;600&display=swap');
+
+main {
+	margin: 0 auto;
+	max-width: 1280px;
+	padding: 24px 0;
+	width: 100%;
+}
