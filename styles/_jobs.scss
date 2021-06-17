@@ -1,0 +1,18 @@
+.jobs-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.job {
+	background-color: #fff;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(#333, 0.7);
+	margin-bottom: 8px;
+	padding: 8px 16px;
+}
+
+.time-label {
+	position: absolute;
+	right: 16px;
+}
