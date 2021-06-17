@@ -8,12 +8,16 @@ const STATES = {
 		displayType: 'secondary',
 	},
 	2: {
-		name: 'Waiting',
+		name: 'Waiting to Start',
 		displayType: 'info',
+	},
+	3: {
+		name: 'Completed',
+		displayType: 'success',
 	},
 	4: {
 		name: 'Running',
-		displayType: 'success',
+		displayType: 'warning',
 	},
 };
 

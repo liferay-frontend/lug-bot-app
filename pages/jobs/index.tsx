@@ -88,9 +88,11 @@ export default function Jobs({items}) {
 						{items.pendingJobs.map((job) => (
 							<ClayList.Item flex key={job.name}>
 								<ClayList.ItemField expand>
-									<ClayList.ItemTitle>
-										{job.name}
-									</ClayList.ItemTitle>
+									<Link href={`/jobs/${job.name}`} passHref>
+										<ClayList.ItemTitle>
+											{job.name}
+										</ClayList.ItemTitle>
+									</Link>
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
@@ -110,9 +112,16 @@ export default function Jobs({items}) {
 						{items.completedJobs.map((job) => (
 							<ClayList.Item flex key={job.name}>
 								<ClayList.ItemField expand>
-									<ClayList.ItemTitle>
-										{job.name}
-									</ClayList.ItemTitle>
+									<Link href={`/jobs/${job.name}`} passHref>
+										<ClayList.ItemTitle>
+											{job.name}
+										</ClayList.ItemTitle>
+									</Link>
+
+									<ClayList.ItemText>
+										{job.totalRecomendations}{' '}
+										Recomendations,
+									</ClayList.ItemText>
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>

@@ -37,6 +37,7 @@ export default {
 			state: 3,
 			finishedTime: 1345134,
 			startTime: 2199,
+			totalRecomendations: 5,
 			comments: [
 				{
 					title: '@deprecated As of Wilberforce (7.0.x), with no direct replacement',
@@ -68,18 +69,21 @@ export default {
 			state: 3,
 			finishedTime: 1345134,
 			startTime: 2199,
+			totalRecomendations: 2,
 		},
 		{
 			name: 'Midgard',
 			state: 3,
 			finishedTime: 1345134,
 			startTime: 2199,
+			totalRecomendations: 3,
 		},
 		{
 			name: 'Ygdrassil',
 			state: 3,
 			finishedTime: 1345134,
 			startTime: 2199,
+			totalRecomendations: 24,
 		},
 	],
 };
