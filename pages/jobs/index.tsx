@@ -1,5 +1,6 @@
 import ClayLayout from '@clayui/layout';
 import ClayLabel from '@clayui/label';
+import ClayList from '@clayui/list';
 import Link from 'next/link';
 
 const STATES = {
@@ -17,30 +18,6 @@ const STATES = {
 	},
 };
 
-const Job = ({job}) => {
-	const {displayType, name} = STATES[job.state];
-
-	return (
-		<li className="job">
-			<Link href={`/jobs/${job.name}`} passHref>
-				<a>
-					<ClayLabel displayType={displayType}>{name}</ClayLabel>
-
-					{job.name}
-
-					{job.state === 4 && (
-						<ClayLabel className="time-label" displayType="info">
-							{new Date(job.runningTime * 1000)
-								.toISOString()
-								.substr(11, 8)}
-						</ClayLabel>
-					)}
-				</a>
-			</Link>
-		</li>
-	);
-};
-
 export default function Jobs({items}) {
 	return (
 		<ClayLayout.ContainerFluid view>
@@ -50,22 +27,69 @@ export default function Jobs({items}) {
 
 			<ClayLayout.Row justify="start">
 				<ClayLayout.Col size={6}>
-					<h2>Pending jobs</h2>
+					<ClayList>
+						<ClayList.Header>Pending Jobs</ClayList.Header>
 
-					<ul className="jobs-list">
-						{items.pendingJobs.map((pendingJob) => (
-							<Job job={pendingJob} key={pendingJob.name} />
+						{items.pending.map((job) => (
+							<ClayList.Item flex key={job.name}>
+								<ClayList.ItemField expand>
+									<Link href={`/jobs/${job.name}`} passHref>
+										<ClayList.ItemTitle>
+											{job.name}
+										</ClayList.ItemTitle>
+									</Link>
+								</ClayList.ItemField>
+
+								<ClayList.ItemField>
+									<ClayLabel
+										displayType={
+											STATES[job.state].displayType
+										}
+									>
+										{STATES[job.state].name}
+									</ClayLabel>
+								</ClayList.ItemField>
+
+								<ClayList.ItemField>
+									{new Date(job.runningTime * 1000)
+										.toISOString()
+										.substr(11, 8)}
+								</ClayList.ItemField>
+							</ClayList.Item>
 						))}
-					</ul>
+					</ClayList>
 				</ClayLayout.Col>
-				<ClayLayout.Col size={6}>
-					<h2>Running jobs</h2>
 
-					<ul className="jobs-list">
-						{items.runningJobs.map((runningJob) => (
-							<Job job={runningJob} key={runningJob.name} />
+				<ClayLayout.Col size={6}>
+					<ClayList>
+						<ClayList.Header>Completed Jobs</ClayList.Header>
+
+						{items.completed.map((job) => (
+							<ClayList.Item flex key={job.name}>
+								<ClayList.ItemField expand>
+									<ClayList.ItemTitle>
+										{job.name}
+									</ClayList.ItemTitle>
+								</ClayList.ItemField>
+
+								<ClayList.ItemField>
+									<ClayLabel
+										displayType={
+											STATES[job.state].displayType
+										}
+									>
+										{STATES[job.state].name}
+									</ClayLabel>
+								</ClayList.ItemField>
+
+								<ClayList.ItemField>
+									{new Date(job.runningTime * 1000)
+										.toISOString()
+										.substr(11, 8)}
+								</ClayList.ItemField>
+							</ClayList.Item>
 						))}
-					</ul>
+					</ClayList>
 				</ClayLayout.Col>
 			</ClayLayout.Row>
 		</ClayLayout.ContainerFluid>
@@ -76,7 +100,7 @@ export async function getServerSideProps(context) {
 	const items = await fetch(`${process.env.API_HOST}/api/jobs`).then((res) =>
 		res.json()
 	);
-	console.log(items);
+
 	return {
 		props: {items},
 	};

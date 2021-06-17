@@ -1,5 +1,5 @@
 export default {
-	pendingJobs: [
+	pending: [
 		{
 			name: 'Niflheim',
 			state: 1,
@@ -21,7 +21,7 @@ export default {
 			runningTime: 2199,
 		},
 	],
-	runningJobs: [
+	completed: [
 		{
 			name: 'Alfheim',
 			state: 4,
