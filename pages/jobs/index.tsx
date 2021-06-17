@@ -26,11 +26,11 @@ export default function Jobs({items}) {
 			</ClayLayout.Row>
 
 			<ClayLayout.Row justify="start">
-				<ClayLayout.Col size={6}>
+				<ClayLayout.Col>
 					<ClayList>
-						<ClayList.Header>Pending Jobs</ClayList.Header>
+						<ClayList.Header>Running Jobs</ClayList.Header>
 
-						{items.pending.map((job) => (
+						{items.runningJobs.map((job) => (
 							<ClayList.Item flex key={job.name}>
 								<ClayList.ItemField expand>
 									<Link href={`/jobs/${job.name}`} passHref>
@@ -57,14 +57,10 @@ export default function Jobs({items}) {
 								</ClayList.ItemField>
 							</ClayList.Item>
 						))}
-					</ClayList>
-				</ClayLayout.Col>
 
-				<ClayLayout.Col size={6}>
-					<ClayList>
-						<ClayList.Header>Completed Jobs</ClayList.Header>
+						<ClayList.Header>Pending Jobs</ClayList.Header>
 
-						{items.completed.map((job) => (
+						{items.pendingJobs.map((job) => (
 							<ClayList.Item flex key={job.name}>
 								<ClayList.ItemField expand>
 									<ClayList.ItemTitle>

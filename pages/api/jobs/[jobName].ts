@@ -3,7 +3,7 @@ import ALL_JOBS from '../../../DUMMY_DATA';
 export default (req, res) => {
 	const {jobName} = req.query;
 
-	const job = [...ALL_JOBS.pending, ...ALL_JOBS.completed].find(
+	const job = [...ALL_JOBS.runningJobs, ...ALL_JOBS.pendingJobs].find(
 		(job) => job.name.toLowerCase() === jobName.toLowerCase()
 	);
 

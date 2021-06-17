@@ -16,7 +16,7 @@ const STATES = {
 	},
 };
 
-export default function Jobs({job}) {
+export default function Job({job}) {
 	const {displayType, name} = STATES[job.state];
 
 	return (
