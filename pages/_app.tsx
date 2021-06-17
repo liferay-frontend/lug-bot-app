@@ -44,34 +44,12 @@ function MyApp({Component, pageProps}) {
 						<ClayNav>
 							<ClayNav.Item>
 								<ClayNav.Link
-									active={currentRoute === '/'}
-									href="/"
-								>
-									<ClayIcon symbol="sheets" />
-
-									{'Dashboard'}
-								</ClayNav.Link>
-							</ClayNav.Item>
-
-							<ClayNav.Item>
-								<ClayNav.Link
 									active={currentRoute === '/jobs'}
 									href="/jobs"
 								>
 									<ClayIcon symbol="code" />
 
 									{'Jobs'}
-								</ClayNav.Link>
-							</ClayNav.Item>
-
-							<ClayNav.Item>
-								<ClayNav.Link
-									active={currentRoute === '/report'}
-									href="/report"
-								>
-									<ClayIcon symbol="analytics" />
-
-									{'Report'}
 								</ClayNav.Link>
 							</ClayNav.Item>
 						</ClayNav>
