@@ -9,13 +9,38 @@ const STATES = {
 		displayType: 'secondary',
 	},
 	2: {
-		name: 'Waiting',
+		name: 'Waiting to Start',
 		displayType: 'info',
+	},
+	3: {
+		name: 'Completed',
+		displayType: 'success',
 	},
 	4: {
 		name: 'Running',
-		displayType: 'success',
+		displayType: 'warning',
 	},
+};
+
+const formatDuration = (duration: number) => {
+	let seconds: string | number = Math.floor((duration / 1000) % 60);
+	let minutes: string | number = Math.floor((duration / (1000 * 60)) % 60);
+	const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+	minutes = minutes < 10 ? `${hours > 0 ? '0' : ''}${minutes}` : minutes;
+	seconds = seconds < 10 ? `0${seconds}` : seconds;
+
+	if (hours > 0) {
+		return `${hours}h ${minutes}m`;
+	}
+
+	if (minutes !== '00') {
+		return `${minutes}m`;
+	}
+
+	if (seconds) {
+		return `${seconds}s`;
+	}
 };
 
 export default function Jobs({items}) {
@@ -51,7 +76,7 @@ export default function Jobs({items}) {
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									{new Date(job.runningTime * 1000)
+									{new Date(job.startTime * 1000)
 										.toISOString()
 										.substr(11, 8)}
 								</ClayList.ItemField>
@@ -77,11 +102,33 @@ export default function Jobs({items}) {
 										{STATES[job.state].name}
 									</ClayLabel>
 								</ClayList.ItemField>
+							</ClayList.Item>
+						))}
+
+						<ClayList.Header>Completed Jobs</ClayList.Header>
+
+						{items.completedJobs.map((job) => (
+							<ClayList.Item flex key={job.name}>
+								<ClayList.ItemField expand>
+									<ClayList.ItemTitle>
+										{job.name}
+									</ClayList.ItemTitle>
+								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									{new Date(job.runningTime * 1000)
-										.toISOString()
-										.substr(11, 8)}
+									<ClayLabel
+										displayType={
+											STATES[job.state].displayType
+										}
+									>
+										{STATES[job.state].name}
+									</ClayLabel>
+								</ClayList.ItemField>
+
+								<ClayList.ItemField>
+									{formatDuration(
+										job.finishedTime - job.startTime
+									)}
 								</ClayList.ItemField>
 							</ClayList.Item>
 						))}
