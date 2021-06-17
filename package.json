@@ -1,23 +1,25 @@
 {
-  "name": "lut-bot-app",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "@clayui/css": "latest",
-    "@clayui/icon": "^3.1.0",
-    "@clayui/nav": "^3.29.0",
-    "next": "10.2.3",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "sass": "^1.32.13"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.11",
-    "typescript": "^4.3.2"
-  }
+	"name": "lut-bot-app",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start"
+	},
+	"dependencies": {
+		"@clayui/css": "latest",
+		"@clayui/icon": "^3.1.0",
+		"@clayui/label": "^3.4.1",
+		"@clayui/layout": "^3.3.0",
+		"@clayui/nav": "^3.29.0",
+		"next": "10.2.3",
+		"react": "17.0.2",
+		"react-dom": "17.0.2",
+		"sass": "^1.32.13"
+	},
+	"devDependencies": {
+		"@types/react": "^17.0.11",
+		"typescript": "^4.3.2"
+	}
 }
