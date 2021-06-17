@@ -1,5 +1,6 @@
 import ClayLayout from '@clayui/layout';
 import ClayLabel from '@clayui/label';
+import ClayBreadcrumb from '@clayui/breadcrumb';
 
 const STATES = {
 	1: {
@@ -21,18 +22,28 @@ export default function Job({job}) {
 
 	return (
 		<ClayLayout.ContainerFluid view>
+			<ClayBreadcrumb
+				ellipsisBuffer={1}
+				items={[
+					{
+						href: '/jobs',
+						label: 'Jobs',
+					},
+					{
+						active: true,
+						label: job.name,
+					},
+				]}
+			/>
+
 			<ClayLayout.Row>
-				<ClayLabel displayType={displayType}>{name}</ClayLabel>
+				<h1>{job.name}</h1>
+			</ClayLayout.Row>
 
-				{job.name}
-
-				{job.state === 4 && (
-					<ClayLabel className="time-label" displayType="info">
-						{new Date(job.runningTime * 1000)
-							.toISOString()
-							.substr(11, 8)}
-					</ClayLabel>
-				)}
+			<ClayLayout.Row>
+				<ClayLabel displayType={displayType} large>
+					{name}
+				</ClayLabel>
 			</ClayLayout.Row>
 		</ClayLayout.ContainerFluid>
 	);
