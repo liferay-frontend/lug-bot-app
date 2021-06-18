@@ -46,6 +46,19 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@clayui/breadcrumb@^3.30.0":
+  version "3.30.0"
+  resolved "https://registry.yarnpkg.com/@clayui/breadcrumb/-/breadcrumb-3.30.0.tgz#f20d42c473182bf5ba8445b57554c23aa36d742b"
+  integrity sha512-2vgiFzZjH9YMuTau7cdjOi5LSu6/ksWD1Ami+JVVbEyqs9JA41CfB/XKz6/P0ZUmTKGRTXnC+ZIK5h6fr+9G6Q==
+  dependencies:
+    "@clayui/button" "^3.6.0"
+    "@clayui/drop-down" "^3.30.0"
+    "@clayui/icon" "^3.1.0"
+    "@clayui/link" "^3.2.0"
+    "@clayui/shared" "^3.29.0"
+    classnames "^2.2.6"
+    warning "^4.0.3"
+
 "@clayui/button@^3.6.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@clayui/button/-/button-3.6.0.tgz#ee9b53984abe0eb72ec9889db7aa644fc41212ad"
@@ -59,10 +72,52 @@
   resolved "https://registry.yarnpkg.com/@clayui/css/-/css-3.29.0.tgz#8e60a8182bba81c8c284621ef10a44837e84d6fa"
   integrity sha512-V0ly0pQhfxNrNo3nNybicnOcjv6Nk8TXbrHOrzwD+82ys113ugaktvxqjtFFYLpc14ssRd7ORsnMNrYdn+PNAg==
 
+"@clayui/drop-down@^3.30.0":
+  version "3.30.0"
+  resolved "https://registry.yarnpkg.com/@clayui/drop-down/-/drop-down-3.30.0.tgz#7bf6abb3a20cd961772b4fffaaeb8c85cf80ee9a"
+  integrity sha512-57o4yVFSpKxEs8nMTPbJa0w5VbVxP8UAaiqnnQLXDvTQZthWNbJfCShz9kpEj5VlmoOBvVjyQQ9tASpeVGVv6w==
+  dependencies:
+    "@clayui/button" "^3.6.0"
+    "@clayui/form" "^3.29.0"
+    "@clayui/icon" "^3.1.0"
+    "@clayui/link" "^3.2.0"
+    "@clayui/shared" "^3.29.0"
+    classnames "^2.2.6"
+    dom-align "^1.10.2"
+    react-transition-group "^4.4.1"
+    warning "^4.0.3"
+
+"@clayui/form@^3.29.0":
+  version "3.29.0"
+  resolved "https://registry.yarnpkg.com/@clayui/form/-/form-3.29.0.tgz#86271903fcd0c95565182c3ae218400f4321fc31"
+  integrity sha512-f2PTXpTffNzVkpi2dZgyQ7e8135MVBzE7uU+d0ihpHEqu+Y13AP4H8Gx7TQV6rhqeRU3pSAq9OAf5OvihZGWUg==
+  dependencies:
+    "@clayui/button" "^3.6.0"
+    "@clayui/icon" "^3.1.0"
+    "@clayui/shared" "^3.29.0"
+    classnames "^2.2.6"
+
 "@clayui/icon@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@clayui/icon/-/icon-3.1.0.tgz#9e600f87194f8dacfb49ace121fbab25a2e82f03"
   integrity sha512-rxFih7ktNoYx7jJMYWA5GiEh6bJ5W3mB5fWRlSAw8sVyDvSH8rIdaqR77SmvAJDTygfKuKJlyeHnhTmWZgJbCg==
+  dependencies:
+    classnames "^2.2.6"
+    warning "^4.0.3"
+
+"@clayui/label@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@clayui/label/-/label-3.4.1.tgz#af235c32c006e0d12d3bb3a3556706033aef9608"
+  integrity sha512-ReGAldU4JkNzvAO0GkmdRy6JIKVVxMF2/L2caG2RxQDVyLsWVB3uituqHCOp3PC3va4KVR0KYQJ7hb317vN15g==
+  dependencies:
+    "@clayui/icon" "^3.1.0"
+    "@clayui/link" "^3.2.0"
+    classnames "^2.2.6"
+
+"@clayui/layout@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@clayui/layout/-/layout-3.3.0.tgz#89b54741787b2d9efaced088e5478fd7c0cb935e"
+  integrity sha512-bIOt0zAyWpg0YHDVc52cMaCS75q3CkZRmvgzj/h9wq4xVbUvogesm8OD1iwHc+ILJzfkKqzgujCrDGZvzOBf+w==
   dependencies:
     classnames "^2.2.6"
     warning "^4.0.3"
@@ -73,6 +128,21 @@
   integrity sha512-UjuEGGwE3X/XnB3Ul+JPPAveHj3d76OyRu8rwhKuw5VwyfQVadb7p8owqpohOPaD29ytljOfce8a6X0vGoXJig==
   dependencies:
     classnames "^2.2.6"
+
+"@clayui/list@^3.30.0":
+  version "3.30.0"
+  resolved "https://registry.yarnpkg.com/@clayui/list/-/list-3.30.0.tgz#50a051172df54cde984bf5ead6b5a83ffe3e87c0"
+  integrity sha512-qrUXq1EXU+y6tu2VDIor84OJz5ovDwK5YSZxk0c9+VAi9a9QDhjlGj96BIbVHr8qqaVL+hrglsBEZcx3s7XkZw==
+  dependencies:
+    "@clayui/drop-down" "^3.30.0"
+    "@clayui/form" "^3.29.0"
+    "@clayui/icon" "^3.1.0"
+    "@clayui/label" "^3.4.1"
+    "@clayui/layout" "^3.3.0"
+    "@clayui/link" "^3.2.0"
+    "@clayui/sticker" "^3.3.0"
+    classnames "^2.2.6"
+    warning "^4.0.3"
 
 "@clayui/nav@^3.29.0":
   version "3.29.0"
@@ -93,6 +163,13 @@
   dependencies:
     "@clayui/button" "^3.6.0"
     "@clayui/link" "^3.2.0"
+
+"@clayui/sticker@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@clayui/sticker/-/sticker-3.3.0.tgz#77fa3606688050bf9e731b49f319320c3718f00b"
+  integrity sha512-Qmu3jarLiyeQmTZYikIAk9g/npl8bPxN1xhaMWP4C95yUZJgCbvqwzDCSEPHYCR+QiedKizBVKG9kQMoqdmcPA==
+  dependencies:
+    classnames "^2.2.6"
 
 "@hapi/accept@5.0.2":
   version "5.0.2"
@@ -629,6 +706,11 @@ diffie-hellman@^5.0.0:
     bn.js "^4.1.0"
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
+
+dom-align@^1.10.2:
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/dom-align/-/dom-align-1.12.2.tgz#0f8164ebd0c9c21b0c790310493cd855892acd4b"
+  integrity sha512-pHuazgqrsTFrGU2WLDdXxCFabkdQDx72ddkraZNih1KsMcN5qsRSTR9O4VJRlwTPCPb5COYg3LOfiMHHcPInHg==
 
 dom-helpers@^5.0.1:
   version "5.2.1"

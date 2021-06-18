@@ -1,127 +1,162 @@
 import ClayLayout from '@clayui/layout';
 import ClayLabel from '@clayui/label';
+import ClayList from '@clayui/list';
+import Link from 'next/link';
 
-export default function Jobs() {
-	const jobs = {
-		pendingJobs: [
-			{
-				name: 'Niflheim',
-				state: 1,
-				runningTime: 2160,
-			},
-			{
-				name: 'Helheim',
-				state: 2,
-				runningTime: 2220,
-			},
-			{
-				name: 'Asgard',
-				state: 1,
-				runningTime: 2102,
-			},
-			{
-				name: 'Svartalfheim',
-				state: 4,
-				runningTime: 2199,
-			},
-		],
-		runningJobs: [
-			{
-				name: 'Alfheim',
-				state: 4,
-				runningTime: 754,
-			},
-			{
-				name: 'Vanaheim',
-				state: 1,
-				runningTime: 781,
-			},
-			{
-				name: 'Jotunheim',
-				state: 2,
-				runningTime: 2187,
-			},
-			{
-				name: 'Muspelheim',
-				state: 2,
-				runningTime: 3300,
-			},
-			{
-				name: 'Midgard',
-				state: 4,
-				runningTime: 3362,
-			},
-			{
-				name: 'Ygdrassil',
-				state: 2,
-				runningTime: 2227,
-			},
-		],
-	};
+const STATES = {
+	1: {
+		name: 'Sleeping',
+		displayType: 'secondary',
+	},
+	2: {
+		name: 'Waiting to Start',
+		displayType: 'info',
+	},
+	3: {
+		name: 'Completed',
+		displayType: 'success',
+	},
+	4: {
+		name: 'Running',
+		displayType: 'warning',
+	},
+};
 
+const formatDuration = (duration: number) => {
+	let seconds: string | number = Math.floor((duration / 1000) % 60);
+	let minutes: string | number = Math.floor((duration / (1000 * 60)) % 60);
+	const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+	minutes = minutes < 10 ? `${hours > 0 ? '0' : ''}${minutes}` : minutes;
+	seconds = seconds < 10 ? `0${seconds}` : seconds;
+
+	if (hours > 0) {
+		return `${hours}h ${minutes}m`;
+	}
+
+	if (minutes !== '00') {
+		return `${minutes}m`;
+	}
+
+	if (seconds) {
+		return `${seconds}s`;
+	}
+};
+
+export default function Jobs({items}) {
 	return (
-		<>
-			<ClayLayout.ContainerFluid view>
-				<ClayLayout.Row justify="center">
-					<h1>Jobs</h1>
-				</ClayLayout.Row>
+		<ClayLayout.ContainerFluid view>
+			<ClayLayout.Row justify="center">
+				<h1>Jobs</h1>
+			</ClayLayout.Row>
 
-				<ClayLayout.Row justify="start">
-					<ClayLayout.Col size={6}>
-						<h2>Pending jobs</h2>
+			<ClayLayout.Row justify="start">
+				<ClayLayout.Col>
+					<ClayList>
+						<ClayList.Header>Running Jobs</ClayList.Header>
 
-						<ul className="jobs-list">
-							{jobs.pendingJobs.map((pendingJob) => (
-								<Job job={pendingJob} key={pendingJob.name} />
-							))}
-						</ul>
-					</ClayLayout.Col>
-					<ClayLayout.Col size={6}>
-						<h2>Running jobs</h2>
+						{items.runningJobs.map((job) => (
+							<ClayList.Item flex key={job.name}>
+								<ClayList.ItemField expand>
+									<Link href={`/jobs/${job.name}`} passHref>
+										<ClayList.ItemTitle>
+											{job.name}
+										</ClayList.ItemTitle>
+									</Link>
+								</ClayList.ItemField>
 
-						<ul className="jobs-list">
-							{jobs.runningJobs.map((runningJob) => (
-								<Job job={runningJob} key={runningJob.name} />
-							))}
-						</ul>
-					</ClayLayout.Col>
-				</ClayLayout.Row>
-			</ClayLayout.ContainerFluid>
-		</>
+								<ClayList.ItemField>
+									<ClayLabel
+										displayType={
+											STATES[job.state].displayType
+										}
+									>
+										{STATES[job.state].name}
+									</ClayLabel>
+								</ClayList.ItemField>
+
+								<ClayList.ItemField>
+									{new Date(job.startTime * 1000)
+										.toISOString()
+										.substr(11, 8)}
+								</ClayList.ItemField>
+							</ClayList.Item>
+						))}
+
+						<ClayList.Header>Pending Jobs</ClayList.Header>
+
+						{items.pendingJobs.map((job) => (
+							<ClayList.Item flex key={job.name}>
+								<ClayList.ItemField expand>
+									<Link href={`/jobs/${job.name}`} passHref>
+										<ClayList.ItemTitle>
+											{job.name}
+										</ClayList.ItemTitle>
+									</Link>
+								</ClayList.ItemField>
+
+								<ClayList.ItemField>
+									<ClayLabel
+										displayType={
+											STATES[job.state].displayType
+										}
+									>
+										{STATES[job.state].name}
+									</ClayLabel>
+								</ClayList.ItemField>
+							</ClayList.Item>
+						))}
+
+						<ClayList.Header>Completed Jobs</ClayList.Header>
+
+						{items.completedJobs.map((job) => (
+							<ClayList.Item flex key={job.name}>
+								<ClayList.ItemField expand>
+									<Link href={`/jobs/${job.name}`} passHref>
+										<ClayList.ItemTitle>
+											{job.name}
+										</ClayList.ItemTitle>
+									</Link>
+
+									<ClayList.ItemText>
+										{job.totalRecomendations}{' '}
+										Recomendations,
+									</ClayList.ItemText>
+								</ClayList.ItemField>
+
+								<ClayList.ItemField>
+									<ClayLabel
+										displayType={
+											STATES[job.state].displayType
+										}
+									>
+										{STATES[job.state].name}
+									</ClayLabel>
+								</ClayList.ItemField>
+
+								<ClayList.ItemField>
+									{formatDuration(
+										job.finishedTime - job.startTime
+									)}
+								</ClayList.ItemField>
+							</ClayList.Item>
+						))}
+					</ClayList>
+				</ClayLayout.Col>
+			</ClayLayout.Row>
+		</ClayLayout.ContainerFluid>
 	);
 }
 
-const Job = ({job}) => {
-	const states = {
-		1: {
-			name: 'Sleeping',
-			displayType: 'secondary',
-		},
-		2: {
-			name: 'Waiting',
-			displayType: 'info',
-		},
-		4: {
-			name: 'Running',
-			displayType: 'success',
-		},
-	};
+export async function getServerSideProps(context) {
+	const host = context.req.headers.host;
+	const protocol = context.req.headers.referer.split('://')[0];
 
-	return (
-		<li className="job">
-			<ClayLabel displayType={states[job.state].displayType}>
-				{states[job.state].name}
-			</ClayLabel>
-
-			{job.name}
-
-			{job.state === 4 && (
-				<ClayLabel className="time-label" displayType="info">
-					{new Date(job.runningTime * 1000)
-						.toISOString()
-						.substr(11, 8)}
-				</ClayLabel>
-			)}
-		</li>
+	const items = await fetch(`${`${protocol}://${host}`}/api/jobs`).then(
+		(res) => res.json()
 	);
-};
+
+	return {
+		props: {items},
+	};
+}

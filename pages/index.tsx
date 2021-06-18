@@ -5,3 +5,12 @@ export default function Home() {
 		</>
 	);
 }
+
+export async function getServerSideProps(context) {
+	return {
+		redirect: {
+			destination: '/jobs',
+			permanent: true,
+		},
+	};
+}

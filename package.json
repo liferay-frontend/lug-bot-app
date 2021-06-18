@@ -1,5 +1,5 @@
 {
-	"name": "lut-bot-app",
+	"name": "lug-bot-app",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -8,10 +8,13 @@
 		"start": "next start"
 	},
 	"dependencies": {
+		"@clayui/breadcrumb": "^3.30.0",
 		"@clayui/css": "latest",
 		"@clayui/icon": "^3.1.0",
 		"@clayui/label": "^3.4.1",
 		"@clayui/layout": "^3.3.0",
+		"@clayui/link": "^3.2.0",
+		"@clayui/list": "^3.30.0",
 		"@clayui/nav": "^3.29.0",
 		"next": "10.2.3",
 		"react": "17.0.2",
