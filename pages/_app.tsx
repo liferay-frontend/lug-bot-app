@@ -17,7 +17,7 @@ const NextLink = ({href, ...otherProps}: any) => (
 function MyApp({Component, pageProps}) {
 	const router = useRouter();
 
-	const currentRoute = router.pathname;
+	const currentRoute = router.asPath;
 
 	const title = currentRoute.substr(1);
 
