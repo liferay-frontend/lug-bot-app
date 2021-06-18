@@ -54,8 +54,11 @@ export default function Job({job}) {
 }
 
 export async function getServerSideProps(context) {
+	const host = context.req.headers.host;
+	const protocol = context.req.headers.referer.split('://')[0];
+
 	const job = await fetch(
-		`${process.env.API_HOST}/api/jobs/${context.query.jobName}`
+		`${`${protocol}://${host}`}/api/jobs/${context.query.jobName}`
 	).then((res) => res.json());
 
 	return {

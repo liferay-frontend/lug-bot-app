@@ -149,8 +149,11 @@ export default function Jobs({items}) {
 }
 
 export async function getServerSideProps(context) {
-	const items = await fetch(`${process.env.API_HOST}/api/jobs`).then((res) =>
-		res.json()
+	const host = context.req.headers.host;
+	const protocol = context.req.headers.referer.split('://')[0];
+
+	const items = await fetch(`${`${protocol}://${host}`}/api/jobs`).then(
+		(res) => res.json()
 	);
 
 	return {
