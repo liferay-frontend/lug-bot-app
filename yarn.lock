@@ -156,6 +156,17 @@
     react-transition-group "^4.4.1"
     warning "^4.0.3"
 
+"@clayui/panel@^3.29.0":
+  version "3.29.0"
+  resolved "https://registry.yarnpkg.com/@clayui/panel/-/panel-3.29.0.tgz#d7f2e48ca4992604fc77a33d5d2c6854e17e0544"
+  integrity sha512-QkbmvgO5/8oe+kdeIW1ONG4FkVIhdWBiuMvqLZuLa+qR72xnO9Sp1/sq0AorV06QkxTYzXcMU7jslPaqqE5rLA==
+  dependencies:
+    "@clayui/button" "^3.6.0"
+    "@clayui/icon" "^3.1.0"
+    "@clayui/shared" "^3.29.0"
+    classnames "^2.2.6"
+    react-transition-group "^4.4.1"
+
 "@clayui/shared@^3.29.0":
   version "3.29.0"
   resolved "https://registry.yarnpkg.com/@clayui/shared/-/shared-3.29.0.tgz#b737dfee602fe69f3f495bf77142b8d498151984"
