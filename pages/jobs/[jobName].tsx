@@ -56,48 +56,58 @@ export default function Job({files, job}) {
 			</ClayLayout.Row>
 
 			<ClayLayout.Row>
-				{job.comments && (
+				{job.recomendations && (
 					<>
-						<h2>Issues:</h2>
+						<h2>{job.totalRecomendations} Issues: </h2>
 
-						{job.comments.map((comment) => (
-							<ClayPanel
-								collapsable
-								displayTitle={
-									<span style={{textTransform: 'none'}}>
-										{`${comment.file}#${comment.line}`}
-									</span>
-								}
-								displayType="secondary"
-								style={{width: '100%'}}
-								showCollapseIcon={true}
-								key={`${comment.file}#${comment.line}`}
-							>
-								<ClayPanel.Header>
-									<h3>{comment.title}</h3>
-								</ClayPanel.Header>
-								<ClayPanel.Body>
-									{comment.description ? (
-										<ReactMarkdown>
-											{comment.description}
-										</ReactMarkdown>
-									) : (
-										'No Description'
-									)}
-									<hr />
-									<CodeBlock
-										language="java"
-										value={files[
-											`${comment.file}#${comment.line}`
-										].join('\n')}
-									/>
-								</ClayPanel.Body>
-							</ClayPanel>
-						))}
+						{Object.entries(job.recomendations).map(
+							([file, comments]: any) => (
+								<ClayPanel
+									collapsable
+									displayTitle={
+										<span style={{textTransform: 'none'}}>
+											({comments.length}) {file}
+										</span>
+									}
+									displayType="secondary"
+									style={{width: '100%'}}
+									showCollapseIcon={true}
+									key={file}
+								>
+									{comments.map((comment, i) => (
+										<>
+											<ClayPanel.Header>
+												<h3>
+													{comment.title}
+													<br /> Line: {comment.line}
+												</h3>
+											</ClayPanel.Header>
+											<ClayPanel.Body>
+												{comment.description && (
+													<ReactMarkdown>
+														{comment.description}
+													</ReactMarkdown>
+												)}
+												<CodeBlock
+													language="diff"
+													value={comment.diff}
+													startingLineNumber={
+														comment.line
+													}
+												/>
+												{i !== comments.length - 1 && (
+													<hr />
+												)}
+											</ClayPanel.Body>
+										</>
+									))}
+								</ClayPanel>
+							)
+						)}
 					</>
 				)}
 
-				{!job.comments && <p>No comments</p>}
+				{!job.recomendations && <p>No Recomendations</p>}
 			</ClayLayout.Row>
 		</ClayLayout.ContainerFluid>
 	);
@@ -110,27 +120,7 @@ export async function getServerSideProps(context) {
 		`${`${APIOrigin}`}/api/jobs/${context.query.jobName}`
 	).then((res) => res.json());
 
-	let files = {};
-
-	if (job.comments) {
-		(
-			await Promise.all(
-				job.comments.map(({file, line}) =>
-					fetch(`${APIOrigin}/api/files`, {
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						method: 'POST',
-						body: JSON.stringify({file, line}),
-					}).then((res) => res.json())
-				)
-			)
-		).forEach(({locator, content}) => {
-			files[locator] = content;
-		});
-	}
-
 	return {
-		props: {job, files},
+		props: {job},
 	};
 }
