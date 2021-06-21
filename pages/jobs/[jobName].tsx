@@ -5,6 +5,7 @@ import ClayPanel from '@clayui/panel';
 import ReactMarkdown from 'react-markdown';
 
 import getAPIOrigin from '../../utils/getAPIOrigin';
+import CodeBlock from '../../components/CodeBlock';
 
 const STATES = {
 	1: {
@@ -25,7 +26,7 @@ const STATES = {
 	},
 };
 
-export default function Job({job}) {
+export default function Job({files, job}) {
 	const {displayType, name} = STATES[job.state];
 
 	return (
@@ -79,6 +80,13 @@ export default function Job({job}) {
 									) : (
 										'No Description'
 									)}
+									<hr />
+									<CodeBlock
+										language="java"
+										value={files[
+											`${comment.file}#${comment.line}`
+										].join('\n')}
+									/>
 								</ClayPanel.Body>
 							</ClayPanel>
 						))}
@@ -92,11 +100,33 @@ export default function Job({job}) {
 }
 
 export async function getServerSideProps(context) {
+	const APIOrigin = getAPIOrigin(context.req);
+
 	const job = await fetch(
-		`${`${getAPIOrigin(context.req)}`}/api/jobs/${context.query.jobName}`
+		`${`${APIOrigin}`}/api/jobs/${context.query.jobName}`
 	).then((res) => res.json());
 
+	let files = {};
+
+	if (job.comments) {
+		(
+			await Promise.all(
+				job.comments.map(({file, line}) =>
+					fetch(`${APIOrigin}/api/files`, {
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						method: 'POST',
+						body: JSON.stringify({file, line}),
+					}).then((res) => res.json())
+				)
+			)
+		).forEach(({locator, content}) => {
+			files[locator] = content;
+		});
+	}
+
 	return {
-		props: {job},
+		props: {job, files},
 	};
 }
