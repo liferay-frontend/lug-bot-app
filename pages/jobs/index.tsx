@@ -47,11 +47,13 @@ const formatDuration = (duration: number) => {
 export default function Jobs({items}) {
 	return (
 		<ClayLayout.ContainerFluid view>
-			<ClayLayout.Row justify="center">
-				<h1>Jobs</h1>
+			<ClayLayout.Row>
+				<ClayLayout.Col>
+					<h1>Jobs</h1>
+				</ClayLayout.Col>
 			</ClayLayout.Row>
 
-			<ClayLayout.Row justify="start">
+			<ClayLayout.Row>
 				<ClayLayout.Col>
 					<ClayList>
 						<ClayList.Header>Running Jobs</ClayList.Header>
