@@ -63,7 +63,11 @@ export default function Job({files, job}) {
 						{job.comments.map((comment) => (
 							<ClayPanel
 								collapsable
-								displayTitle={`${comment.file}#${comment.line}`}
+								displayTitle={
+									<span style={{textTransform: 'none'}}>
+										{`${comment.file}#${comment.line}`}
+									</span>
+								}
 								displayType="secondary"
 								style={{width: '100%'}}
 								showCollapseIcon={true}
