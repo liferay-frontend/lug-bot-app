@@ -5,6 +5,7 @@ import ClayPanel from '@clayui/panel';
 import ReactMarkdown from 'react-markdown';
 
 import getAPIOrigin from '../../utils/getAPIOrigin';
+import CodeBlock from '../../components/CodeBlock';
 
 const STATES = {
 	1: {
@@ -25,7 +26,7 @@ const STATES = {
 	},
 };
 
-export default function Job({job}) {
+export default function Job({files, job}) {
 	const {displayType, name} = STATES[job.state];
 
 	return (
@@ -55,45 +56,68 @@ export default function Job({job}) {
 			</ClayLayout.Row>
 
 			<ClayLayout.Row>
-				{job.comments && (
+				{job.recomendations && (
 					<>
-						<h2>Issues:</h2>
+						<h2>{job.totalRecomendations} Issues: </h2>
 
-						{job.comments.map((comment) => (
-							<ClayPanel
-								collapsable
-								displayTitle={`${comment.file}#${comment.line}`}
-								displayType="secondary"
-								style={{width: '100%'}}
-								showCollapseIcon={true}
-								key={`${comment.file}#${comment.line}`}
-							>
-								<ClayPanel.Header>
-									<h3>{comment.title}</h3>
-								</ClayPanel.Header>
-								<ClayPanel.Body>
-									{comment.description ? (
-										<ReactMarkdown>
-											{comment.description}
-										</ReactMarkdown>
-									) : (
-										'No Description'
-									)}
-								</ClayPanel.Body>
-							</ClayPanel>
-						))}
+						{Object.entries(job.recomendations).map(
+							([file, comments]: any) => (
+								<ClayPanel
+									collapsable
+									displayTitle={
+										<span style={{textTransform: 'none'}}>
+											({comments.length}) {file}
+										</span>
+									}
+									displayType="secondary"
+									style={{width: '100%'}}
+									showCollapseIcon={true}
+									key={file}
+								>
+									{comments.map((comment, i) => (
+										<>
+											<ClayPanel.Header>
+												<h3>
+													{comment.title}
+													<br /> Line: {comment.line}
+												</h3>
+											</ClayPanel.Header>
+											<ClayPanel.Body>
+												{comment.description && (
+													<ReactMarkdown>
+														{comment.description}
+													</ReactMarkdown>
+												)}
+												<CodeBlock
+													language="diff"
+													value={comment.diff}
+													startingLineNumber={
+														comment.line
+													}
+												/>
+												{i !== comments.length - 1 && (
+													<hr />
+												)}
+											</ClayPanel.Body>
+										</>
+									))}
+								</ClayPanel>
+							)
+						)}
 					</>
 				)}
 
-				{!job.comments && <p>No comments</p>}
+				{!job.recomendations && <p>No Recomendations</p>}
 			</ClayLayout.Row>
 		</ClayLayout.ContainerFluid>
 	);
 }
 
 export async function getServerSideProps(context) {
+	const APIOrigin = getAPIOrigin(context.req);
+
 	const job = await fetch(
-		`${`${getAPIOrigin(context.req)}`}/api/jobs/${context.query.jobName}`
+		`${`${APIOrigin}`}/api/jobs/${context.query.jobName}`
 	).then((res) => res.json());
 
 	return {
