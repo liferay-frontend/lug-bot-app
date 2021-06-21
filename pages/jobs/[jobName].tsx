@@ -2,6 +2,8 @@ import ClayBreadcrumb from '@clayui/breadcrumb';
 import ClayLayout from '@clayui/layout';
 import ClayLabel from '@clayui/label';
 import ClayPanel from '@clayui/panel';
+import ReactMarkdown from 'react-markdown';
+
 import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const STATES = {
@@ -21,14 +23,6 @@ const STATES = {
 		name: 'Running',
 		displayType: 'warning',
 	},
-};
-
-const formatCode = (code: string): string => {
-	if (!code) {
-		return;
-	}
-
-	return code.replace(new RegExp(/\s*\n[\t\s]*/, 'g'), '\n');
 };
 
 export default function Job({job}) {
@@ -52,42 +46,46 @@ export default function Job({job}) {
 				/>
 			</ClayLayout.Row>
 
-			<ClayLayout.Row>
-				<h1>{job.name}</h1>
-			</ClayLayout.Row>
+			<ClayLayout.Row containerElement="h1">{job.name}</ClayLayout.Row>
 
-			<ClayLayout.Row>
+			<ClayLayout.Row style={{marginBottom: 4}}>
 				<ClayLabel displayType={displayType} large>
 					{name}
 				</ClayLabel>
 			</ClayLayout.Row>
 
 			<ClayLayout.Row>
-				{job.comments ? (
-					job.comments.map((comment) => (
-						<ClayLayout.Row key={`${comment.file}#${comment.line}`}>
+				{job.comments && (
+					<>
+						<h2>Issues:</h2>
+
+						{job.comments.map((comment) => (
 							<ClayPanel
 								collapsable
 								displayTitle={`${comment.file}#${comment.line}`}
 								displayType="secondary"
 								style={{width: '100%'}}
 								showCollapseIcon={true}
+								key={`${comment.file}#${comment.line}`}
 							>
+								<ClayPanel.Header>
+									<h3>{comment.title}</h3>
+								</ClayPanel.Header>
 								<ClayPanel.Body>
-									<h4>{comment.title}</h4>
-
-									{comment.description && (
-										<pre>
-											{formatCode(comment.description)}
-										</pre>
+									{comment.description ? (
+										<ReactMarkdown>
+											{comment.description}
+										</ReactMarkdown>
+									) : (
+										'No Description'
 									)}
 								</ClayPanel.Body>
 							</ClayPanel>
-						</ClayLayout.Row>
-					))
-				) : (
-					<p>No comments</p>
+						))}
+					</>
 				)}
+
+				{!job.comments && <p>No comments</p>}
 			</ClayLayout.Row>
 		</ClayLayout.ContainerFluid>
 	);
