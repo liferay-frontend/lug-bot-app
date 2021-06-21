@@ -2,6 +2,7 @@ import '../styles/main.scss';
 import ClayNavigationBar from '@clayui/navigation-bar';
 import {ClayIconSpriteContext} from '@clayui/icon';
 import ClayLink, {ClayLinkContext} from '@clayui/link';
+import ClayLayout from '@clayui/layout';
 import Head from 'next/head';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
@@ -64,7 +65,19 @@ function MyApp({Component, pageProps}) {
 					</main>
 
 					<footer>
-						<span>Footer</span>
+						<ClayLayout.ContainerFluid>
+							<ClayLayout.Row justify="center">
+								<span>
+									Created By{' '}
+									<ClayLink
+										href="https://liferay.com"
+										target="__blank"
+									>
+										Liferay
+									</ClayLink>
+								</span>
+							</ClayLayout.Row>
+						</ClayLayout.ContainerFluid>
 					</footer>
 				</ClayIconSpriteContext.Provider>
 			</ClayLinkContext.Provider>

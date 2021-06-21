@@ -36,19 +36,21 @@ export default function Job({job}) {
 
 	return (
 		<ClayLayout.ContainerFluid view>
-			<ClayBreadcrumb
-				ellipsisBuffer={1}
-				items={[
-					{
-						href: '/jobs',
-						label: 'Jobs',
-					},
-					{
-						active: true,
-						label: job.name,
-					},
-				]}
-			/>
+			<ClayLayout.Row>
+				<ClayBreadcrumb
+					ellipsisBuffer={1}
+					items={[
+						{
+							href: '/jobs',
+							label: 'Jobs',
+						},
+						{
+							active: true,
+							label: job.name,
+						},
+					]}
+				/>
+			</ClayLayout.Row>
 
 			<ClayLayout.Row>
 				<h1>{job.name}</h1>
@@ -60,27 +62,33 @@ export default function Job({job}) {
 				</ClayLabel>
 			</ClayLayout.Row>
 
-			{job.comments.map((comment) => (
-				<ClayLayout.Row key={`${comment.file}#${comment.line}`}>
-					<ClayPanel
-						collapsable
-						displayTitle={`${comment.file}#${comment.line}`}
-						displayType="secondary"
-						style={{width: '100%'}}
-						showCollapseIcon={true}
-					>
-						<ClayPanel.Body>
-							<h4>{comment.title}</h4>
+			<ClayLayout.Row>
+				{job.comments ? (
+					job.comments.map((comment) => (
+						<ClayLayout.Row key={`${comment.file}#${comment.line}`}>
+							<ClayPanel
+								collapsable
+								displayTitle={`${comment.file}#${comment.line}`}
+								displayType="secondary"
+								style={{width: '100%'}}
+								showCollapseIcon={true}
+							>
+								<ClayPanel.Body>
+									<h4>{comment.title}</h4>
 
-							{comment.description ? (
-								<pre>{formatCode(comment.description)}</pre>
-							) : (
-								<p>No comments</p>
-							)}
-						</ClayPanel.Body>
-					</ClayPanel>
-				</ClayLayout.Row>
-			))}
+									{comment.description && (
+										<pre>
+											{formatCode(comment.description)}
+										</pre>
+									)}
+								</ClayPanel.Body>
+							</ClayPanel>
+						</ClayLayout.Row>
+					))
+				) : (
+					<p>No comments</p>
+				)}
+			</ClayLayout.Row>
 		</ClayLayout.ContainerFluid>
 	);
 }

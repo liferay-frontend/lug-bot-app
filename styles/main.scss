@@ -2,9 +2,6 @@
 
 @import 'variables';
 
-@import 'footer';
-@import 'jobs';
-
 body {
 	background-color: $lug-bot-canvas;
 
@@ -13,4 +10,9 @@ body {
 		display: flex;
 		flex-direction: column;
 	}
+}
+
+footer {
+	margin-top: auto;
+	margin-bottom: 1rem;
 }
