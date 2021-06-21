@@ -59,7 +59,10 @@ export default function Jobs({items}) {
 						{items.runningJobs.map((job) => (
 							<ClayList.Item flex key={job.name}>
 								<ClayList.ItemField expand>
-									<Link href={`/jobs/${job.name}`} passHref>
+									<Link
+										href={`/jobs/${job.name.toLowerCase()}`}
+										passHref
+									>
 										<ClayList.ItemTitle>
 											{job.name}
 										</ClayList.ItemTitle>
@@ -89,7 +92,10 @@ export default function Jobs({items}) {
 						{items.pendingJobs.map((job) => (
 							<ClayList.Item flex key={job.name}>
 								<ClayList.ItemField expand>
-									<Link href={`/jobs/${job.name}`} passHref>
+									<Link
+										href={`/jobs/${job.name.toLowerCase()}`}
+										passHref
+									>
 										<ClayList.ItemTitle>
 											{job.name}
 										</ClayList.ItemTitle>
