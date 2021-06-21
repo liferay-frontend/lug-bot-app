@@ -1,7 +1,7 @@
 import '../styles/main.scss';
-import ClayNav from '@clayui/nav';
-import ClayIcon, {ClayIconSpriteContext} from '@clayui/icon';
-import {ClayLinkContext} from '@clayui/link';
+import ClayNavigationBar from '@clayui/navigation-bar';
+import {ClayIconSpriteContext} from '@clayui/icon';
+import ClayLink, {ClayLinkContext} from '@clayui/link';
 import Head from 'next/head';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
@@ -41,18 +41,22 @@ function MyApp({Component, pageProps}) {
 			<ClayLinkContext.Provider value={NextLink}>
 				<ClayIconSpriteContext.Provider value={spritemap}>
 					<header>
-						<ClayNav>
-							<ClayNav.Item>
-								<ClayNav.Link
-									active={currentRoute === '/jobs'}
+						<ClayNavigationBar triggerLabel="Jobs" inverted>
+							<ClayLink className="navbar-brand" href="/">
+								{'Lug Bot'}
+							</ClayLink>
+							<ClayNavigationBar.Item
+								active={currentRoute === '/jobs'}
+							>
+								<ClayLink
 									href="/jobs"
+									className="nav-link"
+									displayType="unstyled"
 								>
-									<ClayIcon symbol="code" />
-
 									{'Jobs'}
-								</ClayNav.Link>
-							</ClayNav.Item>
-						</ClayNav>
+								</ClayLink>
+							</ClayNavigationBar.Item>
+						</ClayNavigationBar>
 					</header>
 
 					<main>

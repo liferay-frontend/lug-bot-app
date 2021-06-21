@@ -144,13 +144,14 @@
     classnames "^2.2.6"
     warning "^4.0.3"
 
-"@clayui/nav@^3.29.0":
+"@clayui/navigation-bar@^3.29.0":
   version "3.29.0"
-  resolved "https://registry.yarnpkg.com/@clayui/nav/-/nav-3.29.0.tgz#67bfc1b82886e41bf6d6ce03217b4510c19caca7"
-  integrity sha512-1+1trDPcxSYnYinwk1ocCKBZQuGuDCcXgBhA9RaaheJCmQ5FtnT4DjQ/gyzFk3EzT2ORmq1bazuECj7e0c8Sag==
+  resolved "https://registry.yarnpkg.com/@clayui/navigation-bar/-/navigation-bar-3.29.0.tgz#78ca04bb2d01ff7d107a3da71629127023691554"
+  integrity sha512-2dLxCDuIoMaafMyKT4klU6Gs8863a1mEHqJxTkJUPn1L4jRMcl4D/QzRoXsEODwQMdXNpEMyUtsu2ylfDNQoWg==
   dependencies:
     "@clayui/button" "^3.6.0"
     "@clayui/icon" "^3.1.0"
+    "@clayui/layout" "^3.3.0"
     "@clayui/shared" "^3.29.0"
     classnames "^2.2.6"
     react-transition-group "^4.4.1"
