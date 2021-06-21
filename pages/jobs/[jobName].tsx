@@ -1,6 +1,7 @@
+import ClayBreadcrumb from '@clayui/breadcrumb';
 import ClayLayout from '@clayui/layout';
 import ClayLabel from '@clayui/label';
-import ClayBreadcrumb from '@clayui/breadcrumb';
+import ClayPanel from '@clayui/panel';
 
 const STATES = {
 	1: {
@@ -19,6 +20,14 @@ const STATES = {
 		name: 'Running',
 		displayType: 'warning',
 	},
+};
+
+const formatCode = (code: string): string => {
+	if (!code) {
+		return;
+	}
+
+	return code.replace(new RegExp(/\s*\n[\t\s]*/, 'g'), '\n');
 };
 
 export default function Job({job}) {
@@ -49,6 +58,28 @@ export default function Job({job}) {
 					{name}
 				</ClayLabel>
 			</ClayLayout.Row>
+
+			{job.comments.map((comment) => (
+				<ClayLayout.Row key={`${comment.file}#${comment.line}`}>
+					<ClayPanel
+						collapsable
+						displayTitle={`${comment.file}#${comment.line}`}
+						displayType="secondary"
+						style={{width: '100%'}}
+						showCollapseIcon={true}
+					>
+						<ClayPanel.Body>
+							<h4>{comment.title}</h4>
+
+							{comment.description ? (
+								<pre>{formatCode(comment.description)}</pre>
+							) : (
+								<p>No comments</p>
+							)}
+						</ClayPanel.Body>
+					</ClayPanel>
+				</ClayLayout.Row>
+			))}
 		</ClayLayout.ContainerFluid>
 	);
 }
