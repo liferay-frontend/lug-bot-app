@@ -2,6 +2,7 @@ import ClayBreadcrumb from '@clayui/breadcrumb';
 import ClayLayout from '@clayui/layout';
 import ClayLabel from '@clayui/label';
 import ClayPanel from '@clayui/panel';
+import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const STATES = {
 	1: {
@@ -85,11 +86,8 @@ export default function Job({job}) {
 }
 
 export async function getServerSideProps(context) {
-	const host = context.req.headers.host;
-	const protocol = context.req.headers.referer.split('://')[0];
-
 	const job = await fetch(
-		`${`${protocol}://${host}`}/api/jobs/${context.query.jobName}`
+		`${`${getAPIOrigin(context.req)}`}/api/jobs/${context.query.jobName}`
 	).then((res) => res.json());
 
 	return {
