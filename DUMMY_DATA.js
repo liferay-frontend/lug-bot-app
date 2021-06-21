@@ -46,19 +46,8 @@ export default {
 				},
 				{
 					title: 'PortletConfig get/format methods',
-					description: `
-					- Date: 2014-Mar-07
-					- JIRA Ticket: LPS-44342
-
-					**What changed?**
-					All the methods get() and format() which had the PortletConfig as a parameter have been removed.
-					
-					**Who is affected?**
-					Any invocations from Java classes or JSPs to these methods in LanguageUtil and UnicodeLanguageUtil are affected.
-					
-					**How should I update my code?**
-					Replace invocations to these methods with invocations to methods of the same name that take a ResourceBundle parameter, instead of taking a PortletConfig parameter.
-					`,
+					description:
+						'- Date: 2014-Mar-07\n- JIRA Ticket: LPS-44342\n\n**What changed?**\nAll the methods get() and format() which had the PortletConfig as a parameter have been removed.\n\n**Who is affected?**\nAny invocations from Java classes or JSPs to these methods in LanguageUtil and UnicodeLanguageUtil are affected.\n\n**How should I update my code?**\nReplace invocations to these methods with invocations to methods of the same name that take a ResourceBundle parameter, instead of taking a PortletConfig parameter.',
 					file: 'evp/evp-portlet/src/main/webapp/WEB-INF/jsp/evp/views/divisions/search_container.jsp',
 					line: 111,
 				},

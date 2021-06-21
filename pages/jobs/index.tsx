@@ -2,6 +2,7 @@ import ClayLayout from '@clayui/layout';
 import ClayLabel from '@clayui/label';
 import ClayList from '@clayui/list';
 import Link from 'next/link';
+import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const STATES = {
 	1: {
@@ -46,11 +47,13 @@ const formatDuration = (duration: number) => {
 export default function Jobs({items}) {
 	return (
 		<ClayLayout.ContainerFluid view>
-			<ClayLayout.Row justify="center">
-				<h1>Jobs</h1>
+			<ClayLayout.Row>
+				<ClayLayout.Col>
+					<h1>Jobs</h1>
+				</ClayLayout.Col>
 			</ClayLayout.Row>
 
-			<ClayLayout.Row justify="start">
+			<ClayLayout.Row>
 				<ClayLayout.Col>
 					<ClayList>
 						<ClayList.Header>Running Jobs</ClayList.Header>
@@ -58,7 +61,10 @@ export default function Jobs({items}) {
 						{items.runningJobs.map((job) => (
 							<ClayList.Item flex key={job.name}>
 								<ClayList.ItemField expand>
-									<Link href={`/jobs/${job.name}`} passHref>
+									<Link
+										href={`/jobs/${job.name.toLowerCase()}`}
+										passHref
+									>
 										<ClayList.ItemTitle>
 											{job.name}
 										</ClayList.ItemTitle>
@@ -88,7 +94,10 @@ export default function Jobs({items}) {
 						{items.pendingJobs.map((job) => (
 							<ClayList.Item flex key={job.name}>
 								<ClayList.ItemField expand>
-									<Link href={`/jobs/${job.name}`} passHref>
+									<Link
+										href={`/jobs/${job.name.toLowerCase()}`}
+										passHref
+									>
 										<ClayList.ItemTitle>
 											{job.name}
 										</ClayList.ItemTitle>
@@ -149,10 +158,7 @@ export default function Jobs({items}) {
 }
 
 export async function getServerSideProps(context) {
-	const host = context.req.headers.host;
-	const protocol = context.req.headers.referer.split('://')[0];
-
-	const items = await fetch(`${`${protocol}://${host}`}/api/jobs`).then(
+	const items = await fetch(`${getAPIOrigin(context.req)}/api/jobs`).then(
 		(res) => res.json()
 	);
 

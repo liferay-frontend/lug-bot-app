@@ -1,13 +1,9 @@
 @import 'atlas';
-@import 'variables';
-@import 'footer';
-@import 'jobs';
-@import 'nav';
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;800&family=Raleway:wght@200;400;600&display=swap');
+@import 'variables';
 
 body {
-	background-color: #fefefe;
+	background-color: $lug-bot-canvas;
 
 	#__next {
 		min-height: 100vh;
@@ -16,9 +12,7 @@ body {
 	}
 }
 
-main {
-	margin: 0 auto;
-	max-width: 1280px;
-	padding: 24px 0;
-	width: 100%;
+footer {
+	margin-top: auto;
+	margin-bottom: 1rem;
 }

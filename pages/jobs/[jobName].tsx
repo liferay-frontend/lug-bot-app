@@ -2,6 +2,9 @@ import ClayBreadcrumb from '@clayui/breadcrumb';
 import ClayLayout from '@clayui/layout';
 import ClayLabel from '@clayui/label';
 import ClayPanel from '@clayui/panel';
+import ReactMarkdown from 'react-markdown';
+
+import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const STATES = {
 	1: {
@@ -22,74 +25,75 @@ const STATES = {
 	},
 };
 
-const formatCode = (code: string): string => {
-	if (!code) {
-		return;
-	}
-
-	return code.replace(new RegExp(/\s*\n[\t\s]*/, 'g'), '\n');
-};
-
 export default function Job({job}) {
 	const {displayType, name} = STATES[job.state];
 
 	return (
 		<ClayLayout.ContainerFluid view>
-			<ClayBreadcrumb
-				ellipsisBuffer={1}
-				items={[
-					{
-						href: '/jobs',
-						label: 'Jobs',
-					},
-					{
-						active: true,
-						label: job.name,
-					},
-				]}
-			/>
-
 			<ClayLayout.Row>
-				<h1>{job.name}</h1>
+				<ClayBreadcrumb
+					ellipsisBuffer={1}
+					items={[
+						{
+							href: '/jobs',
+							label: 'Jobs',
+						},
+						{
+							active: true,
+							label: job.name,
+						},
+					]}
+				/>
 			</ClayLayout.Row>
 
-			<ClayLayout.Row>
+			<ClayLayout.Row containerElement="h1">{job.name}</ClayLayout.Row>
+
+			<ClayLayout.Row style={{marginBottom: 4}}>
 				<ClayLabel displayType={displayType} large>
 					{name}
 				</ClayLabel>
 			</ClayLayout.Row>
 
-			{job.comments.map((comment) => (
-				<ClayLayout.Row key={`${comment.file}#${comment.line}`}>
-					<ClayPanel
-						collapsable
-						displayTitle={`${comment.file}#${comment.line}`}
-						displayType="secondary"
-						style={{width: '100%'}}
-						showCollapseIcon={true}
-					>
-						<ClayPanel.Body>
-							<h4>{comment.title}</h4>
+			<ClayLayout.Row>
+				{job.comments && (
+					<>
+						<h2>Issues:</h2>
 
-							{comment.description ? (
-								<pre>{formatCode(comment.description)}</pre>
-							) : (
-								<p>No comments</p>
-							)}
-						</ClayPanel.Body>
-					</ClayPanel>
-				</ClayLayout.Row>
-			))}
+						{job.comments.map((comment) => (
+							<ClayPanel
+								collapsable
+								displayTitle={`${comment.file}#${comment.line}`}
+								displayType="secondary"
+								style={{width: '100%'}}
+								showCollapseIcon={true}
+								key={`${comment.file}#${comment.line}`}
+							>
+								<ClayPanel.Header>
+									<h3>{comment.title}</h3>
+								</ClayPanel.Header>
+								<ClayPanel.Body>
+									{comment.description ? (
+										<ReactMarkdown>
+											{comment.description}
+										</ReactMarkdown>
+									) : (
+										'No Description'
+									)}
+								</ClayPanel.Body>
+							</ClayPanel>
+						))}
+					</>
+				)}
+
+				{!job.comments && <p>No comments</p>}
+			</ClayLayout.Row>
 		</ClayLayout.ContainerFluid>
 	);
 }
 
 export async function getServerSideProps(context) {
-	const host = context.req.headers.host;
-	const protocol = context.req.headers.referer.split('://')[0];
-
 	const job = await fetch(
-		`${`${protocol}://${host}`}/api/jobs/${context.query.jobName}`
+		`${`${getAPIOrigin(context.req)}`}/api/jobs/${context.query.jobName}`
 	).then((res) => res.json());
 
 	return {
