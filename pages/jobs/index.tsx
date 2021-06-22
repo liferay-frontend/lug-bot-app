@@ -159,9 +159,9 @@ export default function Jobs({items}) {
 }
 
 export async function getServerSideProps(context) {
-	const items = await fetch(
-		`${getAPIOrigin(context.req)}/api/jobs`
-	).then((res) => res.json());
+	const items = await fetch(`${getAPIOrigin(context.req)}/api/jobs`).then(
+		(res) => res.json()
+	);
 
 	return {
 		props: {items},
