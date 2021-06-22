@@ -1,6 +1,7 @@
 import ClayBreadcrumb from '@clayui/breadcrumb';
 import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
+import ClayLink from '@clayui/link';
 import ClayPanel from '@clayui/panel';
 import {useEffect, useRef} from 'react';
 import Terminal from 'react-console-emulator';
@@ -33,18 +34,22 @@ export default function Job({job}) {
 	const terminalRef = useRef(null);
 	const {displayType, name} = STATES[job.state];
 
+	const isCompleted = job.state === 3;
+
 	useEffect(() => {
-		fetch(`/api/jobs/${job.name.toLowerCase()}/status`).finally(() => {
-			const socket = io();
+		if (!isCompleted) {
+			fetch(`/api/jobs/${job.name.toLowerCase()}/status`).finally(() => {
+				const socket = io();
 
-			socket.on('connect', () => {
-				terminalRef.current.pushToStdout('You connected!');
-			});
+				socket.on('connect', () => {
+					terminalRef.current.pushToStdout('You connected!');
+				});
 
-			socket.on('new-user', () => {
-				terminalRef.current.pushToStdout('A user connected');
+				socket.on('new-user', () => {
+					terminalRef.current.pushToStdout('A user connected');
+				});
 			});
-		});
+		}
 	}, []);
 
 	return (
@@ -69,6 +74,16 @@ export default function Job({job}) {
 
 			<ClayLayout.Row containerElement="h1">
 				<ClayLayout.Col>{job.name}</ClayLayout.Col>
+
+				{isCompleted && (
+					<ClayLayout.Col>
+						<ClayLayout.Row justify="end">
+							<ClayLink href="#" button displayType="primary">
+								{'Download Report'}
+							</ClayLink>
+						</ClayLayout.Row>
+					</ClayLayout.Col>
+				)}
 			</ClayLayout.Row>
 
 			<ClayLayout.Row style={{marginBottom: 4}}>
@@ -80,7 +95,7 @@ export default function Job({job}) {
 			</ClayLayout.Row>
 
 			<ClayLayout.Row>
-				{job.state === 4 && (
+				{!isCompleted && (
 					<ClayLayout.Col>
 						<Terminal
 							commands={{}}
@@ -95,7 +110,7 @@ export default function Job({job}) {
 					</ClayLayout.Col>
 				)}
 
-				{job.state === 3 && (
+				{isCompleted && (
 					<ClayLayout.Col>
 						{job.recomendations && (
 							<>
