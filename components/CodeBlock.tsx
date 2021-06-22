@@ -2,7 +2,7 @@ import React from 'react';
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {tomorrow} from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
-const CodeBlock = ({language, value, startingLineNumber = 0}) => {
+const CodeBlock = ({language, startingLineNumber = 0, value}) => {
 	return (
 		<SyntaxHighlighter
 			language={language}

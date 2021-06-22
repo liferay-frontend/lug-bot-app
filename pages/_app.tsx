@@ -1,8 +1,9 @@
 import '../styles/main.scss';
-import ClayNavigationBar from '@clayui/navigation-bar';
+
 import {ClayIconSpriteContext} from '@clayui/icon';
-import ClayLink, {ClayLinkContext} from '@clayui/link';
 import ClayLayout from '@clayui/layout';
+import ClayLink, {ClayLinkContext} from '@clayui/link';
+import ClayNavigationBar from '@clayui/navigation-bar';
 import Head from 'next/head';
 import Link from 'next/link';
 import {useRouter} from 'next/router';

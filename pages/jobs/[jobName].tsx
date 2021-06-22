@@ -1,32 +1,32 @@
 import ClayBreadcrumb from '@clayui/breadcrumb';
-import ClayLayout from '@clayui/layout';
 import ClayLabel from '@clayui/label';
+import ClayLayout from '@clayui/layout';
 import ClayPanel from '@clayui/panel';
 import ReactMarkdown from 'react-markdown';
 
-import getAPIOrigin from '../../utils/getAPIOrigin';
 import CodeBlock from '../../components/CodeBlock';
+import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const STATES = {
 	1: {
-		name: 'Sleeping',
 		displayType: 'secondary',
+		name: 'Sleeping',
 	},
 	2: {
-		name: 'Waiting to Start',
 		displayType: 'info',
+		name: 'Waiting to Start',
 	},
 	3: {
-		name: 'Completed',
 		displayType: 'success',
+		name: 'Completed',
 	},
 	4: {
-		name: 'Running',
 		displayType: 'warning',
+		name: 'Running',
 	},
 };
 
-export default function Job({files, job}) {
+export default function Job({job}) {
 	const {displayType, name} = STATES[job.state];
 
 	return (
