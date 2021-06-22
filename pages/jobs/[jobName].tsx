@@ -132,7 +132,7 @@ export default function Job({initialStagedChanges, job}) {
 
 			<ClayLayout.ContentRow>
 				{!isCompleted && (
-					<ClayLayout.ContentCol>
+					<ClayLayout.ContentCol expand>
 						<Terminal
 							commands={{}}
 							ref={terminalRef}
