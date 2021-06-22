@@ -1,5 +1,19 @@
-export default (req, res) => {
-	res.status(200).json([
-		'evp-portlet-upgrade-webhook/liferay-workspace/modules/evp/evp-portlet/src/main/java/com/liferay/evp/hook/upgrade/v1_1_0/UpgradeEVPServiceRequest.java#331',
-	]);
+import {NextApiRequest, NextApiResponse} from 'next';
+
+const TEMP_STAGED = [];
+
+export default (req: NextApiRequest, res: NextApiResponse) => {
+	if (req.method === 'POST') {
+		const {add, locator} = JSON.parse(req.body);
+
+		if (add) {
+			TEMP_STAGED.push(locator);
+		} else {
+			TEMP_STAGED.splice(TEMP_STAGED.indexOf(locator), 1);
+		}
+
+		res.status(200).json(TEMP_STAGED);
+	} else {
+		res.status(200).json(TEMP_STAGED);
+	}
 };

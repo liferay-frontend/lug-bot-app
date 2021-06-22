@@ -40,6 +40,13 @@ export default function Job({initialStagedChanges, job}) {
 
 	const isCompleted = job.state === 3;
 
+	function postStaged(add, locator) {
+		fetch(`/api/jobs/${job.name.toLowerCase()}/staged`, {
+			body: JSON.stringify({add, locator}),
+			method: 'POST',
+		});
+	}
+
 	useEffect(() => {
 		if (!isCompleted) {
 			fetch(`/api/jobs/${job.name.toLowerCase()}/status`).finally(() => {
@@ -93,7 +100,13 @@ export default function Job({initialStagedChanges, job}) {
 						</ClayLayout.ContentCol>
 						<ClayLayout.ContentCol style={{marginLeft: 4}}>
 							<ClayButton
-								onClick={() => alert('Submit pr!')}
+								onClick={() =>
+									alert(
+										`Sending PR with the following changes:\n ${stagedChanges.join(
+											'\n'
+										)}`
+									)
+								}
 								disabled={!stagedChanges.length}
 								// @ts-ignore
 								displayType={
@@ -188,10 +201,16 @@ export default function Job({initialStagedChanges, job}) {
 																				'auto',
 																		}}
 																		onClick={() => {
+																			postStaged(
+																				!isStaged,
+																				`${file}#${comment.line}`
+																			);
+
 																			const newArray =
 																				[
 																					...stagedChanges,
 																				];
+
 																			if (
 																				isStaged
 																			) {
