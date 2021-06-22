@@ -1,4 +1,5 @@
 // copied from https://github.com/jakeburden/next-absolute-url/blob/1d96d1d2a2a2308db60ce53a130b5d47aab3ee25/index.ts
+
 import {IncomingMessage} from 'http';
 
 export default function getAPIOrigin(

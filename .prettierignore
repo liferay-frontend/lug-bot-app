@@ -1,0 +1,5 @@
+*.d.ts
+.git
+.next
+build
+node_modules

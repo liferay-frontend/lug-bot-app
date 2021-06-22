@@ -5,7 +5,12 @@
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
-		"start": "next start"
+		"start": "next start",
+		"format": "prettier --write -- \"**/*.{js,ts,tsx,md,mdx,json,scss}\"",
+		"format:check": "prettier --list-different -- \"**/*.{js,ts,tsx,md,mdx,json,scss}\"",
+		"format:all": "yarn lint:fix && yarn format",
+		"lint:fix": "eslint --fix \".*.js\" \"**/*.{js,ts,tsx}\"",
+		"lint": "eslint \".*.js\" \"**/*.{js,ts,tsx}\""
 	},
 	"dependencies": {
 		"@clayui/breadcrumb": "^3.30.0",
@@ -25,7 +30,10 @@
 		"sass": "^1.32.13"
 	},
 	"devDependencies": {
+		"@liferay/eslint-config": "^25.0.1",
 		"@types/react": "^17.0.11",
+		"@typescript-eslint/parser": "^4.28.0",
+		"eslint": "7.23.0",
 		"typescript": "^4.3.2"
 	}
 }
