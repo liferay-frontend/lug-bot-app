@@ -67,7 +67,9 @@ function MyApp({Component, pageProps}) {
 
 					<footer>
 						<ClayLayout.ContainerFluid>
-							<ClayLayout.Row justify="center">
+							<ClayLayout.ContentRow
+								style={{justifyContent: 'center'}}
+							>
 								<span>
 									Created By{' '}
 									<ClayLink
@@ -77,7 +79,7 @@ function MyApp({Component, pageProps}) {
 										Liferay
 									</ClayLink>
 								</span>
-							</ClayLayout.Row>
+							</ClayLayout.ContentRow>
 						</ClayLayout.ContainerFluid>
 					</footer>
 				</ClayIconSpriteContext.Provider>

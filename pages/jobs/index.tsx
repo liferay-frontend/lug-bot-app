@@ -48,15 +48,15 @@ const formatDuration = (duration: number) => {
 export default function Jobs({items, project}) {
 	return (
 		<ClayLayout.ContainerFluid view>
-			<ClayLayout.Row>
-				<ClayLayout.Col>
+			<ClayLayout.ContentRow>
+				<ClayLayout.ContentCol>
 					<h1>{project.name}</h1>
 					<p>Git: {project.location}</p>
-				</ClayLayout.Col>
-			</ClayLayout.Row>
+				</ClayLayout.ContentCol>
+			</ClayLayout.ContentRow>
 
-			<ClayLayout.Row>
-				<ClayLayout.Col>
+			<ClayLayout.ContentRow>
+				<ClayLayout.ContentCol expand>
 					<ClayList>
 						<ClayList.Header>Running Jobs</ClayList.Header>
 
@@ -153,8 +153,8 @@ export default function Jobs({items, project}) {
 							</ClayList.Item>
 						))}
 					</ClayList>
-				</ClayLayout.Col>
-			</ClayLayout.Row>
+				</ClayLayout.ContentCol>
+			</ClayLayout.ContentRow>
 		</ClayLayout.ContainerFluid>
 	);
 }
