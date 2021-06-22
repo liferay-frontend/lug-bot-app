@@ -55,7 +55,7 @@ function MyApp({Component, pageProps}) {
 									className="nav-link"
 									displayType="unstyled"
 								>
-									{'Jobs'}
+									{'Dashboard'}
 								</ClayLink>
 							</ClayNavigationBar.Item>
 						</ClayNavigationBar>

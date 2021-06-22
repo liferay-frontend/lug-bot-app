@@ -45,12 +45,13 @@ const formatDuration = (duration: number) => {
 	}
 };
 
-export default function Jobs({items}) {
+export default function Jobs({items, project}) {
 	return (
 		<ClayLayout.ContainerFluid view>
 			<ClayLayout.Row>
 				<ClayLayout.Col>
-					<h1>Jobs</h1>
+					<h1>{project.name}</h1>
+					<p>Git: {project.location}</p>
 				</ClayLayout.Col>
 			</ClayLayout.Row>
 
@@ -163,7 +164,11 @@ export async function getServerSideProps(context) {
 		(res) => res.json()
 	);
 
+	const project = await fetch(
+		`${getAPIOrigin(context.req)}/api/project`
+	).then((res) => res.json());
+
 	return {
-		props: {items},
+		props: {items, project},
 	};
 }
