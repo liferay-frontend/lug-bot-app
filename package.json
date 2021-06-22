@@ -14,6 +14,7 @@
 	},
 	"dependencies": {
 		"@clayui/breadcrumb": "^3.30.0",
+		"@clayui/button": "^3.6.0",
 		"@clayui/css": "latest",
 		"@clayui/icon": "^3.1.0",
 		"@clayui/label": "^3.4.1",

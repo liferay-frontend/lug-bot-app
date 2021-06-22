@@ -1,9 +1,11 @@
 import ClayBreadcrumb from '@clayui/breadcrumb';
+import ClayButton from '@clayui/button';
+import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
 import ClayLink from '@clayui/link';
 import ClayPanel from '@clayui/panel';
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Terminal from 'react-console-emulator';
 import ReactMarkdown from 'react-markdown';
 import io from 'socket.io-client';
@@ -30,7 +32,9 @@ const STATES = {
 	},
 };
 
-export default function Job({job}) {
+export default function Job({initialStagedChanges, job}) {
+	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
+
 	const terminalRef = useRef(null);
 	const {displayType, name} = STATES[job.state];
 
@@ -54,8 +58,8 @@ export default function Job({job}) {
 
 	return (
 		<ClayLayout.ContainerFluid view>
-			<ClayLayout.Row>
-				<ClayLayout.Col>
+			<ClayLayout.ContentRow>
+				<ClayLayout.ContentCol>
 					<ClayBreadcrumb
 						ellipsisBuffer={1}
 						items={[
@@ -69,34 +73,53 @@ export default function Job({job}) {
 							},
 						]}
 					/>
-				</ClayLayout.Col>
-			</ClayLayout.Row>
+				</ClayLayout.ContentCol>
+			</ClayLayout.ContentRow>
 
-			<ClayLayout.Row containerElement="h1">
-				<ClayLayout.Col>{job.name}</ClayLayout.Col>
+			<ClayLayout.ContentRow containerElement="h1" float>
+				<ClayLayout.ContentCol>{job.name}</ClayLayout.ContentCol>
 
 				{isCompleted && (
-					<ClayLayout.Col>
-						<ClayLayout.Row justify="end">
-							<ClayLink href="#" button displayType="primary">
+					<>
+						<ClayLayout.ContentCol expand>
+							<ClayLink
+								href="#"
+								button
+								displayType="secondary"
+								style={{marginLeft: 'auto'}}
+							>
 								{'Download Report'}
 							</ClayLink>
-						</ClayLayout.Row>
-					</ClayLayout.Col>
+						</ClayLayout.ContentCol>
+						<ClayLayout.ContentCol style={{marginLeft: 4}}>
+							<ClayButton
+								onClick={() => alert('Submit pr!')}
+								disabled={!stagedChanges.length}
+								// @ts-ignore
+								displayType={
+									stagedChanges.length
+										? 'success'
+										: 'secondary'
+								}
+							>
+								{`Send Pull Request (${stagedChanges.length})`}
+							</ClayButton>
+						</ClayLayout.ContentCol>
+					</>
 				)}
-			</ClayLayout.Row>
+			</ClayLayout.ContentRow>
 
-			<ClayLayout.Row style={{marginBottom: 4}}>
-				<ClayLayout.Col>
+			<ClayLayout.ContentRow style={{marginBottom: 4}}>
+				<ClayLayout.ContentCol>
 					<ClayLabel displayType={displayType} large>
 						{name}
 					</ClayLabel>
-				</ClayLayout.Col>
-			</ClayLayout.Row>
+				</ClayLayout.ContentCol>
+			</ClayLayout.ContentRow>
 
-			<ClayLayout.Row>
+			<ClayLayout.ContentRow>
 				{!isCompleted && (
-					<ClayLayout.Col>
+					<ClayLayout.ContentCol>
 						<Terminal
 							commands={{}}
 							ref={terminalRef}
@@ -107,11 +130,11 @@ export default function Job({job}) {
 							welcomeMessage="Running..."
 							readOnly
 						/>
-					</ClayLayout.Col>
+					</ClayLayout.ContentCol>
 				)}
 
 				{isCompleted && (
-					<ClayLayout.Col>
+					<ClayLayout.ContentCol expand>
 						{job.recomendations && (
 							<>
 								<h2>{job.totalRecomendations} Issues: </h2>
@@ -130,40 +153,105 @@ export default function Job({job}) {
 												</span>
 											}
 											displayType="secondary"
-											style={{width: '100%'}}
 											showCollapseIcon={true}
 											key={file}
 										>
-											{comments.map((comment, i) => (
-												<>
-													<ClayPanel.Header>
-														<h3>
-															{comment.title}
-															<br /> Line:{' '}
-															{comment.line}
-														</h3>
-													</ClayPanel.Header>
-													<ClayPanel.Body>
-														{comment.description && (
-															<ReactMarkdown>
-																{
-																	comment.description
+											{comments.map((comment, i) => {
+												const isStaged =
+													stagedChanges.indexOf(
+														`${file}#${comment.line}`
+													) !== -1;
+
+												return (
+													<React.Fragment key={i}>
+														<ClayPanel.Header>
+															<ClayLayout.ContentRow
+																containerElement="h3"
+																float
+															>
+																<ClayLayout.ContentCol>
+																	{`Line ${comment.line}: ${comment.title}`}
+																</ClayLayout.ContentCol>
+																<ClayLayout.ContentCol
+																	expand
+																>
+																	<ClayButton
+																		// @ts-ignore
+																		displayType={
+																			isStaged
+																				? 'success'
+																				: 'secondary'
+																		}
+																		small
+																		style={{
+																			marginLeft:
+																				'auto',
+																		}}
+																		onClick={() => {
+																			const newArray =
+																				[
+																					...stagedChanges,
+																				];
+																			if (
+																				isStaged
+																			) {
+																				newArray.splice(
+																					newArray.indexOf(
+																						`${file}#${comment.line}`
+																					),
+																					1
+																				);
+																			} else {
+																				newArray.push(
+																					`${file}#${comment.line}`
+																				);
+																			}
+
+																			setStagedChanges(
+																				newArray
+																			);
+																		}}
+																	>
+																		{isStaged
+																			? 'Staged'
+																			: 'Stage Change'}
+
+																		{isStaged && (
+																			<ClayIcon
+																				symbol="check"
+																				style={{
+																					marginLeft: 4,
+																				}}
+																			/>
+																		)}
+																	</ClayButton>
+																</ClayLayout.ContentCol>
+															</ClayLayout.ContentRow>
+														</ClayPanel.Header>
+														<ClayPanel.Body>
+															{comment.description && (
+																<ReactMarkdown>
+																	{
+																		comment.description
+																	}
+																</ReactMarkdown>
+															)}
+															<CodeBlock
+																language="diff"
+																value={
+																	comment.diff
 																}
-															</ReactMarkdown>
-														)}
-														<CodeBlock
-															language="diff"
-															value={comment.diff}
-															startingLineNumber={
-																comment.line
-															}
-														/>
-														{i !==
-															comments.length -
-																1 && <hr />}
-													</ClayPanel.Body>
-												</>
-											))}
+																startingLineNumber={
+																	comment.line
+																}
+															/>
+															{i !==
+																comments.length -
+																	1 && <hr />}
+														</ClayPanel.Body>
+													</React.Fragment>
+												);
+											})}
 										</ClayPanel>
 									)
 								)}
@@ -171,9 +259,9 @@ export default function Job({job}) {
 						)}
 
 						{!job.recomendations && <p>No Recomendations</p>}
-					</ClayLayout.Col>
+					</ClayLayout.ContentCol>
 				)}
-			</ClayLayout.Row>
+			</ClayLayout.ContentRow>
 		</ClayLayout.ContainerFluid>
 	);
 }
@@ -185,7 +273,11 @@ export async function getServerSideProps(context) {
 		`${`${APIOrigin}`}/api/jobs/${context.query.jobName}`
 	).then((res) => res.json());
 
+	const stagedChanges = await fetch(
+		`${`${APIOrigin}`}/api/jobs/${context.query.jobName}/staged`
+	).then((res) => res.json());
+
 	return {
-		props: {job},
+		props: {initialStagedChanges: stagedChanges, job},
 	};
 }
