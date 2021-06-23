@@ -3,3 +3,4 @@
 .next
 build
 node_modules
+dummy-data.js

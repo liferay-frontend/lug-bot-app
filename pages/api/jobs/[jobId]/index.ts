@@ -1,13 +1,13 @@
-import ALL_JOBS from '../../../../DUMMY_DATA';
+import ALL_JOBS from '../../../../dummy-data';
 
 export default (req, res) => {
-	const {jobName} = req.query;
+	const {jobId} = req.query;
 
 	const job = [
 		...ALL_JOBS.completedJobs,
 		...ALL_JOBS.pendingJobs,
 		...ALL_JOBS.runningJobs,
-	].find((job) => job.name.toLowerCase() === jobName.toLowerCase());
+	].find((job) => job.id === jobId);
 
 	res.status(200).json(job);
 };

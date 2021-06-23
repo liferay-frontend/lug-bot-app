@@ -11,37 +11,19 @@ import ReactMarkdown from 'react-markdown';
 import io from 'socket.io-client';
 
 import CodeBlock from '../../components/CodeBlock';
+import STATES from '../../constants/jobStates';
 import getAPIOrigin from '../../utils/getAPIOrigin';
-
-const STATES = {
-	1: {
-		displayType: 'secondary',
-		name: 'Sleeping',
-	},
-	2: {
-		displayType: 'info',
-		name: 'Waiting to Start',
-	},
-	3: {
-		displayType: 'success',
-		name: 'Completed',
-	},
-	4: {
-		displayType: 'warning',
-		name: 'Running',
-	},
-};
 
 export default function Job({initialStagedChanges, job}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
 
 	const terminalRef = useRef(null);
-	const {displayType, name} = STATES[job.state];
+	const {displayType, name} = STATES.byId[job.state];
 
-	const isCompleted = job.state === 3;
+	const isCompleted = job.state === STATES.byName.complete.id;
 
 	function postStaged(add, locator) {
-		fetch(`/api/jobs/${job.name.toLowerCase()}/staged`, {
+		fetch(`/api/jobs/${job.id}/staged`, {
 			body: JSON.stringify({add, locator}),
 			method: 'POST',
 		});
@@ -49,7 +31,7 @@ export default function Job({initialStagedChanges, job}) {
 
 	useEffect(() => {
 		if (!isCompleted) {
-			fetch(`/api/jobs/${job.name.toLowerCase()}/status`).finally(() => {
+			fetch(`/api/jobs/${job.id}/status`).finally(() => {
 				const socket = io();
 
 				socket.on('connect', () => {
@@ -173,7 +155,7 @@ export default function Job({initialStagedChanges, job}) {
 											{comments.map((comment, i) => {
 												const isStaged =
 													stagedChanges.indexOf(
-														`${file}#${comment.line}`
+														comment.id
 													) !== -1;
 
 												return (
@@ -199,7 +181,7 @@ export default function Job({initialStagedChanges, job}) {
 																		onClick={() => {
 																			postStaged(
 																				!isStaged,
-																				`${file}#${comment.line}`
+																				comment.id
 																			);
 
 																			const newArray =
@@ -212,13 +194,13 @@ export default function Job({initialStagedChanges, job}) {
 																			) {
 																				newArray.splice(
 																					newArray.indexOf(
-																						`${file}#${comment.line}`
+																						comment.id
 																					),
 																					1
 																				);
 																			} else {
 																				newArray.push(
-																					`${file}#${comment.line}`
+																					comment.id
 																				);
 																			}
 
@@ -291,11 +273,11 @@ export async function getServerSideProps(context) {
 	const APIOrigin = getAPIOrigin(context.req);
 
 	const job = await fetch(
-		`${`${APIOrigin}`}/api/jobs/${context.query.jobName}`
+		`${`${APIOrigin}`}/api/jobs/${context.query.jobId}`
 	).then((res) => res.json());
 
 	const stagedChanges = await fetch(
-		`${`${APIOrigin}`}/api/jobs/${context.query.jobName}/staged`
+		`${`${APIOrigin}`}/api/jobs/${context.query.jobId}/staged`
 	).then((res) => res.json());
 
 	return {

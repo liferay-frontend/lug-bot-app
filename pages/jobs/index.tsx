@@ -2,27 +2,10 @@ import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
 import ClayList from '@clayui/list';
 import Link from 'next/link';
+import React from 'react';
 
+import STATES from '../../constants/jobStates';
 import getAPIOrigin from '../../utils/getAPIOrigin';
-
-const STATES = {
-	1: {
-		displayType: 'secondary',
-		name: 'Sleeping',
-	},
-	2: {
-		displayType: 'info',
-		name: 'Waiting to Start',
-	},
-	3: {
-		displayType: 'success',
-		name: 'Completed',
-	},
-	4: {
-		displayType: 'warning',
-		name: 'Running',
-	},
-};
 
 const formatDuration = (duration: number) => {
 	let seconds: string | number = Math.floor((duration / 1000) % 60);
@@ -43,6 +26,18 @@ const formatDuration = (duration: number) => {
 	if (seconds) {
 		return `${seconds}s`;
 	}
+};
+
+const CountUp = ({startTime}) => {
+	const [time, setTime] = React.useState(new Date(startTime).getTime());
+
+	React.useEffect(() => {
+		setInterval(() => {
+			setTime((time) => time + 1000);
+		}, 1000);
+	}, []);
+
+	return <span>{new Date(time).toISOString().substr(11, 8)}</span>;
 };
 
 export default function Jobs({items, project}) {
@@ -66,12 +61,9 @@ export default function Jobs({items, project}) {
 						<ClayList.Header>Running Jobs</ClayList.Header>
 
 						{items.runningJobs.map((job) => (
-							<ClayList.Item flex key={job.name}>
+							<ClayList.Item flex key={job.id}>
 								<ClayList.ItemField expand>
-									<Link
-										href={`/jobs/${job.name.toLowerCase()}`}
-										passHref
-									>
+									<Link href={`/jobs/${job.id}`} passHref>
 										<ClayList.ItemTitle>
 											{job.name}
 										</ClayList.ItemTitle>
@@ -79,19 +71,17 @@ export default function Jobs({items, project}) {
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									<ClayLabel
-										displayType={
-											STATES[job.state].displayType
-										}
-									>
-										{STATES[job.state].name}
-									</ClayLabel>
+									<CountUp startTime={job.startTime} />
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									{new Date(job.startTime * 1000)
-										.toISOString()
-										.substr(11, 8)}
+									<ClayLabel
+										displayType={
+											STATES.byId[job.state].displayType
+										}
+									>
+										{STATES.byId[job.state].name}
+									</ClayLabel>
 								</ClayList.ItemField>
 							</ClayList.Item>
 						))}
@@ -99,12 +89,9 @@ export default function Jobs({items, project}) {
 						<ClayList.Header>Pending Jobs</ClayList.Header>
 
 						{items.pendingJobs.map((job) => (
-							<ClayList.Item flex key={job.name}>
+							<ClayList.Item flex key={job.id}>
 								<ClayList.ItemField expand>
-									<Link
-										href={`/jobs/${job.name.toLowerCase()}`}
-										passHref
-									>
+									<Link href={`/jobs/${job.id}`} passHref>
 										<ClayList.ItemTitle>
 											{job.name}
 										</ClayList.ItemTitle>
@@ -114,10 +101,10 @@ export default function Jobs({items, project}) {
 								<ClayList.ItemField>
 									<ClayLabel
 										displayType={
-											STATES[job.state].displayType
+											STATES.byId[job.state].displayType
 										}
 									>
-										{STATES[job.state].name}
+										{STATES.byId[job.state].name}
 									</ClayLabel>
 								</ClayList.ItemField>
 							</ClayList.Item>
@@ -126,9 +113,9 @@ export default function Jobs({items, project}) {
 						<ClayList.Header>Completed Jobs</ClayList.Header>
 
 						{items.completedJobs.map((job) => (
-							<ClayList.Item flex key={job.name}>
+							<ClayList.Item flex key={job.id}>
 								<ClayList.ItemField expand>
-									<Link href={`/jobs/${job.name}`} passHref>
+									<Link href={`/jobs/${job.id}`} passHref>
 										<ClayList.ItemTitle>
 											{job.name}
 										</ClayList.ItemTitle>
@@ -140,19 +127,20 @@ export default function Jobs({items, project}) {
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									<ClayLabel
-										displayType={
-											STATES[job.state].displayType
-										}
-									>
-										{STATES[job.state].name}
-									</ClayLabel>
+									{formatDuration(
+										new Date(job.finishedTime).getTime() -
+											new Date(job.startTime).getTime()
+									)}
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									{formatDuration(
-										job.finishedTime - job.startTime
-									)}
+									<ClayLabel
+										displayType={
+											STATES.byId[job.state].displayType
+										}
+									>
+										{STATES.byId[job.state].name}
+									</ClayLabel>
 								</ClayList.ItemField>
 							</ClayList.Item>
 						))}
