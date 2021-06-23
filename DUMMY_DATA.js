@@ -1,21 +1,25 @@
 export default {
 	runningJobs: [
 		{
+			id: '1',
 			name: 'Niflheim',
 			state: 4,
 			startTime: 2160,
 		},
 		{
+			id: '2',
 			name: 'Helheim',
 			state: 4,
 			startTime: 2220,
 		},
 		{
+			id: '3',
 			name: 'Asgard',
 			state: 4,
 			startTime: 2102,
 		},
 		{
+			id: '4',
 			name: 'Svartalfheim',
 			state: 4,
 			startTime: 2199,
@@ -23,16 +27,19 @@ export default {
 	],
 	pendingJobs: [
 		{
+			id: '5',
 			name: 'Alfheim',
 			state: 2,
 		},
 		{
+			id: '6',
 			name: 'Vanaheim',
 			state: 2,
 		},
 	],
 	completedJobs: [
 		{
+			id: '7',
 			name: 'Jotunheim',
 			state: 3,
 			finishedTime: 1345134,
@@ -68,6 +75,7 @@ export default {
 			},
 		},
 		{
+			id: '8',
 			name: 'Muspelheim',
 			state: 3,
 			finishedTime: 1345134,
@@ -75,6 +83,7 @@ export default {
 			totalRecomendations: 2,
 		},
 		{
+			id: '9',
 			name: 'Midgard',
 			state: 3,
 			finishedTime: 1345134,
@@ -82,6 +91,7 @@ export default {
 			totalRecomendations: 3,
 		},
 		{
+			id: '10',
 			name: 'Ygdrassil',
 			state: 3,
 			finishedTime: 1345134,
