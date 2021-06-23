@@ -50,7 +50,12 @@ export default function Jobs({items, project}) {
 		<ClayLayout.ContainerFluid view>
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol>
-					<h1>{project.name}</h1>
+					<h1>
+						<a href={project.url} target="blank">
+							{project.name}
+						</a>
+					</h1>
+
 					<p>Git: {project.location}</p>
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
@@ -130,8 +135,7 @@ export default function Jobs({items, project}) {
 									</Link>
 
 									<ClayList.ItemText>
-										{job.totalRecomendations}{' '}
-										Recomendations,
+										{job.totalRecomendations} Recomendations
 									</ClayList.ItemText>
 								</ClayList.ItemField>
 
