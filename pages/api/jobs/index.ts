@@ -1,4 +1,4 @@
-import ALL_JOBS from '../../../DUMMY_DATA';
+import ALL_JOBS from '../../../dummy-data';
 
 export default (_req, res) => {
 	res.status(200).json(ALL_JOBS);

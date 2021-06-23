@@ -11,34 +11,16 @@ import ReactMarkdown from 'react-markdown';
 import io from 'socket.io-client';
 
 import CodeBlock from '../../components/CodeBlock';
+import STATES from '../../constants/jobStates';
 import getAPIOrigin from '../../utils/getAPIOrigin';
-
-const STATES = {
-	1: {
-		displayType: 'secondary',
-		name: 'Sleeping',
-	},
-	2: {
-		displayType: 'info',
-		name: 'Waiting to Start',
-	},
-	3: {
-		displayType: 'success',
-		name: 'Completed',
-	},
-	4: {
-		displayType: 'warning',
-		name: 'Running',
-	},
-};
 
 export default function Job({initialStagedChanges, job}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
 
 	const terminalRef = useRef(null);
-	const {displayType, name} = STATES[job.state];
+	const {displayType, name} = STATES.byId[job.state];
 
-	const isCompleted = job.state === 3;
+	const isCompleted = job.state === STATES.byName.complete.id;
 
 	function postStaged(add, locator) {
 		fetch(`/api/jobs/${job.name.toLowerCase()}/staged`, {

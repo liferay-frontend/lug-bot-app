@@ -3,7 +3,7 @@ module.exports = {
 		node: true,
 	},
 	extends: '@liferay',
-	ignorePatterns: ['DUMMY_DATA.js'],
+	ignorePatterns: ['dummy-data.js'],
 	parser: '@typescript-eslint/parser',
 	rules: {
 		'lines-around-comment': 'off',

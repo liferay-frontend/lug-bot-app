@@ -6,6 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
+		"generateDummyData": "node generate-dummy-data.js",
 		"format": "prettier --write -- \"**/*.{js,ts,tsx,md,mdx,json,scss}\"",
 		"format:check": "prettier --list-different -- \"**/*.{js,ts,tsx,md,mdx,json,scss}\"",
 		"format:all": "yarn lint:fix && yarn format",
@@ -38,6 +39,7 @@
 		"@types/react": "^17.0.11",
 		"@typescript-eslint/parser": "^4.28.0",
 		"eslint": "7.23.0",
+		"faker": "^5.5.3",
 		"prettier": "^2.3.1",
 		"typescript": "^4.3.2"
 	}

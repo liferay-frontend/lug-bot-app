@@ -2,27 +2,10 @@ import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
 import ClayList from '@clayui/list';
 import Link from 'next/link';
+import React from 'react';
 
+import STATES from '../../constants/jobStates';
 import getAPIOrigin from '../../utils/getAPIOrigin';
-
-const STATES = {
-	1: {
-		displayType: 'secondary',
-		name: 'Sleeping',
-	},
-	2: {
-		displayType: 'info',
-		name: 'Waiting to Start',
-	},
-	3: {
-		displayType: 'success',
-		name: 'Completed',
-	},
-	4: {
-		displayType: 'warning',
-		name: 'Running',
-	},
-};
 
 const formatDuration = (duration: number) => {
 	let seconds: string | number = Math.floor((duration / 1000) % 60);
@@ -43,6 +26,18 @@ const formatDuration = (duration: number) => {
 	if (seconds) {
 		return `${seconds}s`;
 	}
+};
+
+const CountUp = ({startTime}) => {
+	const [time, setTime] = React.useState(new Date(startTime).getTime());
+
+	React.useEffect(() => {
+		setInterval(() => {
+			setTime((time) => time + 1000);
+		}, 1000);
+	}, []);
+
+	return <span>{new Date(time).toISOString().substr(11, 8)}</span>;
 };
 
 export default function Jobs({items, project}) {
@@ -79,19 +74,17 @@ export default function Jobs({items, project}) {
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									<ClayLabel
-										displayType={
-											STATES[job.state].displayType
-										}
-									>
-										{STATES[job.state].name}
-									</ClayLabel>
+									<CountUp startTime={job.startTime} />
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									{new Date(job.startTime * 1000)
-										.toISOString()
-										.substr(11, 8)}
+									<ClayLabel
+										displayType={
+											STATES.byId[job.state].displayType
+										}
+									>
+										{STATES.byId[job.state].name}
+									</ClayLabel>
 								</ClayList.ItemField>
 							</ClayList.Item>
 						))}
@@ -114,10 +107,10 @@ export default function Jobs({items, project}) {
 								<ClayList.ItemField>
 									<ClayLabel
 										displayType={
-											STATES[job.state].displayType
+											STATES.byId[job.state].displayType
 										}
 									>
-										{STATES[job.state].name}
+										{STATES.byId[job.state].name}
 									</ClayLabel>
 								</ClayList.ItemField>
 							</ClayList.Item>
@@ -140,19 +133,20 @@ export default function Jobs({items, project}) {
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									<ClayLabel
-										displayType={
-											STATES[job.state].displayType
-										}
-									>
-										{STATES[job.state].name}
-									</ClayLabel>
+									{formatDuration(
+										new Date(job.finishedTime).getTime() -
+											new Date(job.startTime).getTime()
+									)}
 								</ClayList.ItemField>
 
 								<ClayList.ItemField>
-									{formatDuration(
-										job.finishedTime - job.startTime
-									)}
+									<ClayLabel
+										displayType={
+											STATES.byId[job.state].displayType
+										}
+									>
+										{STATES.byId[job.state].name}
+									</ClayLabel>
 								</ClayList.ItemField>
 							</ClayList.Item>
 						))}
