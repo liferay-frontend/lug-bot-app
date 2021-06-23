@@ -27,6 +27,7 @@ const comments = [
 function generateComment() {
 	return {
 		id: faker.datatype.uuid(),
+		line: getRandomNumberBetween(0, 500),
 		...comments[getRandomNumberBetween(0, 2)],
 	};
 }

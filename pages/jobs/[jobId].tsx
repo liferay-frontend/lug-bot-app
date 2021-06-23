@@ -23,7 +23,7 @@ export default function Job({initialStagedChanges, job}) {
 	const isCompleted = job.state === STATES.byName.complete.id;
 
 	function postStaged(add, locator) {
-		fetch(`/api/jobs/${job.name.toLowerCase()}/staged`, {
+		fetch(`/api/jobs/${job.id}/staged`, {
 			body: JSON.stringify({add, locator}),
 			method: 'POST',
 		});
@@ -31,7 +31,7 @@ export default function Job({initialStagedChanges, job}) {
 
 	useEffect(() => {
 		if (!isCompleted) {
-			fetch(`/api/jobs/${job.name.toLowerCase()}/status`).finally(() => {
+			fetch(`/api/jobs/${job.id}/status`).finally(() => {
 				const socket = io();
 
 				socket.on('connect', () => {
@@ -273,11 +273,11 @@ export async function getServerSideProps(context) {
 	const APIOrigin = getAPIOrigin(context.req);
 
 	const job = await fetch(
-		`${`${APIOrigin}`}/api/jobs/${context.query.jobName}`
+		`${`${APIOrigin}`}/api/jobs/${context.query.jobId}`
 	).then((res) => res.json());
 
 	const stagedChanges = await fetch(
-		`${`${APIOrigin}`}/api/jobs/${context.query.jobName}/staged`
+		`${`${APIOrigin}`}/api/jobs/${context.query.jobId}/staged`
 	).then((res) => res.json());
 
 	return {
