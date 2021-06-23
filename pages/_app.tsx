@@ -16,7 +16,7 @@ const NextLink = ({href, ...otherProps}: any) => (
 	</Link>
 );
 
-function MyApp({Component, pageProps}) {
+function Lugbot({Component, pageProps}) {
 	const router = useRouter();
 
 	const currentRoute = router.asPath;
@@ -33,27 +33,28 @@ function MyApp({Component, pageProps}) {
 				<title>{capitalizedTitle}</title>
 
 				<meta
-					name="description"
 					content="Liferay automatic code improvement tool"
+					name="description"
 				/>
 
-				<link rel="icon" href="/favicon.ico" />
+				<link href="/favicon.ico" rel="icon" />
 			</Head>
 
 			<ClayLinkContext.Provider value={NextLink}>
 				<ClayIconSpriteContext.Provider value={spritemap}>
 					<header>
-						<ClayNavigationBar triggerLabel="Jobs" inverted>
+						<ClayNavigationBar inverted triggerLabel="Jobs">
 							<ClayLink className="navbar-brand" href="/">
 								{'Lug Bot'}
 							</ClayLink>
+
 							<ClayNavigationBar.Item
 								active={currentRoute === '/jobs'}
 							>
 								<ClayLink
-									href="/jobs"
 									className="nav-link"
 									displayType="unstyled"
+									href="/jobs"
 								>
 									{'Dashboard'}
 								</ClayLink>
@@ -88,4 +89,4 @@ function MyApp({Component, pageProps}) {
 	);
 }
 
-export default MyApp;
+export default Lugbot;

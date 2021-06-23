@@ -1,6 +1,6 @@
 import {Server} from 'socket.io';
 
-export default function (req, res) {
+export default function (_req, res) {
 	if (!res.socket.server.io) {
 		// eslint-disable-next-line no-console
 		console.log('Starting socket.io');

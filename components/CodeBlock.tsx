@@ -6,10 +6,10 @@ const CodeBlock = ({language, startingLineNumber = 0, value}) => {
 	return (
 		<SyntaxHighlighter
 			language={language}
+			showLineNumbers={true}
+			startingLineNumber={startingLineNumber}
 			style={tomorrow}
 			wrapLines={true}
-			startingLineNumber={startingLineNumber}
-			showLineNumbers={true}
 		>
 			{value}
 		</SyntaxHighlighter>

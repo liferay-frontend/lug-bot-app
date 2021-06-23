@@ -57,7 +57,7 @@ export default function Job({initialStagedChanges, job}) {
 				});
 
 				socket.on('new-user', () => {
-					terminalRef.current.pushToStdout('A user connected');
+					terminalRef.current?.pushToStdout('A user connected');
 				});
 			});
 		}
@@ -90,29 +90,30 @@ export default function Job({initialStagedChanges, job}) {
 					<>
 						<ClayLayout.ContentCol expand>
 							<ClayLink
-								href="#"
 								button
 								displayType="secondary"
+								href="#"
 								style={{marginLeft: 'auto'}}
 							>
 								{'Download Report'}
 							</ClayLink>
 						</ClayLayout.ContentCol>
+
 						<ClayLayout.ContentCol style={{marginLeft: 4}}>
 							<ClayButton
-								onClick={() =>
-									alert(
-										`Sending PR with the following changes:\n ${stagedChanges.join(
-											'\n'
-										)}`
-									)
-								}
 								disabled={!stagedChanges.length}
 								// @ts-ignore
 								displayType={
 									stagedChanges.length
 										? 'success'
 										: 'secondary'
+								}
+								onClick={() =>
+									alert(
+										`Sending PR with the following changes:\n ${stagedChanges.join(
+											'\n'
+										)}`
+									)
 								}
 							>
 								{`Send Pull Request (${stagedChanges.length})`}
@@ -135,13 +136,13 @@ export default function Job({initialStagedChanges, job}) {
 					<ClayLayout.ContentCol expand>
 						<Terminal
 							commands={{}}
+							readOnly
 							ref={terminalRef}
 							style={{
 								flex: 1,
 								maxHeight: '300px',
 							}}
 							welcomeMessage="Running..."
-							readOnly
 						/>
 					</ClayLayout.ContentCol>
 				)}
@@ -166,8 +167,8 @@ export default function Job({initialStagedChanges, job}) {
 												</span>
 											}
 											displayType="secondary"
-											showCollapseIcon={true}
 											key={file}
+											showCollapseIcon={true}
 										>
 											{comments.map((comment, i) => {
 												const isStaged =
@@ -195,11 +196,6 @@ export default function Job({initialStagedChanges, job}) {
 																				? 'success'
 																				: 'secondary'
 																		}
-																		small
-																		style={{
-																			marginLeft:
-																				'auto',
-																		}}
 																		onClick={() => {
 																			postStaged(
 																				!isStaged,
@@ -230,6 +226,11 @@ export default function Job({initialStagedChanges, job}) {
 																				newArray
 																			);
 																		}}
+																		small
+																		style={{
+																			marginLeft:
+																				'auto',
+																		}}
 																	>
 																		{isStaged
 																			? 'Staged'
@@ -247,6 +248,7 @@ export default function Job({initialStagedChanges, job}) {
 																</ClayLayout.ContentCol>
 															</ClayLayout.ContentRow>
 														</ClayPanel.Header>
+
 														<ClayPanel.Body>
 															{comment.description && (
 																<ReactMarkdown>
@@ -257,11 +259,11 @@ export default function Job({initialStagedChanges, job}) {
 															)}
 															<CodeBlock
 																language="diff"
-																value={
-																	comment.diff
-																}
 																startingLineNumber={
 																	comment.line
+																}
+																value={
+																	comment.diff
 																}
 															/>
 															{i !==
