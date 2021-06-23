@@ -24,6 +24,13 @@ const comments = [
 	},
 ];
 
+function generateComment() {
+	return {
+		id: faker.datatype.uuid(),
+		...comments[getRandomNumberBetween(0, 2)],
+	};
+}
+
 function getRandomNumberBetween(min, max) {
 	return Math.round(Math.random() * (max - min) + min);
 }
@@ -49,7 +56,7 @@ function generateJob(state) {
 
 				acc[faker.system.filePath()] = Array(totalComments)
 					.fill(0)
-					.map(() => comments[getRandomNumberBetween(0, 2)]);
+					.map(() => generateComment());
 
 				return acc;
 			}, {});

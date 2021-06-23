@@ -155,7 +155,7 @@ export default function Job({initialStagedChanges, job}) {
 											{comments.map((comment, i) => {
 												const isStaged =
 													stagedChanges.indexOf(
-														`${file}#${comment.line}`
+														comment.id
 													) !== -1;
 
 												return (
@@ -181,7 +181,7 @@ export default function Job({initialStagedChanges, job}) {
 																		onClick={() => {
 																			postStaged(
 																				!isStaged,
-																				`${file}#${comment.line}`
+																				comment.id
 																			);
 
 																			const newArray =
@@ -194,13 +194,13 @@ export default function Job({initialStagedChanges, job}) {
 																			) {
 																				newArray.splice(
 																					newArray.indexOf(
-																						`${file}#${comment.line}`
+																						comment.id
 																					),
 																					1
 																				);
 																			} else {
 																				newArray.push(
-																					`${file}#${comment.line}`
+																					comment.id
 																				);
 																			}
 
