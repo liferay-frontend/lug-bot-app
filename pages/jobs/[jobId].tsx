@@ -18,7 +18,7 @@ export default function Job({initialStagedChanges, job}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
 
 	const terminalRef = useRef(null);
-	const {displayType, name} = STATES.byId[job.state];
+	const {displayType, label} = STATES.byId[job.state];
 
 	const isCompleted = job.state === STATES.byName.complete.id;
 
@@ -108,7 +108,7 @@ export default function Job({initialStagedChanges, job}) {
 			<ClayLayout.ContentRow style={{marginBottom: 4}}>
 				<ClayLayout.ContentCol>
 					<ClayLabel displayType={displayType} large>
-						{name}
+						{label}
 					</ClayLabel>
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>

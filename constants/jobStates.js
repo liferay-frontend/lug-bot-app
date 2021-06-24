@@ -1,18 +1,18 @@
 const STATES = {
 	complete: {
 		displayType: 'success',
-		id: 2,
-		name: 'Completed',
+		id: '2',
+		label: 'Completed',
 	},
 	running: {
 		displayType: 'warning',
-		id: 3,
-		name: 'Running',
+		id: '3',
+		label: 'Running',
 	},
 	waiting: {
 		displayType: 'info',
-		id: 1,
-		name: 'Waiting to Start',
+		id: '1',
+		label: 'Waiting to Start',
 	},
 };
 
@@ -22,11 +22,7 @@ module.exports = {
 
 		return acc;
 	}, {}),
-	byName: Object.values(STATES).reduce((acc, state) => {
-		acc[state.name] = state;
-
-		return acc;
-	}, {}),
+	byName: STATES,
 	completedState: STATES.complete,
 	pendingState: STATES.waiting,
 	runningState: STATES.running,
