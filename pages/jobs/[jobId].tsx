@@ -8,16 +8,22 @@ import ClayPanel from '@clayui/panel';
 import React, {useEffect, useRef, useState} from 'react';
 import Terminal from 'react-console-emulator';
 import ReactMarkdown from 'react-markdown';
-import io from 'socket.io-client';
+import useSWR from 'swr';
 
 import CodeBlock from '../../components/CodeBlock';
 import STATES from '../../constants/jobStates';
 import getAPIOrigin from '../../utils/getAPIOrigin';
 
+const fetcher = (args) => fetch(args).then((res) => res.json());
+
 export default function Job({initialStagedChanges, job}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
-
 	const terminalRef = useRef(null);
+
+	const {data} = useSWR(`/api/jobs/${job.id}/log`, fetcher, {
+		refreshInterval: 1000,
+	});
+
 	const {displayType, label} = STATES.byId[job.state];
 
 	const isCompleted = job.state === STATES.byName.complete.id;
@@ -31,19 +37,9 @@ export default function Job({initialStagedChanges, job}) {
 
 	useEffect(() => {
 		if (!isCompleted) {
-			fetch(`/api/jobs/${job.id}/status`).finally(() => {
-				const socket = io();
-
-				socket.on('connect', () => {
-					terminalRef.current.pushToStdout('You connected!');
-				});
-
-				socket.on('new-user', () => {
-					terminalRef.current?.pushToStdout('A user connected');
-				});
-			});
+			terminalRef.current.pushToStdout(data?.log);
 		}
-	}, []);
+	}, [data]);
 
 	return (
 		<ClayLayout.ContainerFluid view>
@@ -276,11 +272,11 @@ export async function getServerSideProps(context) {
 		`${`${APIOrigin}`}/api/jobs/${context.query.jobId}`
 	).then((res) => res.json());
 
-	const stagedChanges = await fetch(
+	const initialStagedChanges = await fetch(
 		`${`${APIOrigin}`}/api/jobs/${context.query.jobId}/staged`
 	).then((res) => res.json());
 
 	return {
-		props: {initialStagedChanges: stagedChanges, job},
+		props: {initialStagedChanges, job},
 	};
 }

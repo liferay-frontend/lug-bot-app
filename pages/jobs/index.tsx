@@ -8,9 +8,12 @@ import ClayList from '@clayui/list';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 import React, {useState} from 'react';
+import useSWR from 'swr';
 
 import STATES from '../../constants/jobStates';
 import getAPIOrigin from '../../utils/getAPIOrigin';
+
+const fetcher = (args) => fetch(args).then((res) => res.json());
 
 const formatDuration = (duration: number) => {
 	let seconds: string | number = Math.floor((duration / 1000) % 60);
@@ -48,13 +51,16 @@ const CountUp = ({startTime}) => {
 export default function Jobs({items, jobStateFilter, project}) {
 	const [filterOpen, setFilterOpen] = useState(false);
 
+	const {data: jobs} = useSWR(`/api/jobs`, fetcher, {
+		initialData: items,
+		refreshInterval: 5000,
+	});
+
 	const router = useRouter();
 	const basePath = router.pathname;
 
 	const isCompletedStateRoute = jobStateFilter === STATES.completedState.id;
-
 	const isPendingStateRoute = jobStateFilter === STATES.pendingState.id;
-
 	const isRunningStateRoute = jobStateFilter === STATES.runningState.id;
 
 	return (
@@ -137,7 +143,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 							<>
 								<ClayList.Header>Running Jobs</ClayList.Header>
 
-								{items.runningJobs.map((job) => (
+								{jobs.runningJobs.map((job) => (
 									<ClayList.Item flex key={job.id}>
 										<ClayList.ItemField expand>
 											<Link
@@ -175,7 +181,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 							<>
 								<ClayList.Header>Pending Jobs</ClayList.Header>
 
-								{items.pendingJobs.map((job) => (
+								{jobs.pendingJobs.map((job) => (
 									<ClayList.Item flex key={job.id}>
 										<ClayList.ItemField expand>
 											<Link
@@ -209,7 +215,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 									Completed Jobs
 								</ClayList.Header>
 
-								{items.completedJobs.map((job) => (
+								{jobs.completedJobs.map((job) => (
 									<ClayList.Item flex key={job.id}>
 										<ClayList.ItemField expand>
 											<Link
