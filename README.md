@@ -1,4 +1,4 @@
-# Lug Bot App
+# Lugbot App
 
 This is the Web App for the Liferay Upgrade Tool. This project is built with [Next.js](https://nextjs.org/) and was bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -35,13 +35,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Building the docker image
 
 ```bash
-docker build . -t lug-bot-app
+docker build . -t lugbot-app
 ```
 
 Running the docker image
 
 ```bash
-docker run -p 3000:3000 lug-bot-app
+docker run -p 3000:3000 lugbot-app
 ```
 
 ## Learn More

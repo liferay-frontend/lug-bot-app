@@ -45,7 +45,7 @@ function Lugbot({Component, pageProps}) {
 					<header>
 						<ClayNavigationBar inverted triggerLabel="Jobs">
 							<ClayLink className="navbar-brand" href="/">
-								{'Lug Bot'}
+								{'Lugbot'}
 							</ClayLink>
 
 							<ClayNavigationBar.Item
