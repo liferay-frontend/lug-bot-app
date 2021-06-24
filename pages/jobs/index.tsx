@@ -1,8 +1,13 @@
+import ClayButton from '@clayui/button';
+import ClayDropDown from '@clayui/drop-down';
+import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
+import ClayLink from '@clayui/link';
 import ClayList from '@clayui/list';
 import Link from 'next/link';
-import React from 'react';
+import {useRouter} from 'next/router';
+import React, {useState} from 'react';
 
 import STATES from '../../constants/jobStates';
 import getAPIOrigin from '../../utils/getAPIOrigin';
@@ -40,110 +45,213 @@ const CountUp = ({startTime}) => {
 	return <span>{new Date(time).toISOString().substr(11, 8)}</span>;
 };
 
-export default function Jobs({items, project}) {
+export default function Jobs({items, jobStateFilter, project}) {
+	const [filterOpen, setFilterOpen] = useState(false);
+
+	const router = useRouter();
+	const basePath = router.pathname;
+
+	const isCompletedStateRoute = jobStateFilter === STATES.completedState.id;
+
+	const isPendingStateRoute = jobStateFilter === STATES.pendingState.id;
+
+	const isRunningStateRoute = jobStateFilter === STATES.runningState.id;
+
 	return (
 		<ClayLayout.ContainerFluid view>
 			<ClayLayout.ContentRow>
-				<ClayLayout.ContentCol>
+				<ClayLayout.ContentCol expand>
 					<h1>
 						<a href={project.url} target="blank">
 							{project.name}
 						</a>
 					</h1>
 
-					<p>Git: {project.location}</p>
+					<ClayLayout.ContentRow>
+						<ClayLayout.ContentCol expand>
+							<p>Git: {project.location}</p>
+						</ClayLayout.ContentCol>
+
+						<ClayLayout.ContentCol>
+							<ClayDropDown
+								active={filterOpen}
+								alignmentPosition={3}
+								onActiveChange={setFilterOpen}
+								trigger={
+									<ClayButton displayType="secondary" small>
+										<span className="inline-item inline-item-before">
+											<ClayIcon symbol="filter" />
+										</span>
+
+										{`Filter: ${
+											jobStateFilter
+												? STATES.byId[jobStateFilter]
+														.label
+												: 'All'
+										}`}
+									</ClayButton>
+								}
+							>
+								<ClayDropDown.ItemList>
+									<ClayDropDown.Group header="Filter by status">
+										<ClayLink href={basePath}>
+											<ClayDropDown.Item
+												symbolRight={
+													!jobStateFilter && 'check'
+												}
+											>
+												{'All'}
+											</ClayDropDown.Item>
+										</ClayLink>
+
+										{Object.values(STATES.byName).map(
+											(state) => (
+												<ClayLink
+													href={`${basePath}?status=${state.id}`}
+													key={state.id}
+												>
+													<ClayDropDown.Item
+														symbolRight={
+															jobStateFilter ===
+																state.id &&
+															'check'
+														}
+													>
+														{state.label}
+													</ClayDropDown.Item>
+												</ClayLink>
+											)
+										)}
+									</ClayDropDown.Group>
+								</ClayDropDown.ItemList>
+							</ClayDropDown>
+						</ClayLayout.ContentCol>
+					</ClayLayout.ContentRow>
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
 					<ClayList>
-						<ClayList.Header>Running Jobs</ClayList.Header>
+						{!isCompletedStateRoute && !isPendingStateRoute && (
+							<>
+								<ClayList.Header>Running Jobs</ClayList.Header>
 
-						{items.runningJobs.map((job) => (
-							<ClayList.Item flex key={job.id}>
-								<ClayList.ItemField expand>
-									<Link href={`/jobs/${job.id}`} passHref>
-										<ClayList.ItemTitle>
-											{job.name}
-										</ClayList.ItemTitle>
-									</Link>
-								</ClayList.ItemField>
+								{items.runningJobs.map((job) => (
+									<ClayList.Item flex key={job.id}>
+										<ClayList.ItemField expand>
+											<Link
+												href={`/jobs/${job.id}`}
+												passHref
+											>
+												<ClayList.ItemTitle>
+													{job.name}
+												</ClayList.ItemTitle>
+											</Link>
+										</ClayList.ItemField>
 
-								<ClayList.ItemField>
-									<CountUp startTime={job.startTime} />
-								</ClayList.ItemField>
+										<ClayList.ItemField>
+											<CountUp
+												startTime={job.startTime}
+											/>
+										</ClayList.ItemField>
 
-								<ClayList.ItemField>
-									<ClayLabel
-										displayType={
-											STATES.byId[job.state].displayType
-										}
-									>
-										{STATES.byId[job.state].name}
-									</ClayLabel>
-								</ClayList.ItemField>
-							</ClayList.Item>
-						))}
+										<ClayList.ItemField>
+											<ClayLabel
+												displayType={
+													STATES.byId[job.state]
+														.displayType
+												}
+											>
+												{STATES.byId[job.state].label}
+											</ClayLabel>
+										</ClayList.ItemField>
+									</ClayList.Item>
+								))}
+							</>
+						)}
 
-						<ClayList.Header>Pending Jobs</ClayList.Header>
+						{!isCompletedStateRoute && !isRunningStateRoute && (
+							<>
+								<ClayList.Header>Pending Jobs</ClayList.Header>
 
-						{items.pendingJobs.map((job) => (
-							<ClayList.Item flex key={job.id}>
-								<ClayList.ItemField expand>
-									<Link href={`/jobs/${job.id}`} passHref>
-										<ClayList.ItemTitle>
-											{job.name}
-										</ClayList.ItemTitle>
-									</Link>
-								</ClayList.ItemField>
+								{items.pendingJobs.map((job) => (
+									<ClayList.Item flex key={job.id}>
+										<ClayList.ItemField expand>
+											<Link
+												href={`/jobs/${job.id}`}
+												passHref
+											>
+												<ClayList.ItemTitle>
+													{job.name}
+												</ClayList.ItemTitle>
+											</Link>
+										</ClayList.ItemField>
 
-								<ClayList.ItemField>
-									<ClayLabel
-										displayType={
-											STATES.byId[job.state].displayType
-										}
-									>
-										{STATES.byId[job.state].name}
-									</ClayLabel>
-								</ClayList.ItemField>
-							</ClayList.Item>
-						))}
+										<ClayList.ItemField>
+											<ClayLabel
+												displayType={
+													STATES.byId[job.state]
+														.displayType
+												}
+											>
+												{STATES.byId[job.state].label}
+											</ClayLabel>
+										</ClayList.ItemField>
+									</ClayList.Item>
+								))}
+							</>
+						)}
 
-						<ClayList.Header>Completed Jobs</ClayList.Header>
+						{!isPendingStateRoute && !isRunningStateRoute && (
+							<>
+								<ClayList.Header>
+									Completed Jobs
+								</ClayList.Header>
 
-						{items.completedJobs.map((job) => (
-							<ClayList.Item flex key={job.id}>
-								<ClayList.ItemField expand>
-									<Link href={`/jobs/${job.id}`} passHref>
-										<ClayList.ItemTitle>
-											{job.name}
-										</ClayList.ItemTitle>
-									</Link>
+								{items.completedJobs.map((job) => (
+									<ClayList.Item flex key={job.id}>
+										<ClayList.ItemField expand>
+											<Link
+												href={`/jobs/${job.id}`}
+												passHref
+											>
+												<ClayList.ItemTitle>
+													{job.name}
+												</ClayList.ItemTitle>
+											</Link>
 
-									<ClayList.ItemText>
-										{job.totalRecomendations} Recomendations
-									</ClayList.ItemText>
-								</ClayList.ItemField>
+											<ClayList.ItemText>
+												{job.totalRecommendations}{' '}
+												Recommendations
+											</ClayList.ItemText>
+										</ClayList.ItemField>
 
-								<ClayList.ItemField>
-									{formatDuration(
-										new Date(job.finishedTime).getTime() -
-											new Date(job.startTime).getTime()
-									)}
-								</ClayList.ItemField>
+										<ClayList.ItemField>
+											{formatDuration(
+												new Date(
+													job.finishedTime
+												).getTime() -
+													new Date(
+														job.startTime
+													).getTime()
+											)}
+										</ClayList.ItemField>
 
-								<ClayList.ItemField>
-									<ClayLabel
-										displayType={
-											STATES.byId[job.state].displayType
-										}
-									>
-										{STATES.byId[job.state].name}
-									</ClayLabel>
-								</ClayList.ItemField>
-							</ClayList.Item>
-						))}
+										<ClayList.ItemField>
+											<ClayLabel
+												displayType={
+													STATES.byId[job.state]
+														.displayType
+												}
+											>
+												{STATES.byId[job.state].label}
+											</ClayLabel>
+										</ClayList.ItemField>
+									</ClayList.Item>
+								))}
+							</>
+						)}
 					</ClayList>
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
@@ -161,6 +269,6 @@ export async function getServerSideProps(context) {
 	).then((res) => res.json());
 
 	return {
-		props: {items, project},
+		props: {items, jobStateFilter: context.query.status || '', project},
 	};
 }

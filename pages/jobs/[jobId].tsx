@@ -18,7 +18,7 @@ export default function Job({initialStagedChanges, job}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
 
 	const terminalRef = useRef(null);
-	const {displayType, name} = STATES.byId[job.state];
+	const {displayType, label} = STATES.byId[job.state];
 
 	const isCompleted = job.state === STATES.byName.complete.id;
 
@@ -108,7 +108,7 @@ export default function Job({initialStagedChanges, job}) {
 			<ClayLayout.ContentRow style={{marginBottom: 4}}>
 				<ClayLayout.ContentCol>
 					<ClayLabel displayType={displayType} large>
-						{name}
+						{label}
 					</ClayLabel>
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
@@ -131,11 +131,11 @@ export default function Job({initialStagedChanges, job}) {
 
 				{isCompleted && (
 					<ClayLayout.ContentCol expand>
-						{job.recomendations && (
+						{job.recommendations && (
 							<>
-								<h2>{job.totalRecomendations} Issues: </h2>
+								<h2>{job.totalRecommendations} Issues: </h2>
 
-								{Object.entries(job.recomendations).map(
+								{Object.entries(job.recommendations).map(
 									([file, comments]: any) => (
 										<ClayPanel
 											collapsable
@@ -261,7 +261,7 @@ export default function Job({initialStagedChanges, job}) {
 							</>
 						)}
 
-						{!job.recomendations && <p>No Recomendations</p>}
+						{!job.recommendations && <p>No Recommendations</p>}
 					</ClayLayout.ContentCol>
 				)}
 			</ClayLayout.ContentRow>
