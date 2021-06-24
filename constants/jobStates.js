@@ -22,5 +22,12 @@ module.exports = {
 
 		return acc;
 	}, {}),
-	byName: STATES,
+	byName: Object.values(STATES).reduce((acc, state) => {
+		acc[state.name] = state;
+
+		return acc;
+	}, {}),
+	completedState: STATES.complete,
+	pendingState: STATES.waiting,
+	runningState: STATES.running,
 };
