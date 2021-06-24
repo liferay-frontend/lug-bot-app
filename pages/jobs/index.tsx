@@ -45,23 +45,17 @@ const CountUp = ({startTime}) => {
 	return <span>{new Date(time).toISOString().substr(11, 8)}</span>;
 };
 
-export default function Jobs({items, project}) {
+export default function Jobs({items, jobStateFilter, project}) {
 	const [filterOpen, setFilterOpen] = useState(false);
 
 	const router = useRouter();
-
-	const currentRoute = router.asPath;
 	const basePath = router.pathname;
 
-	const isCompletedStateRoute = currentRoute.includes(
-		STATES.completedState.id.toString()
-	);
-	const isPendingStateRoute = currentRoute.includes(
-		STATES.pendingState.id.toString()
-	);
-	const isRunningStateRoute = currentRoute.includes(
-		STATES.runningState.id.toString()
-	);
+	const isCompletedStateRoute = jobStateFilter === STATES.completedState.id;
+
+	const isPendingStateRoute = jobStateFilter === STATES.pendingState.id;
+
+	const isRunningStateRoute = jobStateFilter === STATES.runningState.id;
 
 	return (
 		<ClayLayout.ContainerFluid view>
@@ -79,30 +73,6 @@ export default function Jobs({items, project}) {
 						</ClayLayout.ContentCol>
 
 						<ClayLayout.ContentCol>
-							<p>
-								{'Filter: '}
-
-								<ClayLabel
-									displayType={
-										STATES.byId[
-											currentRoute.charAt(
-												currentRoute.length - 1
-											)
-										].displayType
-									}
-								>
-									{
-										STATES.byId[
-											currentRoute.charAt(
-												currentRoute.length - 1
-											)
-										].name
-									}
-								</ClayLabel>
-							</p>
-						</ClayLayout.ContentCol>
-
-						<ClayLayout.ContentCol>
 							<ClayDropDown
 								active={filterOpen}
 								alignmentPosition={3}
@@ -113,27 +83,41 @@ export default function Jobs({items, project}) {
 											<ClayIcon symbol="filter" />
 										</span>
 
-										{'Filter tasks'}
+										{`Filter: ${
+											jobStateFilter
+												? STATES.byId[jobStateFilter]
+														.label
+												: 'All'
+										}`}
 									</ClayButton>
 								}
 							>
 								<ClayDropDown.ItemList>
 									<ClayDropDown.Group header="Filter by status">
-										{Object.entries(STATES.byName).map(
+										<ClayLink href={basePath}>
+											<ClayDropDown.Item
+												symbolRight={
+													!jobStateFilter && 'check'
+												}
+											>
+												{'All'}
+											</ClayDropDown.Item>
+										</ClayLink>
+
+										{Object.values(STATES.byName).map(
 											(state) => (
 												<ClayLink
-													href={`${basePath}?status=${state[1].id}`}
-													key={state[1].id}
+													href={`${basePath}?status=${state.id}`}
+													key={state.id}
 												>
-													<ClayDropDown.Item>
-														<ClayLabel
-															displayType={
-																state[1]
-																	.displayType
-															}
-														>
-															{state[1].name}
-														</ClayLabel>
+													<ClayDropDown.Item
+														symbolRight={
+															jobStateFilter ===
+																state.id &&
+															'check'
+														}
+													>
+														{state.label}
 													</ClayDropDown.Item>
 												</ClayLink>
 											)
@@ -179,7 +163,7 @@ export default function Jobs({items, project}) {
 														.displayType
 												}
 											>
-												{STATES.byId[job.state].name}
+												{STATES.byId[job.state].label}
 											</ClayLabel>
 										</ClayList.ItemField>
 									</ClayList.Item>
@@ -211,7 +195,7 @@ export default function Jobs({items, project}) {
 														.displayType
 												}
 											>
-												{STATES.byId[job.state].name}
+												{STATES.byId[job.state].label}
 											</ClayLabel>
 										</ClayList.ItemField>
 									</ClayList.Item>
@@ -261,7 +245,7 @@ export default function Jobs({items, project}) {
 														.displayType
 												}
 											>
-												{STATES.byId[job.state].name}
+												{STATES.byId[job.state].label}
 											</ClayLabel>
 										</ClayList.ItemField>
 									</ClayList.Item>
@@ -285,6 +269,6 @@ export async function getServerSideProps(context) {
 	).then((res) => res.json());
 
 	return {
-		props: {items, project},
+		props: {items, jobStateFilter: context.query.status || '', project},
 	};
 }
