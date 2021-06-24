@@ -38,7 +38,7 @@ function getRandomNumberBetween(min, max) {
 
 function generateJob(state) {
 	if (!state) {
-		state = getRandomNumberBetween(1, 4);
+		state = getRandomNumberBetween(1, 4).toString();
 	}
 
 	let otherData = {};
