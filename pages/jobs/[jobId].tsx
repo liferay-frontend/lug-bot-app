@@ -131,11 +131,11 @@ export default function Job({initialStagedChanges, job}) {
 
 				{isCompleted && (
 					<ClayLayout.ContentCol expand>
-						{job.recomendations && (
+						{job.recommendations && (
 							<>
-								<h2>{job.totalRecomendations} Issues: </h2>
+								<h2>{job.totalRecommendations} Issues: </h2>
 
-								{Object.entries(job.recomendations).map(
+								{Object.entries(job.recommendations).map(
 									([file, comments]: any) => (
 										<ClayPanel
 											collapsable
@@ -261,7 +261,7 @@ export default function Job({initialStagedChanges, job}) {
 							</>
 						)}
 
-						{!job.recomendations && <p>No Recomendations</p>}
+						{!job.recommendations && <p>No Recommendations</p>}
 					</ClayLayout.ContentCol>
 				)}
 			</ClayLayout.ContentRow>

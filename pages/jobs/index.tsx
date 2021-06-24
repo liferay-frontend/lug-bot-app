@@ -122,7 +122,8 @@ export default function Jobs({items, project}) {
 									</Link>
 
 									<ClayList.ItemText>
-										{job.totalRecomendations} Recomendations
+										{job.totalRecommendations}{' '}
+										Recommendations
 									</ClayList.ItemText>
 								</ClayList.ItemField>
 

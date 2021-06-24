@@ -44,16 +44,16 @@ function generateJob(state) {
 	let otherData = {};
 
 	if (state === STATES.byName.complete.id) {
-		let totalRecomendations = 0;
+		let totalRecommendations = 0;
 
 		const totalFiles = getRandomNumberBetween(0, 20);
 
-		const recomendations = Array(totalFiles)
+		const recommendations = Array(totalFiles)
 			.fill(0)
 			.reduce((acc) => {
 				const totalComments = getRandomNumberBetween(1, 20);
 
-				totalRecomendations += totalComments;
+				totalRecommendations += totalComments;
 
 				acc[faker.system.filePath()] = Array(totalComments)
 					.fill(0)
@@ -64,9 +64,9 @@ function generateJob(state) {
 
 		otherData = {
 			finishedTime: faker.date.soon(),
-			recomendations,
+			recommendations,
 			startTime: faker.date.recent(),
-			totalRecomendations,
+			totalRecommendations,
 		};
 	}
 
