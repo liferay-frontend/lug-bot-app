@@ -48,7 +48,7 @@ const CountUp = ({startTime}) => {
 	return <span>{new Date(time).toISOString().substr(11, 8)}</span>;
 };
 
-export default function Jobs({items, jobStateFilter, project}) {
+export default function Jobs({items, jobStateFilter, projects}) {
 	const [filterOpen, setFilterOpen] = useState(false);
 
 	const {data: jobs} = useSWR(`/api/jobs`, fetcher, {
@@ -68,14 +68,14 @@ export default function Jobs({items, jobStateFilter, project}) {
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
 					<h1>
-						<a href={project.url} target="blank">
-							{project.name}
+						<a href={projects[0].url} target="blank">
+							{projects[0].name}
 						</a>
 					</h1>
 
 					<ClayLayout.ContentRow>
 						<ClayLayout.ContentCol expand>
-							<p>Git: {project.location}</p>
+							<p>Git: {projects[0].location}</p>
 						</ClayLayout.ContentCol>
 
 						<ClayLayout.ContentCol>
@@ -270,11 +270,11 @@ export async function getServerSideProps(context) {
 		(res) => res.json()
 	);
 
-	const project = await fetch(
-		`${getAPIOrigin(context.req)}/api/project`
+	const projects = await fetch(
+		`${getAPIOrigin(context.req)}/api/projects`
 	).then((res) => res.json());
 
 	return {
-		props: {items, jobStateFilter: context.query.status || '', project},
+		props: {items, jobStateFilter: context.query.status || '', projects},
 	};
 }
