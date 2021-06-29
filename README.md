@@ -23,8 +23,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 -   `components/`: Contains React components that are re-usable across pages.
 -   `pages/`: Next.js has a file-system based router and each page is generated from this directory. For example:
     -   `pages/index.tsx` -> `localhost:3000`
-    -   `pages/jobs/index.tsx` -> `localhost:3000/jobs`
-    -   `pages/jobs/[jobName].tsx` -> `localhost:3000/jobs/{dynamic_name}`
+    -   `pages/projects/index.tsx` -> `localhost:3000/projects`
+    -   `pages/projects/[projectId]/index.tsx` -> `localhost:3000/projects/{dynamic_project_id}`
+    -   `pages/projects/[projectId]/jobs/index.tsx` -> `localhost:3000/projects/{dynamic_project_id}/jobs`
+    -   `pages/projects/[projectId]/jobs/[jobId].tsx` -> `localhost:3000/projects/{dynamic_project_id}/jobs/{dynamic_job_id}`
+-   `pages/api`: Next.js has an api route that allows us to quickly create simple REST apis. Read more [here](https://nextjs.org/docs/api-routes/introduction).
 -   `public/`: Static file serving. Any file in this directory will be made available on the `localhost:3000/public/*` route.
 -   `styles/`: Location of scss files. `main.scss` is the entry point to our scss.
 -   `utils/`: Re-usable functions
