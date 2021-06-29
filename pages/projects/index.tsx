@@ -57,7 +57,7 @@ export async function getServerSideProps(context) {
 
 		return {
 			redirect: {
-				destination: `/projects/${project.id}`,
+				destination: `/projects/${project.id}/jobs`,
 			},
 		};
 	}
