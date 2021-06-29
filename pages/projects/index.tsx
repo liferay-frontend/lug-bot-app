@@ -52,6 +52,16 @@ export async function getServerSideProps(context) {
 		`${getAPIOrigin(context.req)}/api/projects`
 	).then((res) => res.json());
 
+	if (projects.length === 1) {
+		const project = projects[0];
+
+		return {
+			redirect: {
+				destination: `/projects/${project.id}`,
+			},
+		};
+	}
+
 	return {
 		props: {projects},
 	};
