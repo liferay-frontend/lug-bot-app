@@ -39,7 +39,22 @@ function getRandomNumberBetween(min, max) {
 function generateProject() {
 	const projectName = faker.company.companyName();
 
+	console.log('GENERATING PROJECT: ' + projectName);
+
+	const jobData = {
+		completedJobs: Array(getRandomNumberBetween(1, 25))
+			.fill(0)
+			.map(() => generateJob(STATES.byName.complete.id)),
+		pendingJobs: Array(getRandomNumberBetween(1, 5))
+			.fill(0)
+			.map(() => generateJob(STATES.byName.waiting.id)),
+		runningJobs: Array(getRandomNumberBetween(1, 5))
+			.fill(0)
+			.map(() => generateJob(STATES.byName.running.id)),
+	};
+
 	return {
+		...jobData,
 		description: faker.lorem.paragraph(),
 		id: faker.helpers.slugify(projectName),
 		location: `https://github.com/lug-bot-api/${faker.git.branch()}`,
@@ -98,18 +113,11 @@ function generateJob(state) {
 
 fs.writeFileSync(
 	path.join(__dirname, './dummy-data.js'),
-	`module.exports = ${JSON.stringify({
-		completedJobs: Array(getRandomNumberBetween(1, 25))
-			.fill(0)
-			.map(() => generateJob(STATES.byName.complete.id)),
-		pendingJobs: Array(getRandomNumberBetween(1, 5))
-			.fill(0)
-			.map(() => generateJob(STATES.byName.waiting.id)),
-		projects: Array(getRandomNumberBetween(1, 6))
+	`module.exports = ${JSON.stringify(
+		Array(getRandomNumberBetween(1, 6))
 			.fill(0)
 			.map(() => generateProject()),
-		runningJobs: Array(getRandomNumberBetween(1, 5))
-			.fill(0)
-			.map(() => generateJob(STATES.byName.running.id)),
-	})}`
+		null,
+		2
+	)}`
 );

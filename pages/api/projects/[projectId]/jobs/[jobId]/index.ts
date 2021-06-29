@@ -1,12 +1,14 @@
-import ALL_JOBS from '../../../../../../dummy-data';
+import PROJECTS from '../../../../../../dummy-data';
 
 export default (req, res) => {
-	const {jobId} = req.query;
+	const {jobId, projectId} = req.query;
+
+	const project = PROJECTS.find((item) => item.id === projectId);
 
 	const job = [
-		...ALL_JOBS.completedJobs,
-		...ALL_JOBS.pendingJobs,
-		...ALL_JOBS.runningJobs,
+		...project.completedJobs,
+		...project.pendingJobs,
+		...project.runningJobs,
 	].find((job) => job.id === jobId);
 
 	res.status(200).json(job);

@@ -57,7 +57,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 	});
 
 	const router = useRouter();
-	const basePath = router.pathname;
+	const basepath = router.asPath.split('?')[0];
 
 	const isCompletedStateRoute = jobStateFilter === STATES.completedState.id;
 	const isPendingStateRoute = jobStateFilter === STATES.pendingState.id;
@@ -100,7 +100,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 							>
 								<ClayDropDown.ItemList>
 									<ClayDropDown.Group header="Filter by status">
-										<ClayLink href={basePath}>
+										<ClayLink href={basepath}>
 											<ClayDropDown.Item
 												symbolRight={
 													!jobStateFilter && 'check'
@@ -113,7 +113,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 										{Object.values(STATES.byName).map(
 											(state) => (
 												<ClayLink
-													href={`${basePath}?status=${state.id}`}
+													href={`${basepath}?status=${state.id}`}
 													key={state.id}
 												>
 													<ClayDropDown.Item
