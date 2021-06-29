@@ -36,6 +36,18 @@ function getRandomNumberBetween(min, max) {
 	return Math.round(Math.random() * (max - min) + min);
 }
 
+function generateProject() {
+	const projectName = faker.company.companyName();
+
+	return {
+		description: faker.lorem.paragraph(),
+		id: faker.helpers.slugify(projectName),
+		location: `https://github.com/lug-bot-api/${faker.git.branch()}`,
+		name: projectName,
+		url: faker.internet.url(),
+	};
+}
+
 function generateJob(state) {
 	if (!state) {
 		state = getRandomNumberBetween(1, 4).toString();
@@ -93,6 +105,9 @@ fs.writeFileSync(
 		pendingJobs: Array(getRandomNumberBetween(1, 5))
 			.fill(0)
 			.map(() => generateJob(STATES.byName.waiting.id)),
+		projects: Array(getRandomNumberBetween(1, 6))
+			.fill(0)
+			.map(() => generateProject()),
 		runningJobs: Array(getRandomNumberBetween(1, 5))
 			.fill(0)
 			.map(() => generateJob(STATES.byName.running.id)),
