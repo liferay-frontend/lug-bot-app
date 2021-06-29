@@ -10,8 +10,8 @@ import {useRouter} from 'next/router';
 import React, {useState} from 'react';
 import useSWR from 'swr';
 
-import STATES from '../../constants/jobStates';
-import getAPIOrigin from '../../utils/getAPIOrigin';
+import STATES from '../../../../constants/jobStates';
+import getAPIOrigin from '../../../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
@@ -48,7 +48,7 @@ const CountUp = ({startTime}) => {
 	return <span>{new Date(time).toISOString().substr(11, 8)}</span>;
 };
 
-export default function Jobs({items, jobStateFilter, projects}) {
+export default function Jobs({items, jobStateFilter, project}) {
 	const [filterOpen, setFilterOpen] = useState(false);
 
 	const {data: jobs} = useSWR(`/api/jobs`, fetcher, {
@@ -68,14 +68,14 @@ export default function Jobs({items, jobStateFilter, projects}) {
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
 					<h1>
-						<a href={projects[0].url} target="blank">
-							{projects[0].name}
+						<a href={project.url} target="blank">
+							{project.name}
 						</a>
 					</h1>
 
 					<ClayLayout.ContentRow>
 						<ClayLayout.ContentCol expand>
-							<p>Git: {projects[0].location}</p>
+							<p>Git: {project.location}</p>
 						</ClayLayout.ContentCol>
 
 						<ClayLayout.ContentCol>
@@ -147,7 +147,7 @@ export default function Jobs({items, jobStateFilter, projects}) {
 									<ClayList.Item flex key={job.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/jobs/${job.id}`}
+												href={`/projects/${project.id}/jobs/${job.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
@@ -270,11 +270,15 @@ export async function getServerSideProps(context) {
 		(res) => res.json()
 	);
 
-	const projects = await fetch(
-		`${getAPIOrigin(context.req)}/api/projects`
+	const project = await fetch(
+		`${getAPIOrigin(context.req)}/api/projects/${context.query.projectId}`
 	).then((res) => res.json());
 
 	return {
-		props: {items, jobStateFilter: context.query.status || '', projects},
+		props: {
+			items,
+			jobStateFilter: context.query.status || '',
+			project,
+		},
 	};
 }

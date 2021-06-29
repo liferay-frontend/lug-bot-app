@@ -9,8 +9,8 @@ export default function Projects({projects}) {
 	return (
 		<ClayLayout.ContainerFluid view>
 			<ClayLayout.Row justify="start">
-				{Object.keys(projects).map((project) => (
-					<ClayLayout.Col key={projects[project].location} size={6}>
+				{projects.map((project) => (
+					<ClayLayout.Col key={project.location} size={6}>
 						<ClayCard horizontal>
 							<ClayCard.Row>
 								<ClayCard.Body>
@@ -18,21 +18,21 @@ export default function Projects({projects}) {
 										displayType="text"
 										tag="h1"
 									>
-										{projects[project].name}
+										{project.name}
 									</ClayCard.Description>
 
 									<ClayCard.Description
 										truncate={false}
 										displayType="text"
 									>
-										{projects[project].description}
+										{project.description}
 									</ClayCard.Description>
 
 									<section className="autofit-section">
 										<ClayLink
 											button
 											displayType="primary"
-											href={`/projects/${project}`}
+											href={`/projects/${project.id}/jobs`}
 										>
 											{'View Jobs'}
 										</ClayLink>

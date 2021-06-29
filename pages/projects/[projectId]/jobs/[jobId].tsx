@@ -10,9 +10,9 @@ import Terminal from 'react-console-emulator';
 import ReactMarkdown from 'react-markdown';
 import useSWR from 'swr';
 
-import CodeBlock from '../../components/CodeBlock';
-import STATES from '../../constants/jobStates';
-import getAPIOrigin from '../../utils/getAPIOrigin';
+import CodeBlock from '../../../../components/CodeBlock';
+import STATES from '../../../../constants/jobStates';
+import getAPIOrigin from '../../../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 

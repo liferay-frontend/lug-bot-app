@@ -1,10 +1,8 @@
 import React from 'react';
 
-import getAPIOrigin from '../../utils/getAPIOrigin';
+import getAPIOrigin from '../../../utils/getAPIOrigin';
 
 export default function Project({project}) {
-	console.log('project: ', project);
-
 	return <p>pls work</p>;
 }
 
