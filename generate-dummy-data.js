@@ -39,6 +39,7 @@ function getRandomNumberBetween(min, max) {
 function generateProject() {
 	const projectName = faker.company.companyName();
 
+	// eslint-disable-next-line no-console
 	console.log('GENERATING PROJECT: ' + projectName);
 
 	const jobData = {
