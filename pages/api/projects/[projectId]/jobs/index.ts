@@ -1,4 +1,4 @@
-import JOBS_AND_PROJECTS from '../../../dummy-data';
+import JOBS_AND_PROJECTS from '../../../../../dummy-data';
 
 export default async function (_req, res) {
 	// REPLACE WITH LUGBOT API

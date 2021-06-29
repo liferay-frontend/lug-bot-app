@@ -1,4 +1,4 @@
-import ALL_JOBS from '../../../../dummy-data';
+import ALL_JOBS from '../../../../../../dummy-data';
 
 export default (req, res) => {
 	const {jobId} = req.query;

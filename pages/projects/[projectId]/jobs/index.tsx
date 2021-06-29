@@ -51,7 +51,7 @@ const CountUp = ({startTime}) => {
 export default function Jobs({items, jobStateFilter, project}) {
 	const [filterOpen, setFilterOpen] = useState(false);
 
-	const {data: jobs} = useSWR(`/api/jobs`, fetcher, {
+	const {data: jobs} = useSWR(`/api/projects/${project.id}/jobs`, fetcher, {
 		initialData: items,
 		refreshInterval: 5000,
 	});
@@ -185,7 +185,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 									<ClayList.Item flex key={job.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/jobs/${job.id}`}
+												href={`/projects/${project.id}/jobs/${job.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
@@ -219,7 +219,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 									<ClayList.Item flex key={job.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/jobs/${job.id}`}
+												href={`/projects/${project.id}/jobs/${job.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
@@ -266,9 +266,11 @@ export default function Jobs({items, jobStateFilter, project}) {
 }
 
 export async function getServerSideProps(context) {
-	const items = await fetch(`${getAPIOrigin(context.req)}/api/jobs`).then(
-		(res) => res.json()
-	);
+	const items = await fetch(
+		`${getAPIOrigin(context.req)}/api/projects/${
+			context.query.projectId
+		}/jobs`
+	).then((res) => res.json());
 
 	const project = await fetch(
 		`${getAPIOrigin(context.req)}/api/projects/${context.query.projectId}`
