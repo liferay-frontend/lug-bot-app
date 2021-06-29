@@ -67,6 +67,22 @@
     "@clayui/icon" "^3.1.0"
     classnames "^2.2.6"
 
+"@clayui/card@^3.30.0":
+  version "3.30.0"
+  resolved "https://registry.yarnpkg.com/@clayui/card/-/card-3.30.0.tgz#aa223368bd6943d354d029cb68c4c42cdf4ced9a"
+  integrity sha512-coM9wBUR8cgfX4wWKGvJQqgYMIWCnVwubuFaows6ax0uS6x4W4ocMGnXiuLGp3eXJTq4q1+vLq/sWBlHMzcu9g==
+  dependencies:
+    "@clayui/button" "^3.6.0"
+    "@clayui/drop-down" "^3.30.0"
+    "@clayui/form" "^3.29.0"
+    "@clayui/icon" "^3.1.0"
+    "@clayui/label" "^3.4.1"
+    "@clayui/layout" "^3.3.0"
+    "@clayui/link" "^3.2.0"
+    "@clayui/shared" "^3.29.0"
+    "@clayui/sticker" "^3.3.0"
+    classnames "^2.2.6"
+
 "@clayui/css@latest":
   version "3.29.0"
   resolved "https://registry.yarnpkg.com/@clayui/css/-/css-3.29.0.tgz#8e60a8182bba81c8c284621ef10a44837e84d6fa"

@@ -10,8 +10,8 @@ import {useRouter} from 'next/router';
 import React, {useState} from 'react';
 import useSWR from 'swr';
 
-import STATES from '../../constants/jobStates';
-import getAPIOrigin from '../../utils/getAPIOrigin';
+import STATES from '../../../../constants/jobStates';
+import getAPIOrigin from '../../../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
@@ -51,13 +51,13 @@ const CountUp = ({startTime}) => {
 export default function Jobs({items, jobStateFilter, project}) {
 	const [filterOpen, setFilterOpen] = useState(false);
 
-	const {data: jobs} = useSWR(`/api/jobs`, fetcher, {
+	const {data: jobs} = useSWR(`/api/projects/${project.id}/jobs`, fetcher, {
 		initialData: items,
 		refreshInterval: 5000,
 	});
 
 	const router = useRouter();
-	const basePath = router.pathname;
+	const basepath = router.asPath.split('?')[0];
 
 	const isCompletedStateRoute = jobStateFilter === STATES.completedState.id;
 	const isPendingStateRoute = jobStateFilter === STATES.pendingState.id;
@@ -100,7 +100,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 							>
 								<ClayDropDown.ItemList>
 									<ClayDropDown.Group header="Filter by status">
-										<ClayLink href={basePath}>
+										<ClayLink href={basepath}>
 											<ClayDropDown.Item
 												symbolRight={
 													!jobStateFilter && 'check'
@@ -113,7 +113,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 										{Object.values(STATES.byName).map(
 											(state) => (
 												<ClayLink
-													href={`${basePath}?status=${state.id}`}
+													href={`${basepath}?status=${state.id}`}
 													key={state.id}
 												>
 													<ClayDropDown.Item
@@ -147,7 +147,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 									<ClayList.Item flex key={job.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/jobs/${job.id}`}
+												href={`/projects/${project.id}/jobs/${job.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
@@ -185,7 +185,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 									<ClayList.Item flex key={job.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/jobs/${job.id}`}
+												href={`/projects/${project.id}/jobs/${job.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
@@ -219,7 +219,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 									<ClayList.Item flex key={job.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/jobs/${job.id}`}
+												href={`/projects/${project.id}/jobs/${job.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
@@ -266,15 +266,21 @@ export default function Jobs({items, jobStateFilter, project}) {
 }
 
 export async function getServerSideProps(context) {
-	const items = await fetch(`${getAPIOrigin(context.req)}/api/jobs`).then(
-		(res) => res.json()
-	);
+	const items = await fetch(
+		`${getAPIOrigin(context.req)}/api/projects/${
+			context.query.projectId
+		}/jobs`
+	).then((res) => res.json());
 
 	const project = await fetch(
-		`${getAPIOrigin(context.req)}/api/project`
+		`${getAPIOrigin(context.req)}/api/projects/${context.query.projectId}`
 	).then((res) => res.json());
 
 	return {
-		props: {items, jobStateFilter: context.query.status || '', project},
+		props: {
+			items,
+			jobStateFilter: context.query.status || '',
+			project,
+		},
 	};
 }

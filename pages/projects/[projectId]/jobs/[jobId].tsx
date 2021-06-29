@@ -10,26 +10,30 @@ import Terminal from 'react-console-emulator';
 import ReactMarkdown from 'react-markdown';
 import useSWR from 'swr';
 
-import CodeBlock from '../../components/CodeBlock';
-import STATES from '../../constants/jobStates';
-import getAPIOrigin from '../../utils/getAPIOrigin';
+import CodeBlock from '../../../../components/CodeBlock';
+import STATES from '../../../../constants/jobStates';
+import getAPIOrigin from '../../../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
-export default function Job({initialStagedChanges, job}) {
+export default function Job({initialStagedChanges, job, projectId}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
 	const terminalRef = useRef(null);
 
-	const {data} = useSWR(`/api/jobs/${job.id}/log`, fetcher, {
-		refreshInterval: 1000,
-	});
+	const {data} = useSWR(
+		`/api/projects/${projectId}/jobs/${job.id}/log`,
+		fetcher,
+		{
+			refreshInterval: 1000,
+		}
+	);
 
 	const {displayType, label} = STATES.byId[job.state];
 
 	const isCompleted = job.state === STATES.byName.complete.id;
 
 	function postStaged(add, locator) {
-		fetch(`/api/jobs/${job.id}/staged`, {
+		fetch(`/api/projects/${projectId}/jobs/${job.id}/staged`, {
 			body: JSON.stringify({add, locator}),
 			method: 'POST',
 		});
@@ -49,7 +53,7 @@ export default function Job({initialStagedChanges, job}) {
 						ellipsisBuffer={1}
 						items={[
 							{
-								href: '/jobs',
+								href: `/projects/${projectId}/jobs`,
 								label: 'Jobs',
 							},
 							{
@@ -269,14 +273,18 @@ export async function getServerSideProps(context) {
 	const APIOrigin = getAPIOrigin(context.req);
 
 	const job = await fetch(
-		`${`${APIOrigin}`}/api/jobs/${context.query.jobId}`
+		`${`${APIOrigin}`}/api/projects/${context.query.projectId}/jobs/${
+			context.query.jobId
+		}`
 	).then((res) => res.json());
 
 	const initialStagedChanges = await fetch(
-		`${`${APIOrigin}`}/api/jobs/${context.query.jobId}/staged`
+		`${`${APIOrigin}`}/api/projects/${context.query.projectId}/jobs/${
+			context.query.jobId
+		}/staged`
 	).then((res) => res.json());
 
 	return {
-		props: {initialStagedChanges, job},
+		props: {initialStagedChanges, job, projectId: context.query.projectId},
 	};
 }
