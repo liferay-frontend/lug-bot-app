@@ -16,12 +16,12 @@ import getAPIOrigin from '../../../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
-export default function Job({initialStagedChanges, job, projectId}) {
+export default function Job({initialStagedChanges, job, project}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
 	const terminalRef = useRef(null);
 
 	const {data} = useSWR(
-		`/api/projects/${projectId}/jobs/${job.id}/log`,
+		`/api/projects/${project.id}/jobs/${job.id}/log`,
 		fetcher,
 		{
 			refreshInterval: 1000,
@@ -33,7 +33,7 @@ export default function Job({initialStagedChanges, job, projectId}) {
 	const isCompleted = job.state === STATES.byName.complete.id;
 
 	function postStaged(add, locator) {
-		fetch(`/api/projects/${projectId}/jobs/${job.id}/staged`, {
+		fetch(`/api/projects/${project.id}/jobs/${job.id}/staged`, {
 			body: JSON.stringify({add, locator}),
 			method: 'POST',
 		});
@@ -53,8 +53,12 @@ export default function Job({initialStagedChanges, job, projectId}) {
 						ellipsisBuffer={1}
 						items={[
 							{
-								href: `/projects/${projectId}/jobs`,
-								label: 'Jobs',
+								href: `/projects`,
+								label: 'Projects',
+							},
+							{
+								href: `/projects/${project.id}/jobs`,
+								label: `${project.name} Jobs`,
 							},
 							{
 								active: true,
@@ -66,7 +70,7 @@ export default function Job({initialStagedChanges, job, projectId}) {
 			</ClayLayout.ContentRow>
 
 			<ClayLayout.ContentRow containerElement="h1" float>
-				<ClayLayout.ContentCol>{job.name}</ClayLayout.ContentCol>
+				<ClayLayout.ContentCol expand>{job.name}</ClayLayout.ContentCol>
 
 				{isCompleted && (
 					<>
@@ -271,9 +275,10 @@ export default function Job({initialStagedChanges, job, projectId}) {
 
 export async function getServerSideProps(context) {
 	const APIOrigin = getAPIOrigin(context.req);
+	const projectId = context.query.projectId;
 
 	const job = await fetch(
-		`${`${APIOrigin}`}/api/projects/${context.query.projectId}/jobs/${
+		`${`${APIOrigin}`}/api/projects/${projectId}/jobs/${
 			context.query.jobId
 		}`
 	).then((res) => res.json());
@@ -284,7 +289,15 @@ export async function getServerSideProps(context) {
 		}/staged`
 	).then((res) => res.json());
 
+	const project = await fetch(
+		`${getAPIOrigin(context.req)}/api/projects/${projectId}`
+	).then((res) => res.json());
+
 	return {
-		props: {initialStagedChanges, job, projectId: context.query.projectId},
+		props: {
+			initialStagedChanges,
+			job,
+			project,
+		},
 	};
 }
