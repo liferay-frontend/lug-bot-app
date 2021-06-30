@@ -31,12 +31,17 @@ export default function Job({initialStagedChanges, job, projectId}) {
 	const {displayType, label} = STATES.byId[job.state];
 
 	const isCompleted = job.state === STATES.byName.complete.id;
+	const isRunning = job.state === STATES.byName.running.id;
 
 	function postStaged(add, locator) {
 		fetch(`/api/projects/${projectId}/jobs/${job.id}/staged`, {
 			body: JSON.stringify({add, locator}),
 			method: 'POST',
 		});
+	}
+
+	function cancelRunningJob() {
+		job.id = STATES.byName.waiting.id;
 	}
 
 	useEffect(() => {
@@ -66,7 +71,7 @@ export default function Job({initialStagedChanges, job, projectId}) {
 			</ClayLayout.ContentRow>
 
 			<ClayLayout.ContentRow containerElement="h1" float>
-				<ClayLayout.ContentCol>{job.name}</ClayLayout.ContentCol>
+				<ClayLayout.ContentCol expand>{job.name}</ClayLayout.ContentCol>
 
 				{isCompleted && (
 					<>
@@ -102,6 +107,19 @@ export default function Job({initialStagedChanges, job, projectId}) {
 							</ClayButton>
 						</ClayLayout.ContentCol>
 					</>
+				)}
+
+				{isRunning && (
+					<ClayLayout.ContentCol>
+						<ClayLink
+							button
+							className="btn-danger"
+							href={`/projects/${projectId}/jobs`}
+							onClick={cancelRunningJob}
+						>
+							{`Cancel ${job.name}`}
+						</ClayLink>
+					</ClayLayout.ContentCol>
 				)}
 			</ClayLayout.ContentRow>
 
