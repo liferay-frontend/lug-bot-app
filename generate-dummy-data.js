@@ -2,7 +2,7 @@ const faker = require('faker');
 const fs = require('fs');
 const path = require('path');
 
-const STATES = require('./constants/jobStates');
+const STATES = require('./constants/taskStates');
 
 const comments = [
 	{
@@ -42,20 +42,20 @@ function generateProject() {
 	// eslint-disable-next-line no-console
 	console.log('GENERATING PROJECT: ' + projectName);
 
-	const jobData = {
-		completedJobs: Array(getRandomNumberBetween(1, 25))
+	const taskData = {
+		completedTasks: Array(getRandomNumberBetween(1, 25))
 			.fill(0)
-			.map(() => generateJob(STATES.byName.complete.id)),
-		pendingJobs: Array(getRandomNumberBetween(1, 5))
+			.map(() => generateTask(STATES.byName.complete.id)),
+		pendingTasks: Array(getRandomNumberBetween(1, 5))
 			.fill(0)
-			.map(() => generateJob(STATES.byName.waiting.id)),
-		runningJobs: Array(getRandomNumberBetween(1, 5))
+			.map(() => generateTask(STATES.byName.waiting.id)),
+		runningTasks: Array(getRandomNumberBetween(1, 5))
 			.fill(0)
-			.map(() => generateJob(STATES.byName.running.id)),
+			.map(() => generateTask(STATES.byName.running.id)),
 	};
 
 	return {
-		...jobData,
+		...taskData,
 		description: faker.lorem.paragraph(),
 		id: faker.helpers.slugify(projectName),
 		location: `https://github.com/lug-bot-api/${faker.git.branch()}`,
@@ -64,7 +64,7 @@ function generateProject() {
 	};
 }
 
-function generateJob(state) {
+function generateTask(state) {
 	if (!state) {
 		state = getRandomNumberBetween(1, 4).toString();
 	}

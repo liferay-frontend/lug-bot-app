@@ -43,7 +43,7 @@ function Lugbot({Component, pageProps}) {
 			<ClayLinkContext.Provider value={NextLink}>
 				<ClayIconSpriteContext.Provider value={spritemap}>
 					<header>
-						<ClayNavigationBar inverted triggerLabel="Jobs">
+						<ClayNavigationBar inverted triggerLabel="Tasks">
 							<ClayLink className="navbar-brand" href="/">
 								{'Lugbot'}
 							</ClayLink>

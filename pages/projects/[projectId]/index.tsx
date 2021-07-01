@@ -5,7 +5,7 @@ export default function Project() {
 export async function getServerSideProps(context) {
 	return {
 		redirect: {
-			destination: `/projects/${context.query.projectId}/jobs`,
+			destination: `/projects/${context.query.projectId}/tasks`,
 		},
 	};
 }

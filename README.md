@@ -25,8 +25,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
     -   `pages/index.tsx` -> `localhost:3000`
     -   `pages/projects/index.tsx` -> `localhost:3000/projects`
     -   `pages/projects/[projectId]/index.tsx` -> `localhost:3000/projects/{dynamic_project_id}`
-    -   `pages/projects/[projectId]/jobs/index.tsx` -> `localhost:3000/projects/{dynamic_project_id}/jobs`
-    -   `pages/projects/[projectId]/jobs/[jobId].tsx` -> `localhost:3000/projects/{dynamic_project_id}/jobs/{dynamic_job_id}`
+    -   `pages/projects/[projectId]/tasks/index.tsx` -> `localhost:3000/projects/{dynamic_project_id}/tasks`
+    -   `pages/projects/[projectId]/tasks/[taskId].tsx` -> `localhost:3000/projects/{dynamic_project_id}/tasks/{dynamic_task_id}`
 -   `pages/api`: Next.js has an api route that allows us to quickly create simple REST apis. Read more [here](https://nextjs.org/docs/api-routes/introduction).
 -   `public/`: Static file serving. Any file in this directory will be made available on the `localhost:3000/public/*` route.
 -   `styles/`: Location of scss files. `main.scss` is the entry point to our scss.
