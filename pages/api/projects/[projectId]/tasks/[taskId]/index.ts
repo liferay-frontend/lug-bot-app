@@ -5,11 +5,20 @@ export default (req, res) => {
 
 	const project = PROJECTS.find((item) => item.id === projectId);
 
-	const task = [
-		...project.completedTasks,
-		...project.pendingTasks,
-		...project.runningTasks,
-	].find((task) => task.id === taskId);
+	if (req.method === 'POST') {
+		const task = project.runningTasks.find((task) => task.id === taskId);
 
-	res.status(200).json(task);
+		project.runningTasks.splice(project.runningTasks.indexOf(task), 1);
+		project.pendingTasks.push(req.body);
+
+		res.status(200).json(req.body);
+	} else {
+		const task = [
+			...project.completedTasks,
+			...project.pendingTasks,
+			...project.runningTasks,
+		].find((task) => task.id === taskId);
+
+		res.status(200).json(task);
+	}
 };
