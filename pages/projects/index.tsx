@@ -32,9 +32,9 @@ export default function Projects({projects}) {
 										<ClayLink
 											button
 											displayType="primary"
-											href={`/projects/${project.id}/jobs`}
+											href={`/projects/${project.id}/tasks`}
 										>
-											{'View Jobs'}
+											{'View Tasks'}
 										</ClayLink>
 									</section>
 								</ClayCard.Body>
@@ -57,7 +57,7 @@ export async function getServerSideProps(context) {
 
 		return {
 			redirect: {
-				destination: `/projects/${project.id}/jobs`,
+				destination: `/projects/${project.id}/tasks`,
 			},
 		};
 	}

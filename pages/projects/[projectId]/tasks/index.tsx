@@ -10,7 +10,7 @@ import {useRouter} from 'next/router';
 import React, {useState} from 'react';
 import useSWR from 'swr';
 
-import STATES from '../../../../constants/jobStates';
+import STATES from '../../../../constants/taskStates';
 import getAPIOrigin from '../../../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
@@ -48,10 +48,10 @@ const CountUp = ({startTime}) => {
 	return <span>{new Date(time).toISOString().substr(11, 8)}</span>;
 };
 
-export default function Jobs({items, jobStateFilter, project}) {
+export default function Tasks({items, project, taskStateFilter}) {
 	const [filterOpen, setFilterOpen] = useState(false);
 
-	const {data: jobs} = useSWR(`/api/projects/${project.id}/jobs`, fetcher, {
+	const {data: tasks} = useSWR(`/api/projects/${project.id}/tasks`, fetcher, {
 		initialData: items,
 		refreshInterval: 5000,
 	});
@@ -59,9 +59,9 @@ export default function Jobs({items, jobStateFilter, project}) {
 	const router = useRouter();
 	const basepath = router.asPath.split('?')[0];
 
-	const isCompletedStateRoute = jobStateFilter === STATES.completedState.id;
-	const isPendingStateRoute = jobStateFilter === STATES.pendingState.id;
-	const isRunningStateRoute = jobStateFilter === STATES.runningState.id;
+	const isCompletedStateRoute = taskStateFilter === STATES.completedState.id;
+	const isPendingStateRoute = taskStateFilter === STATES.pendingState.id;
+	const isRunningStateRoute = taskStateFilter === STATES.runningState.id;
 
 	return (
 		<ClayLayout.ContainerFluid view>
@@ -90,8 +90,8 @@ export default function Jobs({items, jobStateFilter, project}) {
 										</span>
 
 										{`Filter: ${
-											jobStateFilter
-												? STATES.byId[jobStateFilter]
+											taskStateFilter
+												? STATES.byId[taskStateFilter]
 														.label
 												: 'All'
 										}`}
@@ -103,7 +103,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 										<ClayLink href={basepath}>
 											<ClayDropDown.Item
 												symbolRight={
-													!jobStateFilter && 'check'
+													!taskStateFilter && 'check'
 												}
 											>
 												{'All'}
@@ -118,7 +118,7 @@ export default function Jobs({items, jobStateFilter, project}) {
 												>
 													<ClayDropDown.Item
 														symbolRight={
-															jobStateFilter ===
+															taskStateFilter ===
 																state.id &&
 															'check'
 														}
@@ -141,35 +141,35 @@ export default function Jobs({items, jobStateFilter, project}) {
 					<ClayList>
 						{!isCompletedStateRoute && !isPendingStateRoute && (
 							<>
-								<ClayList.Header>Running Jobs</ClayList.Header>
+								<ClayList.Header>Running Tasks</ClayList.Header>
 
-								{jobs.runningJobs.map((job) => (
-									<ClayList.Item flex key={job.id}>
+								{tasks.runningTasks.map((task) => (
+									<ClayList.Item flex key={task.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/projects/${project.id}/jobs/${job.id}`}
+												href={`/projects/${project.id}/tasks/${task.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
-													{job.name}
+													{task.name}
 												</ClayList.ItemTitle>
 											</Link>
 										</ClayList.ItemField>
 
 										<ClayList.ItemField>
 											<CountUp
-												startTime={job.startTime}
+												startTime={task.startTime}
 											/>
 										</ClayList.ItemField>
 
 										<ClayList.ItemField>
 											<ClayLabel
 												displayType={
-													STATES.byId[job.state]
+													STATES.byId[task.state]
 														.displayType
 												}
 											>
-												{STATES.byId[job.state].label}
+												{STATES.byId[task.state].label}
 											</ClayLabel>
 										</ClayList.ItemField>
 									</ClayList.Item>
@@ -179,17 +179,17 @@ export default function Jobs({items, jobStateFilter, project}) {
 
 						{!isCompletedStateRoute && !isRunningStateRoute && (
 							<>
-								<ClayList.Header>Pending Jobs</ClayList.Header>
+								<ClayList.Header>Pending Tasks</ClayList.Header>
 
-								{jobs.pendingJobs.map((job) => (
-									<ClayList.Item flex key={job.id}>
+								{tasks.pendingTasks.map((task) => (
+									<ClayList.Item flex key={task.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/projects/${project.id}/jobs/${job.id}`}
+												href={`/projects/${project.id}/tasks/${task.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
-													{job.name}
+													{task.name}
 												</ClayList.ItemTitle>
 											</Link>
 										</ClayList.ItemField>
@@ -197,11 +197,11 @@ export default function Jobs({items, jobStateFilter, project}) {
 										<ClayList.ItemField>
 											<ClayLabel
 												displayType={
-													STATES.byId[job.state]
+													STATES.byId[task.state]
 														.displayType
 												}
 											>
-												{STATES.byId[job.state].label}
+												{STATES.byId[task.state].label}
 											</ClayLabel>
 										</ClayList.ItemField>
 									</ClayList.Item>
@@ -212,23 +212,23 @@ export default function Jobs({items, jobStateFilter, project}) {
 						{!isPendingStateRoute && !isRunningStateRoute && (
 							<>
 								<ClayList.Header>
-									Completed Jobs
+									Completed Tasks
 								</ClayList.Header>
 
-								{jobs.completedJobs.map((job) => (
-									<ClayList.Item flex key={job.id}>
+								{tasks.completedTasks.map((task) => (
+									<ClayList.Item flex key={task.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/projects/${project.id}/jobs/${job.id}`}
+												href={`/projects/${project.id}/tasks/${task.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
-													{job.name}
+													{task.name}
 												</ClayList.ItemTitle>
 											</Link>
 
 											<ClayList.ItemText>
-												{job.totalRecommendations}{' '}
+												{task.totalRecommendations}{' '}
 												Recommendations
 											</ClayList.ItemText>
 										</ClayList.ItemField>
@@ -236,10 +236,10 @@ export default function Jobs({items, jobStateFilter, project}) {
 										<ClayList.ItemField>
 											{formatDuration(
 												new Date(
-													job.finishedTime
+													task.finishedTime
 												).getTime() -
 													new Date(
-														job.startTime
+														task.startTime
 													).getTime()
 											)}
 										</ClayList.ItemField>
@@ -247,11 +247,11 @@ export default function Jobs({items, jobStateFilter, project}) {
 										<ClayList.ItemField>
 											<ClayLabel
 												displayType={
-													STATES.byId[job.state]
+													STATES.byId[task.state]
 														.displayType
 												}
 											>
-												{STATES.byId[job.state].label}
+												{STATES.byId[task.state].label}
 											</ClayLabel>
 										</ClayList.ItemField>
 									</ClayList.Item>
@@ -269,7 +269,7 @@ export async function getServerSideProps(context) {
 	const items = await fetch(
 		`${getAPIOrigin(context.req)}/api/projects/${
 			context.query.projectId
-		}/jobs`
+		}/tasks`
 	).then((res) => res.json());
 
 	const project = await fetch(
@@ -279,8 +279,8 @@ export async function getServerSideProps(context) {
 	return {
 		props: {
 			items,
-			jobStateFilter: context.query.status || '',
 			project,
+			taskStateFilter: context.query.status || '',
 		},
 	};
 }
