@@ -40,8 +40,29 @@ export default function Task({initialStagedChanges, project, task}) {
 		});
 	}
 
-	function cancelRunningTask() {
-		task.id = STATES.byName.waiting.id;
+	async function cancelRunningTask(projectId, taskId, states) {
+		const currentTask = await fetch(
+			`/api/projects/${projectId}/tasks/${taskId}`
+		).then((response) => response.json());
+
+		currentTask.state = states.byName.waiting.id;
+
+		await fetch(`/api/projects/${projectId}/tasks/${taskId}`, {
+			body: JSON.stringify(currentTask),
+			cache: 'no-cache',
+			credentials: 'same-origin',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: 'POST',
+			mode: 'cors',
+			redirect: 'follow',
+			referrerPolicy: 'no-referrer',
+		});
+
+		await fetch(`/api/projects/${projectId}/tasks/${taskId}`).then(
+			(response) => response.json()
+		);
 	}
 
 	useEffect(() => {
@@ -121,7 +142,9 @@ export default function Task({initialStagedChanges, project, task}) {
 							button
 							className="btn-danger"
 							href={`/projects/${project.id}/tasks`}
-							onClick={cancelRunningTask}
+							onClick={() =>
+								cancelRunningTask(project.id, task.id, STATES)
+							}
 						>
 							{`Cancel ${task.name}`}
 						</ClayLink>
