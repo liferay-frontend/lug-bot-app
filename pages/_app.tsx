@@ -49,12 +49,12 @@ function Lugbot({Component, pageProps}) {
 							</ClayLink>
 
 							<ClayNavigationBar.Item
-								active={currentRoute === '/projects'}
+								active={currentRoute === '/tasks'}
 							>
 								<ClayLink
 									className="nav-link"
 									displayType="unstyled"
-									href="/projects"
+									href="/tasks"
 								>
 									{'Dashboard'}
 								</ClayLink>
