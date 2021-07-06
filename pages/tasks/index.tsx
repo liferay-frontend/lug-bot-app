@@ -10,8 +10,9 @@ import {useRouter} from 'next/router';
 import React, {useState} from 'react';
 import useSWR from 'swr';
 
-import STATES from '../../../../constants/taskStates';
-import getAPIOrigin from '../../../../utils/getAPIOrigin';
+import STATES from '../../constants/taskStates';
+import PROJECT from '../../dummy-data';
+import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
@@ -48,10 +49,10 @@ const CountUp = ({startTime}) => {
 	return <span>{new Date(time).toISOString().substr(11, 8)}</span>;
 };
 
-export default function Tasks({items, project, taskStateFilter}) {
+export default function Tasks({items, taskStateFilter}) {
 	const [filterOpen, setFilterOpen] = useState(false);
 
-	const {data: tasks} = useSWR(`/api/projects/${project.id}/tasks`, fetcher, {
+	const {data: tasks} = useSWR(`/api/tasks`, fetcher, {
 		initialData: items,
 		refreshInterval: 5000,
 	});
@@ -68,14 +69,14 @@ export default function Tasks({items, project, taskStateFilter}) {
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
 					<h1>
-						<a href={project.url} target="blank">
-							{project.name}
+						<a href={PROJECT.url} target="blank">
+							{PROJECT.name}
 						</a>
 					</h1>
 
 					<ClayLayout.ContentRow>
 						<ClayLayout.ContentCol expand>
-							<p>Git: {project.location}</p>
+							<p>Git: {PROJECT.location}</p>
 						</ClayLayout.ContentCol>
 
 						<ClayLayout.ContentCol>
@@ -147,7 +148,7 @@ export default function Tasks({items, project, taskStateFilter}) {
 									<ClayList.Item flex key={task.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/projects/${project.id}/tasks/${task.id}`}
+												href={`/tasks/${task.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
@@ -185,7 +186,7 @@ export default function Tasks({items, project, taskStateFilter}) {
 									<ClayList.Item flex key={task.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/projects/${project.id}/tasks/${task.id}`}
+												href={`/tasks/${task.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
@@ -219,7 +220,7 @@ export default function Tasks({items, project, taskStateFilter}) {
 									<ClayList.Item flex key={task.id}>
 										<ClayList.ItemField expand>
 											<Link
-												href={`/projects/${project.id}/tasks/${task.id}`}
+												href={`/tasks/${task.id}`}
 												passHref
 											>
 												<ClayList.ItemTitle>
@@ -266,20 +267,13 @@ export default function Tasks({items, project, taskStateFilter}) {
 }
 
 export async function getServerSideProps(context) {
-	const items = await fetch(
-		`${getAPIOrigin(context.req)}/api/projects/${
-			context.query.projectId
-		}/tasks`
-	).then((res) => res.json());
-
-	const project = await fetch(
-		`${getAPIOrigin(context.req)}/api/projects/${context.query.projectId}`
-	).then((res) => res.json());
+	const items = await fetch(`${getAPIOrigin(context.req)}/api/tasks`).then(
+		(res) => res.json()
+	);
 
 	return {
 		props: {
 			items,
-			project,
 			taskStateFilter: context.query.status || '',
 		},
 	};

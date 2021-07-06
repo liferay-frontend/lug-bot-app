@@ -114,11 +114,5 @@ function generateTask(state) {
 
 fs.writeFileSync(
 	path.join(__dirname, './dummy-data.js'),
-	`module.exports = ${JSON.stringify(
-		Array(getRandomNumberBetween(1, 6))
-			.fill(0)
-			.map(() => generateProject()),
-		null,
-		2
-	)}`
+	`module.exports = ${JSON.stringify(generateProject(), null, 2)}`
 );

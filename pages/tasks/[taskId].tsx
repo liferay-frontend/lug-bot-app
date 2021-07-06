@@ -10,9 +10,9 @@ import Terminal from 'react-console-emulator';
 import ReactMarkdown from 'react-markdown';
 import useSWR from 'swr';
 
-import CodeBlock from '../../../../components/CodeBlock';
-import STATES from '../../../../constants/taskStates';
-import getAPIOrigin from '../../../../utils/getAPIOrigin';
+import CodeBlock from '../../components/CodeBlock';
+import STATES from '../../constants/taskStates';
+import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
@@ -20,13 +20,9 @@ export default function Task({initialStagedChanges, project, task}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
 	const terminalRef = useRef(null);
 
-	const {data} = useSWR(
-		`/api/projects/${project.id}/tasks/${task.id}/log`,
-		fetcher,
-		{
-			refreshInterval: 1000,
-		}
-	);
+	const {data} = useSWR(`/api/tasks/${task.id}/log`, fetcher, {
+		refreshInterval: 1000,
+	});
 
 	const {displayType, label} = STATES.byId[task.state];
 
@@ -34,20 +30,20 @@ export default function Task({initialStagedChanges, project, task}) {
 	const isRunning = task.state === STATES.byName.running.id;
 
 	function postStaged(add, locator) {
-		fetch(`/api/projects/${project.id}/tasks/${task.id}/staged`, {
+		fetch(`/api/tasks/${task.id}/staged`, {
 			body: JSON.stringify({add, locator}),
 			method: 'POST',
 		});
 	}
 
-	async function cancelRunningTask(projectId, taskId, states) {
-		const currentTask = await fetch(
-			`/api/projects/${projectId}/tasks/${taskId}`
-		).then((response) => response.json());
+	async function cancelRunningTask(taskId, states) {
+		const currentTask = await fetch(`/api/tasks/${taskId}`).then(
+			(response) => response.json()
+		);
 
 		currentTask.state = states.byName.waiting.id;
 
-		await fetch(`/api/projects/${projectId}/tasks/${taskId}`, {
+		await fetch(`/api/tasks/${taskId}`, {
 			body: JSON.stringify(currentTask),
 			cache: 'no-cache',
 			credentials: 'same-origin',
@@ -60,9 +56,7 @@ export default function Task({initialStagedChanges, project, task}) {
 			referrerPolicy: 'no-referrer',
 		});
 
-		await fetch(`/api/projects/${projectId}/tasks/${taskId}`).then(
-			(response) => response.json()
-		);
+		await fetch(`/api/tasks/${taskId}`).then((response) => response.json());
 	}
 
 	useEffect(() => {
@@ -79,11 +73,7 @@ export default function Task({initialStagedChanges, project, task}) {
 						ellipsisBuffer={1}
 						items={[
 							{
-								href: `/projects`,
-								label: 'Projects',
-							},
-							{
-								href: `/projects/${project.id}/tasks`,
+								href: `/tasks`,
 								label: `${project.name} Tasks`,
 							},
 							{
@@ -141,10 +131,8 @@ export default function Task({initialStagedChanges, project, task}) {
 						<ClayLink
 							button
 							className="btn-danger"
-							href={`/projects/${project.id}/tasks`}
-							onClick={() =>
-								cancelRunningTask(project.id, task.id, STATES)
-							}
+							href={`/tasks`}
+							onClick={() => cancelRunningTask(task.id, STATES)}
 						>
 							{`Cancel ${task.name}`}
 						</ClayLink>
@@ -318,22 +306,17 @@ export default function Task({initialStagedChanges, project, task}) {
 
 export async function getServerSideProps(context) {
 	const APIOrigin = getAPIOrigin(context.req);
-	const projectId = context.query.projectId;
 
 	const task = await fetch(
-		`${`${APIOrigin}`}/api/projects/${projectId}/tasks/${
-			context.query.taskId
-		}`
+		`${`${APIOrigin}`}/api/tasks/${context.query.taskId}`
 	).then((res) => res.json());
 
 	const initialStagedChanges = await fetch(
-		`${`${APIOrigin}`}/api/projects/${context.query.projectId}/tasks/${
-			context.query.taskId
-		}/staged`
+		`${`${APIOrigin}`}/api/tasks/${context.query.taskId}/staged`
 	).then((res) => res.json());
 
 	const project = await fetch(
-		`${getAPIOrigin(context.req)}/api/projects/${projectId}`
+		`${getAPIOrigin(context.req)}/api/project`
 	).then((res) => res.json());
 
 	return {
