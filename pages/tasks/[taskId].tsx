@@ -1,16 +1,14 @@
 import ClayBreadcrumb from '@clayui/breadcrumb';
 import ClayButton from '@clayui/button';
-import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
 import ClayLink from '@clayui/link';
 import ClayPanel from '@clayui/panel';
 import React, {useEffect, useRef, useState} from 'react';
 import Terminal from 'react-console-emulator';
-import ReactMarkdown from 'react-markdown';
 import useSWR from 'swr';
 
-import CodeBlock from '../../components/CodeBlock';
+import TaskRecommendation from '../../components/TaskRecommendation';
 import STATES from '../../constants/taskStates';
 import getAPIOrigin from '../../utils/getAPIOrigin';
 
@@ -194,100 +192,20 @@ export default function Task({initialStagedChanges, project, task}) {
 													) !== -1;
 
 												return (
-													<React.Fragment key={i}>
-														<ClayPanel.Header>
-															<ClayLayout.ContentRow
-																containerElement="h3"
-																float
-															>
-																<ClayLayout.ContentCol>
-																	{`Line ${comment.line}: ${comment.title}`}
-																</ClayLayout.ContentCol>
-																<ClayLayout.ContentCol
-																	expand
-																>
-																	<ClayButton
-																		// @ts-ignore
-																		displayType={
-																			isStaged
-																				? 'success'
-																				: 'secondary'
-																		}
-																		onClick={() => {
-																			postStaged(
-																				!isStaged,
-																				comment.id
-																			);
-
-																			const newArray =
-																				[
-																					...stagedChanges,
-																				];
-
-																			if (
-																				isStaged
-																			) {
-																				newArray.splice(
-																					newArray.indexOf(
-																						comment.id
-																					),
-																					1
-																				);
-																			} else {
-																				newArray.push(
-																					comment.id
-																				);
-																			}
-
-																			setStagedChanges(
-																				newArray
-																			);
-																		}}
-																		small
-																		style={{
-																			marginLeft:
-																				'auto',
-																		}}
-																	>
-																		{isStaged
-																			? 'Staged'
-																			: 'Stage Change'}
-
-																		{isStaged && (
-																			<ClayIcon
-																				symbol="check"
-																				style={{
-																					marginLeft: 4,
-																				}}
-																			/>
-																		)}
-																	</ClayButton>
-																</ClayLayout.ContentCol>
-															</ClayLayout.ContentRow>
-														</ClayPanel.Header>
-
-														<ClayPanel.Body>
-															{comment.description && (
-																<ReactMarkdown>
-																	{
-																		comment.description
-																	}
-																</ReactMarkdown>
-															)}
-															<CodeBlock
-																language="diff"
-																startingLineNumber={
-																	comment.line
-																}
-																value={
-																	comment.diff
-																}
-															/>
-															{i !==
-																comments.length -
-																	1 && <hr />}
-														</ClayPanel.Body>
-													</React.Fragment>
+													<TaskRecommendation
+														comment={comment}
+														comments={comments}
+														index={i}
+														key={comment.id}
+														isStaged={isStaged}
+														postStaged={postStaged}
+														stagedChanges={
+															stagedChanges
+														}
+														handleStagedChanges={
+															setStagedChanges
+														}
+													/>
 												);
 											})}
 										</ClayPanel>
