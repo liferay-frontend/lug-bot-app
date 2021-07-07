@@ -1,12 +1,13 @@
 import '../styles/main.scss';
 
 import {ClayIconSpriteContext} from '@clayui/icon';
-import ClayLayout from '@clayui/layout';
-import ClayLink, {ClayLinkContext} from '@clayui/link';
-import ClayNavigationBar from '@clayui/navigation-bar';
+import {ClayLinkContext} from '@clayui/link';
 import Head from 'next/head';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
+
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 const spritemap = '/icons.svg';
 
@@ -42,47 +43,13 @@ function Lugbot({Component, pageProps}) {
 
 			<ClayLinkContext.Provider value={NextLink}>
 				<ClayIconSpriteContext.Provider value={spritemap}>
-					<header>
-						<ClayNavigationBar inverted triggerLabel="Tasks">
-							<ClayLink className="navbar-brand" href="/">
-								{'Lugbot'}
-							</ClayLink>
-
-							<ClayNavigationBar.Item
-								active={currentRoute === '/tasks'}
-							>
-								<ClayLink
-									className="nav-link"
-									displayType="unstyled"
-									href="/tasks"
-								>
-									{'Dashboard'}
-								</ClayLink>
-							</ClayNavigationBar.Item>
-						</ClayNavigationBar>
-					</header>
+					<Header currentRoute={currentRoute} />
 
 					<main>
 						<Component {...pageProps} />
 					</main>
 
-					<footer>
-						<ClayLayout.ContainerFluid>
-							<ClayLayout.ContentRow
-								style={{justifyContent: 'center'}}
-							>
-								<span>
-									Created By{' '}
-									<ClayLink
-										href="https://liferay.com"
-										target="__blank"
-									>
-										Liferay
-									</ClayLink>
-								</span>
-							</ClayLayout.ContentRow>
-						</ClayLayout.ContainerFluid>
-					</footer>
+					<Footer />
 				</ClayIconSpriteContext.Provider>
 			</ClayLinkContext.Provider>
 		</>
