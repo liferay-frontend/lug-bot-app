@@ -21,51 +21,53 @@ const TaskList = ({items, taskStateFilter}) => {
 	return (
 		<ClayLayout.ContentRow>
 			<ClayLayout.ContentCol expand>
-				<ClayList>
-					{!isCompletedStateRoute && !isPendingStateRoute && (
-						<>
-							<ClayList.Header>{'Running Tasks'}</ClayList.Header>
+				{!isCompletedStateRoute && !isPendingStateRoute && (
+					<ClayList className="shadow-sm">
+						<ClayList.Header className="bg-warning">
+							{'Running Tasks'}
+						</ClayList.Header>
 
-							{tasks.runningTasks.map((task) => (
-								<TaskListItem
-									key={task.id}
-									task={task}
-									taskState={STATES.runningState}
-								/>
-							))}
-						</>
-					)}
+						{tasks.runningTasks.map((task) => (
+							<TaskListItem
+								key={task.id}
+								task={task}
+								taskState={STATES.runningState}
+							/>
+						))}
+					</ClayList>
+				)}
 
-					{!isCompletedStateRoute && !isRunningStateRoute && (
-						<>
-							<ClayList.Header>{'Pending Tasks'}</ClayList.Header>
+				{!isCompletedStateRoute && !isRunningStateRoute && (
+					<ClayList className="shadow-sm">
+						<ClayList.Header className="bg-info">
+							{'Pending Tasks'}
+						</ClayList.Header>
 
-							{tasks.pendingTasks.map((task) => (
-								<TaskListItem
-									key={task.id}
-									task={task}
-									taskState={STATES.pendingState}
-								/>
-							))}
-						</>
-					)}
+						{tasks.pendingTasks.map((task) => (
+							<TaskListItem
+								key={task.id}
+								task={task}
+								taskState={STATES.pendingState}
+							/>
+						))}
+					</ClayList>
+				)}
 
-					{!isPendingStateRoute && !isRunningStateRoute && (
-						<>
-							<ClayList.Header>
-								{'Completed Tasks'}
-							</ClayList.Header>
+				{!isPendingStateRoute && !isRunningStateRoute && (
+					<ClayList className="shadow-sm">
+						<ClayList.Header className="bg-success">
+							{'Completed Tasks'}
+						</ClayList.Header>
 
-							{tasks.completedTasks.map((task) => (
-								<TaskListItem
-									key={task.id}
-									task={task}
-									taskState={STATES.completedState}
-								/>
-							))}
-						</>
-					)}
-				</ClayList>
+						{tasks.completedTasks.map((task) => (
+							<TaskListItem
+								key={task.id}
+								task={task}
+								taskState={STATES.completedState}
+							/>
+						))}
+					</ClayList>
+				)}
 			</ClayLayout.ContentCol>
 		</ClayLayout.ContentRow>
 	);
