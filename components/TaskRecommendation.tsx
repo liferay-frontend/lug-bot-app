@@ -51,12 +51,7 @@ const TaskRecommendation = ({
 							{isStaged ? 'Staged' : 'Stage Change'}
 
 							{isStaged && (
-								<ClayIcon
-									symbol="check"
-									style={{
-										marginLeft: 4,
-									}}
-								/>
+								<ClayIcon className="ml-1" symbol="check" />
 							)}
 						</ClayButton>
 					</ClayLayout.ContentCol>
