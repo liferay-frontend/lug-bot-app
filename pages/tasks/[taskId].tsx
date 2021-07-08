@@ -118,7 +118,9 @@ export default function Task({initialStagedChanges, project, task}) {
 									)
 								}
 							>
-								{`Send Pull Request (${stagedChanges.length})`}
+								{project.local
+									? `Merge (${stagedChanges.length})`
+									: 'Send Pull Request (${stagedChanges.length})'}
 							</ClayButton>
 						</ClayLayout.ContentCol>
 					</>

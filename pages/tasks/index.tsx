@@ -9,23 +9,29 @@ import getAPIOrigin from '../../utils/getAPIOrigin';
 export default function Tasks({items, taskStateFilter}) {
 	return (
 		<ClayLayout.ContainerFluid view>
-			<ClayLayout.ContentRow>
-				<ClayLayout.ContentCol expand>
-					<h1>
-						<a href={PROJECT.url} target="blank">
-							{PROJECT.name}
-						</a>
-					</h1>
+			{PROJECT.local ? (
+				<ClayLayout.ContentRow className="justify-content-end mb-3">
+					<TaskFilter taskStateFilter={taskStateFilter} />
+				</ClayLayout.ContentRow>
+			) : (
+				<ClayLayout.ContentRow>
+					<ClayLayout.ContentCol expand>
+						<h1>
+							<a href={PROJECT.url} target="blank">
+								{PROJECT.name}
+							</a>
+						</h1>
 
-					<ClayLayout.ContentRow>
-						<ClayLayout.ContentCol expand>
-							<p>Git: {PROJECT.location}</p>
-						</ClayLayout.ContentCol>
+						<ClayLayout.ContentRow>
+							<ClayLayout.ContentCol expand>
+								<p>Git: {PROJECT.location}</p>
+							</ClayLayout.ContentCol>
 
-						<TaskFilter taskStateFilter={taskStateFilter} />
-					</ClayLayout.ContentRow>
-				</ClayLayout.ContentCol>
-			</ClayLayout.ContentRow>
+							<TaskFilter taskStateFilter={taskStateFilter} />
+						</ClayLayout.ContentRow>
+					</ClayLayout.ContentCol>
+				</ClayLayout.ContentRow>
+			)}
 
 			<TaskList items={items} taskStateFilter={taskStateFilter} />
 		</ClayLayout.ContainerFluid>

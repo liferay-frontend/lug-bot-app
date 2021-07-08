@@ -58,6 +58,7 @@ function generateProject() {
 		...taskData,
 		description: faker.lorem.paragraph(),
 		id: faker.helpers.slugify(projectName),
+		local: true,
 		location: `https://github.com/lug-bot-api/${faker.git.branch()}`,
 		name: projectName,
 		url: faker.internet.url(),
