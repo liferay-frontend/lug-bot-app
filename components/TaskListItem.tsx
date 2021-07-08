@@ -8,15 +8,17 @@ import formatDuration from '../utils/formatDuration';
 import CountUp from './CountUp';
 
 const TaskListItem = ({task, taskState}) => (
-	<ClayList.Item flex key={task.id}>
+	<ClayList.Item flex className="align-items-center" key={task.id}>
 		<ClayList.ItemField expand>
 			<Link href={`/tasks/${task.id}`} passHref>
 				<ClayList.ItemTitle>{task.name}</ClayList.ItemTitle>
 			</Link>
 
-			<ClayList.ItemText>
-				{task.totalRecommendations} Recommendations
-			</ClayList.ItemText>
+			{task.totalRecommendations && (
+				<ClayList.ItemText>
+					{`${task.totalRecommendations} Recommendations`}
+				</ClayList.ItemText>
+			)}
 		</ClayList.ItemField>
 
 		{taskState === STATES.runningState && (
