@@ -17,6 +17,17 @@ footer {
 	margin-bottom: 1rem;
 }
 
+.btn-sm {
+	max-height: 32px;
+}
+
 .list-group-header-title {
 	color: $gray-100;
+}
+
+.navbar {
+	.navbar-nav,
+	.navbar-collapse {
+		width: 100%;
+	}
 }
