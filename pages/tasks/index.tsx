@@ -1,25 +1,59 @@
+import ClayButton from '@clayui/button';
+import ClayIcon from '@clayui/icon';
 import ClayLayout from '@clayui/layout';
 import React from 'react';
 
 import TaskFilter from '../../components/TaskFilter';
 import TaskList from '../../components/TaskList';
-import PROJECT from '../../dummy-data';
+import cancelTask from '../../utils/cancelTask';
 import getAPIOrigin from '../../utils/getAPIOrigin';
 
-export default function Tasks({items, taskStateFilter}) {
+export default function Tasks({project, taskStateFilter}) {
 	return (
 		<ClayLayout.ContainerFluid view>
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
-					<h1>
-						<a href={PROJECT.url} target="blank">
-							{PROJECT.name}
-						</a>
-					</h1>
+					{!project.local && (
+						<h1>
+							<a href={project.url} target="blank">
+								{project.name}
+							</a>
+						</h1>
+					)}
 
-					<ClayLayout.ContentRow>
-						<ClayLayout.ContentCol expand>
-							<p>Git: {PROJECT.location}</p>
+					<ClayLayout.ContentRow
+						className={
+							project.local ? 'justify-content-end mb-3' : ''
+						}
+					>
+						{!project.local && (
+							<ClayLayout.ContentCol expand>
+								<p>Git: {project.location}</p>
+							</ClayLayout.ContentCol>
+						)}
+
+						<ClayLayout.ContentCol>
+							<ClayButton
+								className="btn-danger mr-2"
+								onClick={() => {
+									const tasks = [
+										...project.completedTasks,
+										...project.pendingTasks,
+										...project.runningTasks,
+									];
+
+									tasks.forEach((task) => {
+										cancelTask(task.id);
+									});
+								}}
+								small
+							>
+								<span className="inline-item inline-item-before">
+									<ClayIcon symbol="trash" />
+								</span>
+
+								{'Cancel all tasks'}
+							</ClayButton>
 						</ClayLayout.ContentCol>
 
 						<TaskFilter taskStateFilter={taskStateFilter} />
@@ -27,19 +61,19 @@ export default function Tasks({items, taskStateFilter}) {
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 
-			<TaskList items={items} taskStateFilter={taskStateFilter} />
+			<TaskList project={project} taskStateFilter={taskStateFilter} />
 		</ClayLayout.ContainerFluid>
 	);
 }
 
 export async function getServerSideProps(context) {
-	const items = await fetch(`${getAPIOrigin(context.req)}/api/tasks`).then(
-		(res) => res.json()
-	);
+	const project = await fetch(
+		`${getAPIOrigin(context.req)}/api/project`
+	).then((res) => res.json());
 
 	return {
 		props: {
-			items,
+			project,
 			taskStateFilter: context.query.status || '',
 		},
 	};

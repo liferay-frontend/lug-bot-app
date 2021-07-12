@@ -8,9 +8,9 @@ import TaskListItem from './TaskListItem';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
-const TaskList = ({items, taskStateFilter}) => {
-	const {data: tasks} = useSWR(`/api/tasks`, fetcher, {
-		initialData: items,
+const TaskList = ({project, taskStateFilter}) => {
+	const {data: projectData} = useSWR(`/api/project`, fetcher, {
+		initialData: project,
 		refreshInterval: 5000,
 	});
 
@@ -21,21 +21,23 @@ const TaskList = ({items, taskStateFilter}) => {
 	return (
 		<ClayLayout.ContentRow>
 			<ClayLayout.ContentCol expand>
-				{!isCompletedStateRoute && !isPendingStateRoute && (
-					<ClayList className="shadow-sm">
-						<ClayList.Header className="bg-warning">
-							{'Running Tasks'}
-						</ClayList.Header>
+				{projectData.runningTasks.length !== 0 &&
+					!isCompletedStateRoute &&
+					!isPendingStateRoute && (
+						<ClayList className="shadow-sm">
+							<ClayList.Header className="bg-warning">
+								{'Running Tasks'}
+							</ClayList.Header>
 
-						{tasks.runningTasks.map((task) => (
-							<TaskListItem
-								key={task.id}
-								task={task}
-								taskState={STATES.runningState}
-							/>
-						))}
-					</ClayList>
-				)}
+							{projectData.runningTasks.map((task) => (
+								<TaskListItem
+									key={task.id}
+									task={task}
+									taskState={STATES.runningState}
+								/>
+							))}
+						</ClayList>
+					)}
 
 				{!isCompletedStateRoute && !isRunningStateRoute && (
 					<ClayList className="shadow-sm">
@@ -43,7 +45,7 @@ const TaskList = ({items, taskStateFilter}) => {
 							{'Pending Tasks'}
 						</ClayList.Header>
 
-						{tasks.pendingTasks.map((task) => (
+						{projectData.pendingTasks.map((task) => (
 							<TaskListItem
 								key={task.id}
 								task={task}
@@ -59,7 +61,7 @@ const TaskList = ({items, taskStateFilter}) => {
 							{'Completed Tasks'}
 						</ClayList.Header>
 
-						{tasks.completedTasks.map((task) => (
+						{projectData.completedTasks.map((task) => (
 							<TaskListItem
 								key={task.id}
 								task={task}

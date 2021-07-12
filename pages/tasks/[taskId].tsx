@@ -10,6 +10,7 @@ import useSWR from 'swr';
 
 import TaskRecommendation from '../../components/TaskRecommendation';
 import STATES from '../../constants/taskStates';
+import cancelTask from '../../utils/cancelTask';
 import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
@@ -25,36 +26,12 @@ export default function Task({initialStagedChanges, project, task}) {
 	const {displayType, label} = STATES.byId[task.state];
 
 	const isCompleted = task.state === STATES.byName.complete.id;
-	const isRunning = task.state === STATES.byName.running.id;
 
 	function postStaged(add, locator) {
 		fetch(`/api/tasks/${task.id}/staged`, {
 			body: JSON.stringify({add, locator}),
 			method: 'POST',
 		});
-	}
-
-	async function cancelRunningTask(taskId, states) {
-		const currentTask = await fetch(`/api/tasks/${taskId}`).then(
-			(response) => response.json()
-		);
-
-		currentTask.state = states.byName.waiting.id;
-
-		await fetch(`/api/tasks/${taskId}`, {
-			body: JSON.stringify(currentTask),
-			cache: 'no-cache',
-			credentials: 'same-origin',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			method: 'POST',
-			mode: 'cors',
-			redirect: 'follow',
-			referrerPolicy: 'no-referrer',
-		});
-
-		await fetch(`/api/tasks/${taskId}`).then((response) => response.json());
 	}
 
 	useEffect(() => {
@@ -118,19 +95,21 @@ export default function Task({initialStagedChanges, project, task}) {
 									)
 								}
 							>
-								{`Send Pull Request (${stagedChanges.length})`}
+								{project.local
+									? `Merge (${stagedChanges.length})`
+									: 'Send Pull Request (${stagedChanges.length})'}
 							</ClayButton>
 						</ClayLayout.ContentCol>
 					</>
 				)}
 
-				{isRunning && (
+				{!isCompleted && (
 					<ClayLayout.ContentCol>
 						<ClayLink
 							button
 							className="btn-danger"
 							href={`/tasks`}
-							onClick={() => cancelRunningTask(task.id, STATES)}
+							onClick={() => cancelTask(task.id)}
 						>
 							{`Cancel ${task.name}`}
 						</ClayLink>
