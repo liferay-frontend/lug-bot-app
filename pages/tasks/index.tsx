@@ -5,8 +5,8 @@ import React from 'react';
 
 import TaskFilter from '../../components/TaskFilter';
 import TaskList from '../../components/TaskList';
+import API_ENDPOINT from '../../constants/apiEndoint';
 import cancelTask from '../../utils/cancelTask';
-import getAPIOrigin from '../../utils/getAPIOrigin';
 
 export default function Tasks({project, taskStateFilter}) {
 	return (
@@ -67,9 +67,7 @@ export default function Tasks({project, taskStateFilter}) {
 }
 
 export async function getServerSideProps(context) {
-	const project = await fetch(
-		`${getAPIOrigin(context.req)}/api/project`
-	).then((res) => res.json());
+	const project = await fetch(API_ENDPOINT).then((res) => res.json());
 
 	return {
 		props: {

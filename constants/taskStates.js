@@ -1,17 +1,17 @@
 const STATES = {
 	complete: {
 		displayType: 'success',
-		id: '2',
+		id: '0',
 		label: 'Completed',
 	},
 	running: {
 		displayType: 'warning',
-		id: '3',
+		id: '1',
 		label: 'Running',
 	},
 	waiting: {
 		displayType: 'info',
-		id: '1',
+		id: '2',
 		label: 'Waiting to Start',
 	},
 };

@@ -9,6 +9,7 @@ import Terminal from 'react-console-emulator';
 import useSWR from 'swr';
 
 import TaskRecommendation from '../../components/TaskRecommendation';
+import API_ENDPOINT from '../../constants/apiEndoint';
 import STATES from '../../constants/taskStates';
 import cancelTask from '../../utils/cancelTask';
 import getAPIOrigin from '../../utils/getAPIOrigin';
@@ -111,7 +112,7 @@ export default function Task({initialStagedChanges, project, task}) {
 							href={`/tasks`}
 							onClick={() => cancelTask(task.id)}
 						>
-							{`Cancel ${task.name}`}
+							{'Cancel Task'}
 						</ClayLink>
 					</ClayLayout.ContentCol>
 				)}
@@ -212,9 +213,7 @@ export async function getServerSideProps(context) {
 		`${`${APIOrigin}`}/api/tasks/${context.query.taskId}/staged`
 	).then((res) => res.json());
 
-	const project = await fetch(
-		`${getAPIOrigin(context.req)}/api/project`
-	).then((res) => res.json());
+	const project = await fetch(API_ENDPOINT).then((res) => res.json());
 
 	return {
 		props: {

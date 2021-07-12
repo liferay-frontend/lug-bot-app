@@ -1,20 +1,24 @@
-import PROJECT from '../../../../dummy-data';
+import API_ENDPOINT from '../../../../constants/apiEndoint';
 
-export default (req, res) => {
-	const {taskId} = req.query;
+export default async (req, res) => {
+	let {taskId} = req.query;
+
+	taskId = parseInt(taskId, 10);
+
+	const project = await fetch(API_ENDPOINT).then((res) => res.json());
 
 	if (req.method === 'POST') {
-		const task = PROJECT.runningTasks.find((task) => task.id === taskId);
+		const task = project.runningTasks.find((task) => task.id === taskId);
 
-		PROJECT.runningTasks.splice(PROJECT.runningTasks.indexOf(task), 1);
-		PROJECT.pendingTasks.push(req.body);
+		project.runningTasks.splice(project.runningTasks.indexOf(task), 1);
+		project.pendingTasks.push(req.body);
 
 		res.status(200).json(req.body);
 	} else {
 		const task = [
-			...PROJECT.completedTasks,
-			...PROJECT.pendingTasks,
-			...PROJECT.runningTasks,
+			...project.completedTasks,
+			...project.pendingTasks,
+			...project.runningTasks,
 		].find((task) => task.id === taskId);
 
 		res.status(200).json(task);
