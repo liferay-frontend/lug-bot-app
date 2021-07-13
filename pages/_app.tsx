@@ -17,7 +17,7 @@ const NextLink = ({href, ...otherProps}: any) => (
 	</Link>
 );
 
-function Lugbot({Component, pageProps}) {
+export default function Lugbot({Component, pageProps}) {
 	const router = useRouter();
 
 	const currentRoute = router.asPath;
@@ -55,5 +55,3 @@ function Lugbot({Component, pageProps}) {
 		</>
 	);
 }
-
-export default Lugbot;

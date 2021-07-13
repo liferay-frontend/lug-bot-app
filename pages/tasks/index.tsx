@@ -8,12 +8,7 @@ import TaskList from '../../components/TaskList';
 import API_ENDPOINT from '../../constants/apiEndpoint';
 import cancelTask from '../../utils/cancelTask';
 
-export default function Tasks({
-	initialTasks,
-	lugbot,
-	project,
-	taskStateFilter,
-}) {
+export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
 	const isLocalInstance = lugbot.mode === 'LOCAL';
 
 	return (
@@ -41,13 +36,13 @@ export default function Tasks({
 							<ClayButton
 								className="btn-danger mr-2"
 								onClick={() => {
-									const tasks = [
-										...project.completedTasks,
-										...project.pendingTasks,
-										...project.runningTasks,
+									const allTasks = [
+										...tasks.completedTasks,
+										...tasks.pendingTasks,
+										...tasks.runningTasks,
 									];
 
-									tasks.forEach((task) => {
+									allTasks.forEach((task) => {
 										cancelTask(task.id);
 									});
 								}}
@@ -66,16 +61,13 @@ export default function Tasks({
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 
-			<TaskList
-				initialTasks={initialTasks}
-				taskStateFilter={taskStateFilter}
-			/>
+			<TaskList initialTasks={tasks} taskStateFilter={taskStateFilter} />
 		</ClayLayout.ContainerFluid>
 	);
 }
 
 export async function getServerSideProps(context) {
-	const initialTasks = await fetch(`${API_ENDPOINT}/tasks`).then((res) =>
+	const tasks = await fetch(`${API_ENDPOINT}/tasks`).then((res) =>
 		res.json()
 	);
 
@@ -89,10 +81,10 @@ export async function getServerSideProps(context) {
 
 	return {
 		props: {
-			initialTasks,
 			lugbot,
 			project,
 			taskStateFilter: context.query.status || '',
+			tasks,
 		},
 	};
 }
