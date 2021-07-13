@@ -3,7 +3,7 @@ import ClayList from '@clayui/list';
 import React from 'react';
 import useSWR from 'swr';
 
-import API_ENDPOINT from '../constants/apiEndoint';
+import API_ENDPOINT from '../constants/apiEndpoint';
 import STATES from '../constants/taskStates';
 import TaskListItem from './TaskListItem';
 

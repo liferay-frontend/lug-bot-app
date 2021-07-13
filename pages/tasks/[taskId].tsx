@@ -9,10 +9,9 @@ import Terminal from 'react-console-emulator';
 import useSWR from 'swr';
 
 import TaskRecommendation from '../../components/TaskRecommendation';
-import API_ENDPOINT from '../../constants/apiEndoint';
+import API_ENDPOINT from '../../constants/apiEndpoint';
 import STATES from '../../constants/taskStates';
 import cancelTask from '../../utils/cancelTask';
-import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
@@ -20,7 +19,7 @@ export default function Task({initialStagedChanges, lugbot, project, task}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
 	const terminalRef = useRef(null);
 
-	const {data} = useSWR(`/api/tasks/${task.id}/log`, fetcher, {
+	const {data} = useSWR(`${API_ENDPOINT}/tasks/${task.id}/log`, fetcher, {
 		refreshInterval: 1000,
 	});
 
@@ -30,7 +29,7 @@ export default function Task({initialStagedChanges, lugbot, project, task}) {
 	const isLocalInstance = lugbot.mode === 'LOCAL';
 
 	function postStaged(add, locator) {
-		fetch(`/api/tasks/${task.id}/staged`, {
+		fetch(`${API_ENDPOINT}/tasks/${task.id}/staged`, {
 			body: JSON.stringify({add, locator}),
 			method: 'POST',
 		});
@@ -204,14 +203,12 @@ export default function Task({initialStagedChanges, lugbot, project, task}) {
 }
 
 export async function getServerSideProps(context) {
-	const APIOrigin = getAPIOrigin(context.req);
-
 	const task = await fetch(
-		`${`${APIOrigin}`}/api/tasks/${context.query.taskId}`
+		`${API_ENDPOINT}/tasks/${context.query.taskId}`
 	).then((res) => res.json());
 
 	const initialStagedChanges = await fetch(
-		`${`${APIOrigin}`}/api/tasks/${context.query.taskId}/staged`
+		`${API_ENDPOINT}/tasks/${context.query.taskId}/staged`
 	).then((res) => res.json());
 
 	const {project} = await fetch(`${API_ENDPOINT}/status`).then((res) =>

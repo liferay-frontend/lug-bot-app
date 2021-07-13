@@ -5,7 +5,7 @@ import React from 'react';
 
 import TaskFilter from '../../components/TaskFilter';
 import TaskList from '../../components/TaskList';
-import API_ENDPOINT from '../../constants/apiEndoint';
+import API_ENDPOINT from '../../constants/apiEndpoint';
 import cancelTask from '../../utils/cancelTask';
 
 export default function Tasks({
