@@ -8,25 +8,30 @@ import TaskList from '../../components/TaskList';
 import API_ENDPOINT from '../../constants/apiEndoint';
 import cancelTask from '../../utils/cancelTask';
 
-export default function Tasks({initialTasks, project, taskStateFilter}) {
+export default function Tasks({
+	initialTasks,
+	lugbot,
+	project,
+	taskStateFilter,
+}) {
+	const isLocalInstance = lugbot.mode === 'LOCAL';
+
 	return (
 		<ClayLayout.ContainerFluid view>
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
-					{!project.local && (
-						<h1>
-							<a href={project.url} target="blank">
-								{project.name}
-							</a>
-						</h1>
-					)}
+					<h1>
+						<a href={project.url} target="blank">
+							{project.name}
+						</a>
+					</h1>
 
 					<ClayLayout.ContentRow
 						className={
-							project.local ? 'justify-content-end mb-3' : ''
+							isLocalInstance ? 'justify-content-end mb-3' : ''
 						}
 					>
-						{!project.local && (
+						{!isLocalInstance && (
 							<ClayLayout.ContentCol expand>
 								<p>Git: {project.location}</p>
 							</ClayLayout.ContentCol>
@@ -78,9 +83,14 @@ export async function getServerSideProps(context) {
 		res.json()
 	);
 
+	const {lugbot} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
+		res.json()
+	);
+
 	return {
 		props: {
 			initialTasks,
+			lugbot,
 			project,
 			taskStateFilter: context.query.status || '',
 		},

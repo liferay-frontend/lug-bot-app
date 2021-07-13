@@ -16,7 +16,7 @@ import getAPIOrigin from '../../utils/getAPIOrigin';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
-export default function Task({initialStagedChanges, project, task}) {
+export default function Task({initialStagedChanges, lugbot, project, task}) {
 	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
 	const terminalRef = useRef(null);
 
@@ -27,6 +27,7 @@ export default function Task({initialStagedChanges, project, task}) {
 	const {displayType, label} = STATES.byId[task.state];
 
 	const isCompleted = task.state === STATES.byName.complete.id;
+	const isLocalInstance = lugbot.mode === 'LOCAL';
 
 	function postStaged(add, locator) {
 		fetch(`/api/tasks/${task.id}/staged`, {
@@ -96,7 +97,7 @@ export default function Task({initialStagedChanges, project, task}) {
 									)
 								}
 							>
-								{project.local
+								{isLocalInstance
 									? `Merge (${stagedChanges.length})`
 									: 'Send Pull Request (${stagedChanges.length})'}
 							</ClayButton>
@@ -217,9 +218,14 @@ export async function getServerSideProps(context) {
 		res.json()
 	);
 
+	const {lugbot} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
+		res.json()
+	);
+
 	return {
 		props: {
 			initialStagedChanges,
+			lugbot,
 			project,
 			task,
 		},
