@@ -1,14 +1,8 @@
-import STATES from '../constants/taskStates';
+import API_ENDPOINT from '../constants/apiEndpoint';
 
 export default async function cancelRunningTask(taskId) {
-	const currentTask = await fetch(`/api/tasks/${taskId}`).then((response) =>
-		response.json()
-	);
-
-	currentTask.state = STATES.byName.waiting.id;
-
-	await fetch(`/api/tasks/${taskId}`, {
-		body: JSON.stringify(currentTask),
+	await fetch(`${API_ENDPOINT}/tasks/${taskId}/cancel`, {
+		body: JSON.stringify(taskId),
 		cache: 'no-cache',
 		credentials: 'same-origin',
 		headers: {
@@ -19,6 +13,4 @@ export default async function cancelRunningTask(taskId) {
 		redirect: 'follow',
 		referrerPolicy: 'no-referrer',
 	});
-
-	await fetch(`/api/tasks/${taskId}`).then((response) => response.json());
 }
