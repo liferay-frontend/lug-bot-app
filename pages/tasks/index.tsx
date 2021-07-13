@@ -8,7 +8,7 @@ import TaskList from '../../components/TaskList';
 import API_ENDPOINT from '../../constants/apiEndoint';
 import cancelTask from '../../utils/cancelTask';
 
-export default function Tasks({project, taskStateFilter}) {
+export default function Tasks({initialTasks, project, taskStateFilter}) {
 	return (
 		<ClayLayout.ContainerFluid view>
 			<ClayLayout.ContentRow>
@@ -61,16 +61,26 @@ export default function Tasks({project, taskStateFilter}) {
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 
-			<TaskList project={project} taskStateFilter={taskStateFilter} />
+			<TaskList
+				initialTasks={initialTasks}
+				taskStateFilter={taskStateFilter}
+			/>
 		</ClayLayout.ContainerFluid>
 	);
 }
 
 export async function getServerSideProps(context) {
-	const project = await fetch(API_ENDPOINT).then((res) => res.json());
+	const initialTasks = await fetch(`${API_ENDPOINT}/tasks`).then((res) =>
+		res.json()
+	);
+
+	const {project} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
+		res.json()
+	);
 
 	return {
 		props: {
+			initialTasks,
 			project,
 			taskStateFilter: context.query.status || '',
 		},

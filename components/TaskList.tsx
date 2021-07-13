@@ -9,9 +9,9 @@ import TaskListItem from './TaskListItem';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
-const TaskList = ({project, taskStateFilter}) => {
-	const {data: projectData} = useSWR(API_ENDPOINT, fetcher, {
-		initialData: project,
+const TaskList = ({initialTasks, taskStateFilter}) => {
+	const {data: tasks} = useSWR(`${API_ENDPOINT}/tasks`, fetcher, {
+		initialData: initialTasks,
 		refreshInterval: 5000,
 	});
 
@@ -22,7 +22,7 @@ const TaskList = ({project, taskStateFilter}) => {
 	return (
 		<ClayLayout.ContentRow>
 			<ClayLayout.ContentCol expand>
-				{projectData.runningTasks.length !== 0 &&
+				{tasks.runningTasks.length !== 0 &&
 					!isCompletedStateRoute &&
 					!isPendingStateRoute && (
 						<ClayList className="shadow-sm">
@@ -30,7 +30,7 @@ const TaskList = ({project, taskStateFilter}) => {
 								{'Running Tasks'}
 							</ClayList.Header>
 
-							{projectData.runningTasks.map((task) => (
+							{tasks.runningTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
 									task={task}
@@ -40,7 +40,7 @@ const TaskList = ({project, taskStateFilter}) => {
 						</ClayList>
 					)}
 
-				{projectData.pendingTasks.length !== 0 &&
+				{tasks.pendingTasks.length !== 0 &&
 					!isCompletedStateRoute &&
 					!isRunningStateRoute && (
 						<ClayList className="shadow-sm">
@@ -48,7 +48,7 @@ const TaskList = ({project, taskStateFilter}) => {
 								{'Pending Tasks'}
 							</ClayList.Header>
 
-							{projectData.pendingTasks.map((task) => (
+							{tasks.pendingTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
 									task={task}
@@ -58,7 +58,7 @@ const TaskList = ({project, taskStateFilter}) => {
 						</ClayList>
 					)}
 
-				{projectData.completedTasks.length !== 0 &&
+				{tasks.completedTasks.length !== 0 &&
 					!isPendingStateRoute &&
 					!isRunningStateRoute && (
 						<ClayList className="shadow-sm">
@@ -66,7 +66,7 @@ const TaskList = ({project, taskStateFilter}) => {
 								{'Completed Tasks'}
 							</ClayList.Header>
 
-							{projectData.completedTasks.map((task) => (
+							{tasks.completedTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
 									task={task}
