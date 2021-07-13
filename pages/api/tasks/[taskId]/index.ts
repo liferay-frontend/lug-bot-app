@@ -5,7 +5,9 @@ export default async (req, res) => {
 
 	taskId = parseInt(taskId, 10);
 
-	const project = await fetch(API_ENDPOINT).then((res) => res.json());
+	const {data: project} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
+		res.json()
+	);
 
 	if (req.method === 'POST') {
 		const task = project.runningTasks.find((task) => task.id === taskId);

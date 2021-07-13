@@ -213,7 +213,9 @@ export async function getServerSideProps(context) {
 		`${`${APIOrigin}`}/api/tasks/${context.query.taskId}/staged`
 	).then((res) => res.json());
 
-	const project = await fetch(API_ENDPOINT).then((res) => res.json());
+	const {project} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
+		res.json()
+	);
 
 	return {
 		props: {
