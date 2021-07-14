@@ -6,7 +6,7 @@ import React from 'react';
 import TaskFilter from '../../components/TaskFilter';
 import TaskList from '../../components/TaskList';
 import API_ENDPOINT from '../../constants/apiEndpoint';
-import cancelTask from '../../utils/cancelTask';
+import cancelRunningTask from '../../utils/cancelRunningTask';
 
 export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
 	const isLocalInstance = lugbot.mode === 'LOCAL';
@@ -35,17 +35,11 @@ export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
 						<ClayLayout.ContentCol>
 							<ClayButton
 								className="btn-danger mr-2"
-								onClick={() => {
-									const allTasks = [
-										...tasks.completedTasks,
-										...tasks.pendingTasks,
-										...tasks.runningTasks,
-									];
-
-									allTasks.forEach((task) => {
-										cancelTask(task.id);
-									});
-								}}
+								onClick={() =>
+									tasks.runningTasks.forEach((task) => {
+										cancelRunningTask(task.id);
+									})
+								}
 								small
 							>
 								<span className="inline-item inline-item-before">

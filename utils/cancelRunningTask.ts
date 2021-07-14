@@ -2,14 +2,13 @@ import API_ENDPOINT from '../constants/apiEndpoint';
 
 export default async function cancelRunningTask(taskId) {
 	await fetch(`${API_ENDPOINT}/tasks/${taskId}/cancel`, {
-		body: JSON.stringify(taskId),
 		cache: 'no-cache',
-		credentials: 'same-origin',
+		credentials: 'include',
 		headers: {
 			'Content-Type': 'application/json',
 		},
 		method: 'POST',
-		mode: 'cors',
+		mode: 'no-cors',
 		redirect: 'follow',
 		referrerPolicy: 'no-referrer',
 	});
