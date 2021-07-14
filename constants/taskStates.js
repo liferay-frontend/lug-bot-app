@@ -6,7 +6,7 @@ const STATES = {
 	},
 	running: {
 		displayType: 'warning',
-		id: '1',
+		id: '4',
 		label: 'Running',
 	},
 	waiting: {
