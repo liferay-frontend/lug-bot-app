@@ -32,7 +32,6 @@ export default function Header({currentRoute}) {
 					{'Stop Lugbot'}
 				</ClayButton>
 			</ClayNavigationBar>
-			);
 		</header>
 	);
 }
