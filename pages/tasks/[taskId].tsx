@@ -11,17 +11,22 @@ import useSWR from 'swr';
 import TaskRecommendation from '../../components/TaskRecommendation';
 import API_ENDPOINT from '../../constants/apiEndpoint';
 import STATES from '../../constants/taskStates';
-import cancelTask from '../../utils/cancelTask';
+import cancelTask from '../../utils/cancelRunningTask';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
-export default function Task({initialStagedChanges, lugbot, project, task}) {
-	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
+export default function Task({lugbot, project, task, taskLog}) {
+	const [stagedChanges, setStagedChanges] = useState([]);
 	const terminalRef = useRef(null);
 
-	const {data} = useSWR(`${API_ENDPOINT}/tasks/${task.id}/log`, fetcher, {
-		refreshInterval: 1000,
-	});
+	const {data: log} = useSWR(
+		`${API_ENDPOINT}/tasks/${task.id}/log`,
+		fetcher,
+		{
+			initialData: taskLog,
+			refreshInterval: 1000,
+		}
+	);
 
 	const {displayType, label} = STATES.byId[task.state];
 
@@ -37,9 +42,11 @@ export default function Task({initialStagedChanges, lugbot, project, task}) {
 
 	useEffect(() => {
 		if (!isCompleted) {
-			terminalRef.current.pushToStdout(data?.log);
+			log.map((logLine) => {
+				terminalRef.current.pushToStdout(logLine);
+			});
 		}
-	}, [data]);
+	}, [log]);
 
 	return (
 		<ClayLayout.ContainerFluid view>
@@ -207,10 +214,6 @@ export async function getServerSideProps(context) {
 		`${API_ENDPOINT}/tasks/${context.query.taskId}`
 	).then((res) => res.json());
 
-	const initialStagedChanges = await fetch(
-		`${API_ENDPOINT}/tasks/${context.query.taskId}/staged`
-	).then((res) => res.json());
-
 	const {project} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
 		res.json()
 	);
@@ -219,12 +222,16 @@ export async function getServerSideProps(context) {
 		res.json()
 	);
 
+	const {taskLog} = await fetch(`${API_ENDPOINT}/tasks/${task.id}/log`).then(
+		(res) => res.json()
+	);
+
 	return {
 		props: {
-			initialStagedChanges,
 			lugbot,
 			project,
 			task,
+			taskLog,
 		},
 	};
 }
