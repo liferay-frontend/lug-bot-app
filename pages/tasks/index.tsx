@@ -50,12 +50,27 @@ export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
 							</ClayButton>
 						</ClayLayout.ContentCol>
 
-						<TaskFilter taskStateFilter={taskStateFilter} />
+						<TaskFilter tasks={tasks} taskStateFilter={taskStateFilter} />
 					</ClayLayout.ContentRow>
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 
 			<TaskList initialTasks={tasks} taskStateFilter={taskStateFilter} />
+
+			{isLocalInstance && (
+				<ClayLayout.ContentRow>
+					<ClayButton
+						className="btn-danger ml-auto"
+						onClick={() =>
+							fetch(`${API_ENDPOINT}/shutdown`, {
+								method: 'POST',
+							})
+						}
+					>
+						{'Stop Lugbot'}
+					</ClayButton>
+				</ClayLayout.ContentRow>
+			)}
 		</ClayLayout.ContainerFluid>
 	);
 }

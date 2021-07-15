@@ -1,18 +1,18 @@
 const STATES = {
-	complete: {
+	completed: {
 		displayType: 'success',
 		id: '0',
 		label: 'Completed',
+	},
+	pending: {
+		displayType: 'info',
+		id: '2',
+		label: 'Waiting to Start',
 	},
 	running: {
 		displayType: 'warning',
 		id: '4',
 		label: 'Running',
-	},
-	waiting: {
-		displayType: 'info',
-		id: '2',
-		label: 'Waiting to Start',
 	},
 };
 
@@ -24,6 +24,6 @@ module.exports = {
 	}, {}),
 	byName: STATES,
 	completedState: STATES.complete,
-	pendingState: STATES.waiting,
+	pendingState: STATES.pending,
 	runningState: STATES.running,
 };

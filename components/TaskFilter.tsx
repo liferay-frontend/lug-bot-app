@@ -8,7 +8,7 @@ import React, {useState} from 'react';
 
 import STATES from '../constants/taskStates';
 
-const TaskFilter = ({taskStateFilter}) => {
+const TaskFilter = ({taskStateFilter, tasks}) => {
 	const [filterOpen, setFilterOpen] = useState(false);
 
 	const router = useRouter();
@@ -44,20 +44,23 @@ const TaskFilter = ({taskStateFilter}) => {
 							</ClayDropDown.Item>
 						</ClayLink>
 
-						{Object.values(STATES.byName).map((state) => (
-							<ClayLink
-								href={`${basepath}?status=${state.id}`}
-								key={state.id}
-							>
-								<ClayDropDown.Item
-									symbolRight={
-										taskStateFilter === state.id && 'check'
-									}
+						{Object.values(STATES.byName).map((state) => {
+							return (
+								<ClayLink
+									href={`${basepath}?status=${state.id}`}
+									key={state.id}
 								>
-									{state.label}
-								</ClayDropDown.Item>
-							</ClayLink>
-						))}
+									<ClayDropDown.Item
+										symbolRight={
+											taskStateFilter === state.id &&
+											'check'
+										}
+									>
+										{state.label}
+									</ClayDropDown.Item>
+								</ClayLink>
+							);
+						})}
 					</ClayDropDown.Group>
 				</ClayDropDown.ItemList>
 			</ClayDropDown>

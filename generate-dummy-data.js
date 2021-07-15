@@ -48,7 +48,7 @@ function generateProject() {
 			.map(() => generateTask(STATES.byName.complete.id)),
 		pendingTasks: Array(getRandomNumberBetween(1, 5))
 			.fill(0)
-			.map(() => generateTask(STATES.byName.waiting.id)),
+			.map(() => generateTask(STATES.byName.pending.id)),
 		runningTasks: Array(getRandomNumberBetween(1, 5))
 			.fill(0)
 			.map(() => generateTask(STATES.byName.running.id)),

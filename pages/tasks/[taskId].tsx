@@ -57,7 +57,9 @@ export default function Task({lugbot, project, task, taskLog}) {
 						items={[
 							{
 								href: `/tasks`,
-								label: `${project.name} Tasks`,
+								label: project.name
+									? `${project.name} Tasks`
+									: 'Tasks',
 							},
 							{
 								active: true,
