@@ -8,7 +8,13 @@ import TaskList from '../../components/TaskList';
 import API_ENDPOINT from '../../constants/apiEndpoint';
 import cancelRunningTask from '../../utils/cancelRunningTask';
 
-export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
+export default function Tasks({
+	lugbot,
+	project,
+	states,
+	taskStateFilter,
+	tasks,
+}) {
 	const isLocalInstance = lugbot.mode === 'LOCAL';
 
 	return (
@@ -50,7 +56,10 @@ export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
 							</ClayButton>
 						</ClayLayout.ContentCol>
 
-						<TaskFilter tasks={tasks} taskStateFilter={taskStateFilter} />
+						<TaskFilter
+							tasks={tasks}
+							taskStateFilter={taskStateFilter}
+						/>
 					</ClayLayout.ContentRow>
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
@@ -88,10 +97,15 @@ export async function getServerSideProps(context) {
 		res.json()
 	);
 
+	const states = await fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
+		res.json()
+	);
+
 	return {
 		props: {
 			lugbot,
 			project,
+			states,
 			taskStateFilter: context.query.status || '',
 			tasks,
 		},

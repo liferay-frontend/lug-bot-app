@@ -27,18 +27,19 @@ const TaskListItem = ({task, taskState}) => (
 			</ClayList.ItemField>
 		)}
 
-		{taskState === STATES.completedState && (
-			<ClayList.ItemField>
-				{formatDuration(
-					new Date(task.finishTime).getTime() -
-						new Date(task.startTime).getTime()
-				)}
-			</ClayList.ItemField>
-		)}
+		{taskState === STATES.completedFailureState ||
+			(taskState === STATES.completedSuccessState && (
+				<ClayList.ItemField>
+					{formatDuration(
+						new Date(task.finishTime).getTime() -
+							new Date(task.startTime).getTime()
+					)}
+				</ClayList.ItemField>
+			))}
 
 		<ClayList.ItemField>
-			<ClayLabel displayType={STATES.byId[task.state].displayType}>
-				{STATES.byId[task.state].label}
+			<ClayLabel displayType={STATES.byState[task.state].displayType}>
+				{STATES.byState[task.state].label}
 			</ClayLabel>
 		</ClayList.ItemField>
 	</ClayList.Item>

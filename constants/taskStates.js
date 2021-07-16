@@ -1,29 +1,35 @@
 const STATES = {
-	completed: {
+	completedFailure: {
+		displayType: 'failure',
+		label: 'Completed with errors',
+		state: 'COMPLETED_FAILURE',
+	},
+	completedSuccess: {
 		displayType: 'success',
-		id: '0',
-		label: 'Completed',
+		label: 'Completed successfully',
+		state: 'COMPLETED_SUCCESS',
 	},
 	pending: {
 		displayType: 'info',
-		id: '2',
-		label: 'Waiting to Start',
+		label: 'Waiting to start',
+		state: 'PENDING',
 	},
 	running: {
-		displayType: 'warning',
-		id: '4',
+		displayType: 'info',
 		label: 'Running',
+		state: 'RUNNING',
 	},
 };
 
 module.exports = {
-	byId: Object.values(STATES).reduce((acc, state) => {
-		acc[state.id] = state;
+	byName: STATES,
+	byState: Object.values(STATES).reduce((acc, state) => {
+		acc[state.state] = state;
 
 		return acc;
 	}, {}),
-	byName: STATES,
-	completedState: STATES.complete,
+	completedFailureState: STATES.completedFailure,
+	completedSuccessState: STATES.completedSuccess,
 	pendingState: STATES.pending,
 	runningState: STATES.running,
 };

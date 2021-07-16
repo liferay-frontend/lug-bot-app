@@ -28,7 +28,7 @@ const TaskFilter = ({taskStateFilter, tasks}) => {
 
 						{`Filter: ${
 							taskStateFilter
-								? STATES.byId[taskStateFilter].label
+								? STATES.byState[taskStateFilter].label
 								: 'All'
 						}`}
 					</ClayButton>

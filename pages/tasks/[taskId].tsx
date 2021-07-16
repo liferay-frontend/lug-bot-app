@@ -28,7 +28,7 @@ export default function Task({lugbot, project, task, taskLog}) {
 		}
 	);
 
-	const {displayType, label} = STATES.byId[task.state];
+	const {displayType, label} = STATES.byState[task.state];
 
 	const isCompleted = task.state === STATES.byName.complete.id;
 	const isLocalInstance = lugbot.mode === 'LOCAL';

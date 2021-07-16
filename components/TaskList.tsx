@@ -15,7 +15,10 @@ const TaskList = ({initialTasks, taskStateFilter}) => {
 		refreshInterval: 5000,
 	});
 
-	const isCompletedStateRoute = taskStateFilter === STATES.completedState.id;
+	const isCompletedFailureStateRoute =
+		taskStateFilter === STATES.completedFailureState.id;
+	const isCompletedSuccessStateRoute =
+		taskStateFilter === STATES.completedSuccessState.id;
 	const isPendingStateRoute = taskStateFilter === STATES.pendingState.id;
 	const isRunningStateRoute = taskStateFilter === STATES.runningState.id;
 
@@ -23,7 +26,8 @@ const TaskList = ({initialTasks, taskStateFilter}) => {
 		<ClayLayout.ContentRow>
 			<ClayLayout.ContentCol expand>
 				{tasks.runningTasks.length !== 0 &&
-					!isCompletedStateRoute &&
+					!isCompletedFailureStateRoute &&
+					!isCompletedSuccessStateRoute &&
 					!isPendingStateRoute && (
 						<ClayList className="shadow-sm">
 							<ClayList.Header className="bg-warning">
@@ -41,7 +45,8 @@ const TaskList = ({initialTasks, taskStateFilter}) => {
 					)}
 
 				{tasks.pendingTasks.length !== 0 &&
-					!isCompletedStateRoute &&
+					!isCompletedFailureStateRoute &&
+					!isCompletedSuccessStateRoute &&
 					!isRunningStateRoute && (
 						<ClayList className="shadow-sm">
 							<ClayList.Header className="bg-info">
@@ -60,17 +65,37 @@ const TaskList = ({initialTasks, taskStateFilter}) => {
 
 				{tasks.completedTasks.length !== 0 &&
 					!isPendingStateRoute &&
-					!isRunningStateRoute && (
+					!isRunningStateRoute &&
+					!isCompletedFailureStateRoute && (
 						<ClayList className="shadow-sm">
 							<ClayList.Header className="bg-success">
-								{'Completed Tasks'}
+								{'Successfully Completed Tasks'}
 							</ClayList.Header>
 
 							{tasks.completedTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
 									task={task}
-									taskState={STATES.completedState}
+									taskState={STATES.completedSuccessState}
+								/>
+							))}
+						</ClayList>
+					)}
+
+				{tasks.completedTasks.length !== 0 &&
+					!isPendingStateRoute &&
+					!isRunningStateRoute &&
+					!isCompletedSuccessStateRoute && (
+						<ClayList className="shadow-sm">
+							<ClayList.Header className="bg-danger">
+								{'Failed Completed Tasks'}
+							</ClayList.Header>
+
+							{tasks.completedTasks.map((task) => (
+								<TaskListItem
+									key={task.id}
+									task={task}
+									taskState={STATES.completedFailureState}
 								/>
 							))}
 						</ClayList>
