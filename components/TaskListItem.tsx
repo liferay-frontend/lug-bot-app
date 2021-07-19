@@ -3,11 +3,10 @@ import ClayList from '@clayui/list';
 import Link from 'next/link';
 import React from 'react';
 
-import STATES from '../constants/taskStates';
 import formatDuration from '../utils/formatDuration';
 import CountUp from './CountUp';
 
-const TaskListItem = ({task, taskState}) => (
+const TaskListItem = ({states, task, taskState}) => (
 	<ClayList.Item flex className="align-items-center" key={task.id}>
 		<ClayList.ItemField expand>
 			<Link href={`/tasks/${task.id}`} passHref>
@@ -21,14 +20,14 @@ const TaskListItem = ({task, taskState}) => (
 			)}
 		</ClayList.ItemField>
 
-		{taskState === STATES.runningState && (
+		{taskState === states.runningState && (
 			<ClayList.ItemField>
 				<CountUp startTime={task.startTime} />
 			</ClayList.ItemField>
 		)}
 
-		{taskState === STATES.completedFailureState ||
-			(taskState === STATES.completedSuccessState && (
+		{taskState === states.completedFailureState ||
+			(taskState === states.completedSuccessState && (
 				<ClayList.ItemField>
 					{formatDuration(
 						new Date(task.finishTime).getTime() -
@@ -38,8 +37,8 @@ const TaskListItem = ({task, taskState}) => (
 			))}
 
 		<ClayList.ItemField>
-			<ClayLabel displayType={STATES.byState[task.state].displayType}>
-				{STATES.byState[task.state].label}
+			<ClayLabel displayType={states.byState[task.state].displayType}>
+				{states.byState[task.state].label}
 			</ClayLabel>
 		</ClayList.ItemField>
 	</ClayList.Item>

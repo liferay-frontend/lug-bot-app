@@ -8,7 +8,13 @@ import TaskList from '../../components/TaskList';
 import API_ENDPOINT from '../../constants/apiEndpoint';
 import cancelRunningTask from '../../utils/cancelRunningTask';
 
-export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
+export default function Tasks({
+	lugbot,
+	project,
+	states,
+	taskStateFilter,
+	tasks,
+}) {
 	const isLocalInstance = lugbot.mode === 'LOCAL';
 
 	return (
@@ -51,6 +57,7 @@ export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
 						</ClayLayout.ContentCol>
 
 						<TaskFilter
+							states={states}
 							tasks={tasks}
 							taskStateFilter={taskStateFilter}
 						/>
@@ -58,7 +65,11 @@ export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 
-			<TaskList initialTasks={tasks} taskStateFilter={taskStateFilter} />
+			<TaskList
+				initialTasks={tasks}
+				states={states}
+				taskStateFilter={taskStateFilter}
+			/>
 
 			{isLocalInstance && (
 				<ClayLayout.ContentRow>
@@ -91,10 +102,26 @@ export async function getServerSideProps(context) {
 		res.json()
 	);
 
+	const states = fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
+		res.json()
+	);
+
 	return {
 		props: {
 			lugbot,
 			project,
+			states: {
+				byName: states,
+				byState: Object.values(states).reduce((acc, state) => {
+					acc[state.state] = state;
+
+					return acc;
+				}, {}),
+				completedFailureState: states.completedFailure,
+				completedSuccessState: states.completedSuccess,
+				pendingState: states.pending,
+				runningState: states.running,
+			},
 			taskStateFilter: context.query.status || '',
 			tasks,
 		},

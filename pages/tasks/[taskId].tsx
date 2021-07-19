@@ -10,12 +10,11 @@ import useSWR from 'swr';
 
 import TaskRecommendation from '../../components/TaskRecommendation';
 import API_ENDPOINT from '../../constants/apiEndpoint';
-import STATES from '../../constants/taskStates';
 import cancelTask from '../../utils/cancelRunningTask';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
-export default function Task({lugbot, project, task, taskLog}) {
+export default function Task({lugbot, project, states, task, taskLog}) {
 	const [stagedChanges, setStagedChanges] = useState([]);
 	const terminalRef = useRef(null);
 
@@ -28,9 +27,9 @@ export default function Task({lugbot, project, task, taskLog}) {
 		}
 	);
 
-	const {displayType, label} = STATES.byState[task.state];
+	const {displayType, label} = states.byState[task.state];
 
-	const isCompleted = task.state === STATES.byName.complete.id;
+	const isCompleted = task.state === states.byName.complete.id;
 	const isLocalInstance = lugbot.mode === 'LOCAL';
 
 	function postStaged(add, locator) {
@@ -228,10 +227,26 @@ export async function getServerSideProps(context) {
 		(res) => res.json()
 	);
 
+	const states = fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
+		res.json()
+	);
+
 	return {
 		props: {
 			lugbot,
 			project,
+			states: {
+				byName: states,
+				byState: Object.values(states).reduce((acc, state) => {
+					acc[state.state] = state;
+
+					return acc;
+				}, {}),
+				completedFailureState: states.completedFailure,
+				completedSuccessState: states.completedSuccess,
+				pendingState: states.pending,
+				runningState: states.running,
+			},
 			task,
 			taskLog,
 		},

@@ -4,23 +4,22 @@ import React from 'react';
 import useSWR from 'swr';
 
 import API_ENDPOINT from '../constants/apiEndpoint';
-import STATES from '../constants/taskStates';
 import TaskListItem from './TaskListItem';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
-const TaskList = ({initialTasks, taskStateFilter}) => {
+const TaskList = ({initialTasks, states, taskStateFilter}) => {
 	const {data: tasks} = useSWR(`${API_ENDPOINT}/tasks`, fetcher, {
 		initialData: initialTasks,
 		refreshInterval: 5000,
 	});
 
 	const isCompletedFailureStateRoute =
-		taskStateFilter === STATES.completedFailureState.id;
+		taskStateFilter === states.completedFailureState.id;
 	const isCompletedSuccessStateRoute =
-		taskStateFilter === STATES.completedSuccessState.id;
-	const isPendingStateRoute = taskStateFilter === STATES.pendingState.id;
-	const isRunningStateRoute = taskStateFilter === STATES.runningState.id;
+		taskStateFilter === states.completedSuccessState.id;
+	const isPendingStateRoute = taskStateFilter === states.pendingState.id;
+	const isRunningStateRoute = taskStateFilter === states.runningState.id;
 
 	return (
 		<ClayLayout.ContentRow>
@@ -37,8 +36,9 @@ const TaskList = ({initialTasks, taskStateFilter}) => {
 							{tasks.runningTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
+									states={states}
 									task={task}
-									taskState={STATES.runningState}
+									taskState={states.runningState}
 								/>
 							))}
 						</ClayList>
@@ -56,8 +56,9 @@ const TaskList = ({initialTasks, taskStateFilter}) => {
 							{tasks.pendingTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
+									states={states}
 									task={task}
-									taskState={STATES.pendingState}
+									taskState={states.pendingState}
 								/>
 							))}
 						</ClayList>
@@ -75,8 +76,9 @@ const TaskList = ({initialTasks, taskStateFilter}) => {
 							{tasks.completedTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
+									states={states}
 									task={task}
-									taskState={STATES.completedSuccessState}
+									taskState={states.completedSuccessState}
 								/>
 							))}
 						</ClayList>
@@ -94,8 +96,9 @@ const TaskList = ({initialTasks, taskStateFilter}) => {
 							{tasks.completedTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
+									states={states}
 									task={task}
-									taskState={STATES.completedFailureState}
+									taskState={states.completedFailureState}
 								/>
 							))}
 						</ClayList>
