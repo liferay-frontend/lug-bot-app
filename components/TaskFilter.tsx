@@ -47,12 +47,12 @@ const TaskFilter = ({taskStateFilter, tasks}) => {
 						{Object.values(STATES.byName).map((state) => {
 							return (
 								<ClayLink
-									href={`${basepath}?status=${state.id}`}
-									key={state.id}
+									href={`${basepath}?status=${state.state}`}
+									key={state.state}
 								>
 									<ClayDropDown.Item
 										symbolRight={
-											taskStateFilter === state.id &&
+											taskStateFilter === state.state &&
 											'check'
 										}
 									>

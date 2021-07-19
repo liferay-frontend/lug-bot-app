@@ -8,13 +8,7 @@ import TaskList from '../../components/TaskList';
 import API_ENDPOINT from '../../constants/apiEndpoint';
 import cancelRunningTask from '../../utils/cancelRunningTask';
 
-export default function Tasks({
-	lugbot,
-	project,
-	states,
-	taskStateFilter,
-	tasks,
-}) {
+export default function Tasks({lugbot, project, taskStateFilter, tasks}) {
 	const isLocalInstance = lugbot.mode === 'LOCAL';
 
 	return (
@@ -97,15 +91,10 @@ export async function getServerSideProps(context) {
 		res.json()
 	);
 
-	const states = await fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
-		res.json()
-	);
-
 	return {
 		props: {
 			lugbot,
 			project,
-			states,
 			taskStateFilter: context.query.status || '',
 			tasks,
 		},

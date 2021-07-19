@@ -1,25 +1,6 @@
-const STATES = {
-	completedFailure: {
-		displayType: 'failure',
-		label: 'Completed with errors',
-		state: 'COMPLETED_FAILURE',
-	},
-	completedSuccess: {
-		displayType: 'success',
-		label: 'Completed successfully',
-		state: 'COMPLETED_SUCCESS',
-	},
-	pending: {
-		displayType: 'info',
-		label: 'Waiting to start',
-		state: 'PENDING',
-	},
-	running: {
-		displayType: 'info',
-		label: 'Running',
-		state: 'RUNNING',
-	},
-};
+import API_ENDPOINT from './apiEndpoint';
+
+const STATES = fetch(`${API_ENDPOINT}/taskStateUI`).then((res) => res.json());
 
 module.exports = {
 	byName: STATES,
