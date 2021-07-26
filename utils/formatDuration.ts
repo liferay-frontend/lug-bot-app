@@ -10,7 +10,7 @@ export default function formatDuration(duration: number) {
 		return `${hours}h ${minutes}m`;
 	}
 
-	if (minutes !== '00') {
+	if (minutes !== '0') {
 		return `${minutes}m`;
 	}
 

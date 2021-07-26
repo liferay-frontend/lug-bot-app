@@ -5,9 +5,9 @@ import {ClayLinkContext} from '@clayui/link';
 import Head from 'next/head';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
+import React from 'react';
 
 import Footer from '../components/Footer';
-import Header from '../components/Header';
 
 const spritemap = '/icons.svg';
 
@@ -17,7 +17,7 @@ const NextLink = ({href, ...otherProps}: any) => (
 	</Link>
 );
 
-function Lugbot({Component, pageProps}) {
+export default function Lugbot({Component, pageProps}) {
 	const router = useRouter();
 
 	const currentRoute = router.asPath;
@@ -43,8 +43,6 @@ function Lugbot({Component, pageProps}) {
 
 			<ClayLinkContext.Provider value={NextLink}>
 				<ClayIconSpriteContext.Provider value={spritemap}>
-					<Header currentRoute={currentRoute} />
-
 					<main>
 						<Component {...pageProps} />
 					</main>
@@ -55,5 +53,3 @@ function Lugbot({Component, pageProps}) {
 		</>
 	);
 }
-
-export default Lugbot;

@@ -5,28 +5,34 @@ import React from 'react';
 
 import TaskFilter from '../../components/TaskFilter';
 import TaskList from '../../components/TaskList';
-import cancelTask from '../../utils/cancelTask';
-import getAPIOrigin from '../../utils/getAPIOrigin';
+import API_ENDPOINT from '../../constants/apiEndpoint';
+import cancelRunningTask from '../../utils/cancelRunningTask';
 
-export default function Tasks({project, taskStateFilter}) {
+export default function Tasks({
+	lugbot,
+	project,
+	states,
+	taskStateFilter,
+	tasks,
+}) {
+	const isLocalInstance = lugbot.mode === 'LOCAL';
+
 	return (
 		<ClayLayout.ContainerFluid view>
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
-					{!project.local && (
-						<h1>
-							<a href={project.url} target="blank">
-								{project.name}
-							</a>
-						</h1>
-					)}
+					<h1>
+						<a href={project.url} target="blank">
+							{project.name}
+						</a>
+					</h1>
 
 					<ClayLayout.ContentRow
 						className={
-							project.local ? 'justify-content-end mb-3' : ''
+							isLocalInstance ? 'justify-content-end mb-3' : ''
 						}
 					>
-						{!project.local && (
+						{!isLocalInstance && (
 							<ClayLayout.ContentCol expand>
 								<p>Git: {project.location}</p>
 							</ClayLayout.ContentCol>
@@ -35,17 +41,11 @@ export default function Tasks({project, taskStateFilter}) {
 						<ClayLayout.ContentCol>
 							<ClayButton
 								className="btn-danger mr-2"
-								onClick={() => {
-									const tasks = [
-										...project.completedTasks,
-										...project.pendingTasks,
-										...project.runningTasks,
-									];
-
-									tasks.forEach((task) => {
-										cancelTask(task.id);
-									});
-								}}
+								onClick={() =>
+									tasks.runningTasks.forEach((task) => {
+										cancelRunningTask(task.id);
+									})
+								}
 								small
 							>
 								<span className="inline-item inline-item-before">
@@ -56,25 +56,70 @@ export default function Tasks({project, taskStateFilter}) {
 							</ClayButton>
 						</ClayLayout.ContentCol>
 
-						<TaskFilter taskStateFilter={taskStateFilter} />
+						<TaskFilter
+							states={states}
+							tasks={tasks}
+							taskStateFilter={taskStateFilter}
+						/>
 					</ClayLayout.ContentRow>
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 
-			<TaskList project={project} taskStateFilter={taskStateFilter} />
+			<TaskList
+				initialTasks={tasks}
+				states={states}
+				taskStateFilter={taskStateFilter}
+			/>
+
+			{isLocalInstance && (
+				<ClayLayout.ContentRow>
+					<ClayButton
+						className="btn-danger ml-auto"
+						onClick={() =>
+							fetch(`${API_ENDPOINT}/shutdown`, {
+								method: 'POST',
+							})
+						}
+					>
+						{'Stop Lugbot'}
+					</ClayButton>
+				</ClayLayout.ContentRow>
+			)}
 		</ClayLayout.ContainerFluid>
 	);
 }
 
 export async function getServerSideProps(context) {
-	const project = await fetch(
-		`${getAPIOrigin(context.req)}/api/project`
-	).then((res) => res.json());
+	const {completedTasks, lugbot, pendingTasks, projects, runningTasks} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
+		res.json()
+	);
+
+	const states = await fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
+		res.json()
+	);
 
 	return {
 		props: {
-			project,
+			lugbot,
+			project: projects[0],
+			states: {
+				byName: states,
+				byState: Object.values(states).reduce((acc, state) => {
+					acc[state.state] = state;
+
+					return acc;
+				}, {}),
+				completedFailureState: states.completedFailure,
+				completedSuccessState: states.completedSuccess,
+				pendingState: states.pending,
+				runningState: states.running,
+			},
 			taskStateFilter: context.query.status || '',
+			tasks: {
+				completedTasks,
+				pendingTasks,
+				runningTasks,
+			},
 		},
 	};
 }

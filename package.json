@@ -31,6 +31,7 @@
 		"react": "17.0.2",
 		"react-console-emulator": "^5.0.1",
 		"react-dom": "17.0.2",
+		"react-gh-like-diff": "^2.0.2",
 		"react-markdown": "^6.0.2",
 		"react-syntax-highlighter": "^15.4.3",
 		"sass": "^1.32.13",

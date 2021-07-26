@@ -1,29 +1,16 @@
-const STATES = {
-	complete: {
-		displayType: 'success',
-		id: '2',
-		label: 'Completed',
-	},
-	running: {
-		displayType: 'warning',
-		id: '3',
-		label: 'Running',
-	},
-	waiting: {
-		displayType: 'info',
-		id: '1',
-		label: 'Waiting to Start',
-	},
-};
+// import API_ENDPOINT from './apiEndpoint';
 
-module.exports = {
-	byId: Object.values(STATES).reduce((acc, state) => {
-		acc[state.id] = state;
+// const STATES = fetch(`${API_ENDPOINT}/taskStateUI`).then((res) => res.json());
 
-		return acc;
-	}, {}),
-	byName: STATES,
-	completedState: STATES.complete,
-	pendingState: STATES.waiting,
-	runningState: STATES.running,
-};
+// module.exports = {
+// 	byName: STATES,
+// 	byState: Object.values(STATES).reduce((acc, state) => {
+// 		acc[state.state] = state;
+
+// 		return acc;
+// 	}, {}),
+// 	completedFailureState: STATES.completedFailure,
+// 	completedSuccessState: STATES.completedSuccess,
+// 	pendingState: STATES.pending,
+// 	runningState: STATES.running,
+// };

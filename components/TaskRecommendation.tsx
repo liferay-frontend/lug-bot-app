@@ -23,6 +23,7 @@ const TaskRecommendation = ({
 					<ClayLayout.ContentCol>
 						{`Line ${comment.line}: ${comment.title}`}
 					</ClayLayout.ContentCol>
+
 					<ClayLayout.ContentCol expand>
 						<ClayButton
 							// @ts-ignore

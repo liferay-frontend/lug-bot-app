@@ -3,32 +3,38 @@ import ClayButton from '@clayui/button';
 import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
 import ClayLink from '@clayui/link';
-import ClayPanel from '@clayui/panel';
 import React, {useEffect, useRef, useState} from 'react';
 import Terminal from 'react-console-emulator';
 import useSWR from 'swr';
 
-import TaskRecommendation from '../../components/TaskRecommendation';
-import STATES from '../../constants/taskStates';
-import cancelTask from '../../utils/cancelTask';
-import getAPIOrigin from '../../utils/getAPIOrigin';
+import TaskProposal from '../../components/TaskProposal';
+import API_ENDPOINT from '../../constants/apiEndpoint';
+import cancelTask from '../../utils/cancelRunningTask';
 
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
-export default function Task({initialStagedChanges, project, task}) {
-	const [stagedChanges, setStagedChanges] = useState(initialStagedChanges);
+export default function Task({lugbot, project, states, task, taskLog}) {
+	const [stagedChanges, setStagedChanges] = useState([]);
 	const terminalRef = useRef(null);
 
-	const {data} = useSWR(`/api/tasks/${task.id}/log`, fetcher, {
-		refreshInterval: 1000,
-	});
+	const {data: log} = useSWR(
+		`${API_ENDPOINT}/tasks/${task.id}/log`,
+		fetcher,
+		{
+			initialData: taskLog,
+			refreshInterval: 1000,
+		}
+	);
 
-	const {displayType, label} = STATES.byId[task.state];
+	const {displayType, label} = states.byState[task.state];
 
-	const isCompleted = task.state === STATES.byName.complete.id;
+	const isCompleted = task.state === states.byName.completedSuccess.state;
+	const isLocalInstance = lugbot.mode === 'LOCAL';
+
+
 
 	function postStaged(add, locator) {
-		fetch(`/api/tasks/${task.id}/staged`, {
+		fetch(`${API_ENDPOINT}/tasks/${task.id}/staged`, {
 			body: JSON.stringify({add, locator}),
 			method: 'POST',
 		});
@@ -36,9 +42,11 @@ export default function Task({initialStagedChanges, project, task}) {
 
 	useEffect(() => {
 		if (!isCompleted) {
-			terminalRef.current.pushToStdout(data?.log);
+			log.map((logLine) => {
+				terminalRef.current.pushToStdout(logLine);
+			});
 		}
-	}, [data]);
+	}, [log]);
 
 	return (
 		<ClayLayout.ContainerFluid view>
@@ -49,7 +57,9 @@ export default function Task({initialStagedChanges, project, task}) {
 						items={[
 							{
 								href: `/tasks`,
-								label: `${project.name} Tasks`,
+								label: project.name
+									? `${project.name} Tasks`
+									: 'Tasks',
 							},
 							{
 								active: true,
@@ -95,7 +105,7 @@ export default function Task({initialStagedChanges, project, task}) {
 									)
 								}
 							>
-								{project.local
+								{isLocalInstance
 									? `Merge (${stagedChanges.length})`
 									: 'Send Pull Request (${stagedChanges.length})'}
 							</ClayButton>
@@ -111,7 +121,7 @@ export default function Task({initialStagedChanges, project, task}) {
 							href={`/tasks`}
 							onClick={() => cancelTask(task.id)}
 						>
-							{`Cancel ${task.name}`}
+							{'Cancel Task'}
 						</ClayLink>
 					</ClayLayout.ContentCol>
 				)}
@@ -143,57 +153,16 @@ export default function Task({initialStagedChanges, project, task}) {
 
 				{isCompleted && (
 					<ClayLayout.ContentCol expand>
-						{task.recommendations && (
-							<>
-								<h2>{task.totalRecommendations} Issues: </h2>
-
-								{Object.entries(task.recommendations).map(
-									([file, comments]: any) => (
-										<ClayPanel
-											collapsable
-											displayTitle={
-												<span
-													style={{
-														textTransform: 'none',
-													}}
-												>
-													({comments.length}) {file}
-												</span>
-											}
-											displayType="secondary"
-											key={file}
-											showCollapseIcon={true}
-										>
-											{comments.map((comment, i) => {
-												const isStaged =
-													stagedChanges.indexOf(
-														comment.id
-													) !== -1;
-
-												return (
-													<TaskRecommendation
-														comment={comment}
-														comments={comments}
-														index={i}
-														key={comment.id}
-														isStaged={isStaged}
-														postStaged={postStaged}
-														stagedChanges={
-															stagedChanges
-														}
-														handleStagedChanges={
-															setStagedChanges
-														}
-													/>
-												);
-											})}
-										</ClayPanel>
-									)
-								)}
-							</>
-						)}
-
-						{!task.recommendations && <p>No Recommendations</p>}
+						<TaskProposal
+							proposal={task.proposal}
+							postStaged={postStaged}
+							stagedChanges={
+								stagedChanges
+							}
+							handleStagedChanges={
+								setStagedChanges
+							}
+						/>
 					</ClayLayout.ContentCol>
 				)}
 			</ClayLayout.ContentRow>
@@ -202,25 +171,40 @@ export default function Task({initialStagedChanges, project, task}) {
 }
 
 export async function getServerSideProps(context) {
-	const APIOrigin = getAPIOrigin(context.req);
-
 	const task = await fetch(
-		`${`${APIOrigin}`}/api/tasks/${context.query.taskId}`
+		`${API_ENDPOINT}/tasks/${context.query.taskId}`
 	).then((res) => res.json());
 
-	const initialStagedChanges = await fetch(
-		`${`${APIOrigin}`}/api/tasks/${context.query.taskId}/staged`
-	).then((res) => res.json());
+	const {lugbot, projects} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
+		res.json()
+	);
 
-	const project = await fetch(
-		`${getAPIOrigin(context.req)}/api/project`
-	).then((res) => res.json());
+	const {taskLog} = await fetch(`${API_ENDPOINT}/tasks/${task.id}/log`).then(
+		(res) => res.json()
+	);
+
+	const states = await fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
+		res.json()
+	);
 
 	return {
 		props: {
-			initialStagedChanges,
-			project,
+			lugbot,
+			project: projects[0],
+			states: {
+				byName: states,
+				byState: Object.values(states).reduce((acc, state) => {
+					acc[state.state] = state;
+
+					return acc;
+				}, {}),
+				completedFailureState: states.completedFailure,
+				completedSuccessState: states.completedSuccess,
+				pendingState: states.pending,
+				runningState: states.running,
+			},
 			task,
+			taskLog,
 		},
 	};
 }

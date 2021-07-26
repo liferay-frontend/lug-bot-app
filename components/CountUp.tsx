@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
+import formatDuration from '../utils/formatDuration';
+
 const CountUp = ({startTime}) => {
 	const [time, setTime] = useState(new Date(startTime).getTime());
 
@@ -11,7 +13,12 @@ const CountUp = ({startTime}) => {
 		return () => clearInterval(interval);
 	}, []);
 
-	return <span>{new Date(time).toISOString().substr(11, 8)}</span>;
+	return <span>
+				{formatDuration(
+						new Date().getTime() -
+							new Date(startTime).getTime()
+				)}
+			</span>;
 };
 
 export default CountUp;
