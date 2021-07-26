@@ -7,9 +7,9 @@ import React from 'react';
 import DiffBlock from './DiffBlock';
 
 const TaskProposal = ({
-	proposal,
 	handleStagedChanges,
 	postStaged,
+	proposal,
 	stagedChanges,
 }) => {
 	const isStaged = proposal && stagedChanges.indexOf(proposal.id) !== -1;
@@ -27,7 +27,9 @@ const TaskProposal = ({
 							<ClayLayout.ContentCol expand>
 								<ClayButton
 									// @ts-ignore
-									displayType={isStaged ? 'success' : 'secondary'}
+									displayType={
+										isStaged ? 'success' : 'secondary'
+									}
 									onClick={() => {
 										postStaged(!isStaged, proposal.id);
 
@@ -52,18 +54,18 @@ const TaskProposal = ({
 									{isStaged ? 'Staged' : 'Stage Change'}
 
 									{isStaged && (
-										<ClayIcon className="ml-1" symbol="check" />
+										<ClayIcon
+											className="ml-1"
+											symbol="check"
+										/>
 									)}
 								</ClayButton>
 							</ClayLayout.ContentCol>
 						</ClayLayout.ContentRow>
 					</ClayPanel.Header>
 
-					<DiffBlock
-						diffContent={proposal.diffContent}
-					/>
+					<DiffBlock diffContent={proposal.diffContent} />
 				</>
-				
 			)}
 
 			{!proposal && <p>No Recommendations</p>}

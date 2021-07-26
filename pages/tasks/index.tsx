@@ -90,9 +90,8 @@ export default function Tasks({
 }
 
 export async function getServerSideProps(context) {
-	const {completedTasks, lugbot, pendingTasks, projects, runningTasks} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
-		res.json()
-	);
+	const {completedTasks, lugbot, pendingTasks, projects, runningTasks} =
+		await fetch(`${API_ENDPOINT}/status`).then((res) => res.json());
 
 	const states = await fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
 		res.json()

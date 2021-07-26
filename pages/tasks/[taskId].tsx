@@ -31,8 +31,6 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 	const isCompleted = task.state === states.byName.completedSuccess.state;
 	const isLocalInstance = lugbot.mode === 'LOCAL';
 
-
-
 	function postStaged(add, locator) {
 		fetch(`${API_ENDPOINT}/tasks/${task.id}/staged`, {
 			body: JSON.stringify({add, locator}),
@@ -156,12 +154,8 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 						<TaskProposal
 							proposal={task.proposal}
 							postStaged={postStaged}
-							stagedChanges={
-								stagedChanges
-							}
-							handleStagedChanges={
-								setStagedChanges
-							}
+							stagedChanges={stagedChanges}
+							handleStagedChanges={setStagedChanges}
 						/>
 					</ClayLayout.ContentCol>
 				)}
@@ -175,8 +169,8 @@ export async function getServerSideProps(context) {
 		`${API_ENDPOINT}/tasks/${context.query.taskId}`
 	).then((res) => res.json());
 
-	const {lugbot, projects} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
-		res.json()
+	const {lugbot, projects} = await fetch(`${API_ENDPOINT}/status`).then(
+		(res) => res.json()
 	);
 
 	const {taskLog} = await fetch(`${API_ENDPOINT}/tasks/${task.id}/log`).then(
