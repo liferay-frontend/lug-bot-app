@@ -3,12 +3,11 @@ import ClayButton from '@clayui/button';
 import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
 import ClayLink from '@clayui/link';
-import ClayPanel from '@clayui/panel';
 import React, {useEffect, useRef, useState} from 'react';
 import Terminal from 'react-console-emulator';
 import useSWR from 'swr';
 
-import TaskRecommendation from '../../components/TaskRecommendation';
+import TaskProposal from '../../components/TaskProposal';
 import API_ENDPOINT from '../../constants/apiEndpoint';
 import cancelTask from '../../utils/cancelRunningTask';
 
@@ -29,8 +28,10 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 
 	const {displayType, label} = states.byState[task.state];
 
-	const isCompleted = task.state === states.byName.complete.id;
+	const isCompleted = task.state === states.byName.completedSuccess.state;
 	const isLocalInstance = lugbot.mode === 'LOCAL';
+
+
 
 	function postStaged(add, locator) {
 		fetch(`${API_ENDPOINT}/tasks/${task.id}/staged`, {
@@ -152,57 +153,16 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 
 				{isCompleted && (
 					<ClayLayout.ContentCol expand>
-						{task.recommendations && (
-							<>
-								<h2>{task.totalRecommendations} Issues: </h2>
-
-								{Object.entries(task.recommendations).map(
-									([file, comments]: any) => (
-										<ClayPanel
-											collapsable
-											displayTitle={
-												<span
-													style={{
-														textTransform: 'none',
-													}}
-												>
-													({comments.length}) {file}
-												</span>
-											}
-											displayType="secondary"
-											key={file}
-											showCollapseIcon={true}
-										>
-											{comments.map((comment, i) => {
-												const isStaged =
-													stagedChanges.indexOf(
-														comment.id
-													) !== -1;
-
-												return (
-													<TaskRecommendation
-														comment={comment}
-														comments={comments}
-														index={i}
-														key={comment.id}
-														isStaged={isStaged}
-														postStaged={postStaged}
-														stagedChanges={
-															stagedChanges
-														}
-														handleStagedChanges={
-															setStagedChanges
-														}
-													/>
-												);
-											})}
-										</ClayPanel>
-									)
-								)}
-							</>
-						)}
-
-						{!task.recommendations && <p>No Recommendations</p>}
+						<TaskProposal
+							proposal={task.proposal}
+							postStaged={postStaged}
+							stagedChanges={
+								stagedChanges
+							}
+							handleStagedChanges={
+								setStagedChanges
+							}
+						/>
 					</ClayLayout.ContentCol>
 				)}
 			</ClayLayout.ContentRow>
@@ -215,11 +175,7 @@ export async function getServerSideProps(context) {
 		`${API_ENDPOINT}/tasks/${context.query.taskId}`
 	).then((res) => res.json());
 
-	const {project} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
-		res.json()
-	);
-
-	const {lugbot} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
+	const {lugbot, projects} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
 		res.json()
 	);
 
@@ -227,14 +183,14 @@ export async function getServerSideProps(context) {
 		(res) => res.json()
 	);
 
-	const states = fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
+	const states = await fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
 		res.json()
 	);
 
 	return {
 		props: {
 			lugbot,
-			project,
+			project: projects[0],
 			states: {
 				byName: states,
 				byState: Object.values(states).reduce((acc, state) => {

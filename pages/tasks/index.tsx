@@ -90,26 +90,18 @@ export default function Tasks({
 }
 
 export async function getServerSideProps(context) {
-	const tasks = await fetch(`${API_ENDPOINT}/tasks`).then((res) =>
+	const {completedTasks, lugbot, pendingTasks, projects, runningTasks} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
 		res.json()
 	);
 
-	const {project} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
-		res.json()
-	);
-
-	const {lugbot} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
-		res.json()
-	);
-
-	const states = fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
+	const states = await fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
 		res.json()
 	);
 
 	return {
 		props: {
 			lugbot,
-			project,
+			project: projects[0],
 			states: {
 				byName: states,
 				byState: Object.values(states).reduce((acc, state) => {
@@ -123,7 +115,11 @@ export async function getServerSideProps(context) {
 				runningState: states.running,
 			},
 			taskStateFilter: context.query.status || '',
-			tasks,
+			tasks: {
+				completedTasks,
+				pendingTasks,
+				runningTasks,
+			},
 		},
 	};
 }

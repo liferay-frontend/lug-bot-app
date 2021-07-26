@@ -9,17 +9,20 @@ import TaskListItem from './TaskListItem';
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
 const TaskList = ({initialTasks, states, taskStateFilter}) => {
-	const {data: tasks} = useSWR(`${API_ENDPOINT}/tasks`, fetcher, {
+	const {data: tasks} = useSWR(`${API_ENDPOINT}/status`, fetcher, {
 		initialData: initialTasks,
 		refreshInterval: 5000,
 	});
 
 	const isCompletedFailureStateRoute =
-		taskStateFilter === states.completedFailureState.id;
+		taskStateFilter === states.completedFailureState.state;
 	const isCompletedSuccessStateRoute =
-		taskStateFilter === states.completedSuccessState.id;
-	const isPendingStateRoute = taskStateFilter === states.pendingState.id;
-	const isRunningStateRoute = taskStateFilter === states.runningState.id;
+		taskStateFilter === states.completedSuccessState.state;
+	const isPendingStateRoute = taskStateFilter === states.pendingState.state;
+	const isRunningStateRoute = taskStateFilter === states.runningState.state;
+
+	const completedSuccessTasks = tasks.completedTasks.filter(task => task.state === states.completedSuccessState.state);
+	const completedFailureTasks = tasks.completedTasks.filter(task => task.state === states.completedFailureState.state);
 
 	return (
 		<ClayLayout.ContentRow>
@@ -64,7 +67,7 @@ const TaskList = ({initialTasks, states, taskStateFilter}) => {
 						</ClayList>
 					)}
 
-				{tasks.completedTasks.length !== 0 &&
+				{completedSuccessTasks.length !== 0 &&
 					!isPendingStateRoute &&
 					!isRunningStateRoute &&
 					!isCompletedFailureStateRoute && (
@@ -73,7 +76,7 @@ const TaskList = ({initialTasks, states, taskStateFilter}) => {
 								{'Successfully Completed Tasks'}
 							</ClayList.Header>
 
-							{tasks.completedTasks.map((task) => (
+							{completedSuccessTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
 									states={states}
@@ -84,7 +87,7 @@ const TaskList = ({initialTasks, states, taskStateFilter}) => {
 						</ClayList>
 					)}
 
-				{tasks.completedTasks.length !== 0 &&
+				{completedFailureTasks.length !== 0 &&
 					!isPendingStateRoute &&
 					!isRunningStateRoute &&
 					!isCompletedSuccessStateRoute && (
@@ -93,7 +96,7 @@ const TaskList = ({initialTasks, states, taskStateFilter}) => {
 								{'Failed Completed Tasks'}
 							</ClayList.Header>
 
-							{tasks.completedTasks.map((task) => (
+							{completedFailureTasks.map((task) => (
 								<TaskListItem
 									key={task.id}
 									states={states}
