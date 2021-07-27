@@ -14,6 +14,11 @@
 		"isolatedModules": true,
 		"jsx": "preserve"
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "constants/taskStates.js"],
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		"constants/taskStates.js"
+	],
 	"exclude": ["node_modules"]
 }
