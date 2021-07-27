@@ -50,7 +50,7 @@ const TaskProposal = ({
 									marginLeft: 'auto',
 								}}
 							>
-								{isStaged ? 'Staged' : 'Stage Change'}
+								{isStaged ? 'Staged' : 'Stage Changes'}
 
 								{isStaged && (
 									<ClayIcon className="ml-1" symbol="check" />
@@ -66,7 +66,9 @@ const TaskProposal = ({
 					</ClayLayout.ContentRow>
 				</>
 			) : (
-				<p className="mt-2">{'There are no proposals for this task.'}</p>
+				<p className="mt-2">
+					{'There are no proposals for this task.'}
+				</p>
 			)}
 		</>
 	);
