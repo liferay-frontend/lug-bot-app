@@ -13,9 +13,9 @@ const TaskListItem = ({states, task, taskState}) => (
 				<ClayList.ItemTitle>{task.name}</ClayList.ItemTitle>
 			</Link>
 
-			{task.totalRecommendations && (
-				<ClayList.ItemText>
-					{`${task.totalRecommendations} Recommendations`}
+			{task.proposal?.mergeAdvice && (
+				<ClayList.ItemText style={{color: '#b95000'}}>
+					{`Merge advice ${task.proposal.mergeAdvice}`}
 				</ClayList.ItemText>
 			)}
 		</ClayList.ItemField>
