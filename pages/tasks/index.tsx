@@ -22,9 +22,13 @@ export default function Tasks({
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
 					<h1>
-						<a href={project.url} target="blank">
-							{project.name}
-						</a>
+						{project.url ? (
+							<a href={project.url} target="blank">
+								{project.name}
+							</a>
+						) : (
+							<span>{project.name}</span>
+						)}
 					</h1>
 
 					<ClayLayout.ContentRow
