@@ -1,73 +1,57 @@
 import ClayButton from '@clayui/button';
-import ClayIcon from '@clayui/icon';
 import ClayLayout from '@clayui/layout';
-import ClayPanel from '@clayui/panel';
+import ClayLink from '@clayui/link';
 import React from 'react';
 
 import DiffBlock from './DiffBlock';
 
-const TaskProposal = ({
-	proposal,
-	handleStagedChanges,
-	postStaged,
-	stagedChanges,
-}) => {
-	const isStaged = proposal && stagedChanges.indexOf(proposal.id) !== -1;
+const TaskProposal = ({lugbot, proposal}) => {
+	const isLocalInstance = lugbot.mode === 'LOCAL';
 
 	return (
-		<>
-			{proposal && (
+		<div className="bg-white p-3 rounded shadow">
+			{proposal ? (
 				<>
-					<ClayPanel.Header>
-						<ClayLayout.ContentRow containerElement="h3" float>
-							<ClayLayout.ContentCol>
-								{`${proposal.action}`}
-							</ClayLayout.ContentCol>
+					<ClayLayout.ContentRow className="mb-3">
+						<ClayLayout.ContentCol
+							className="align-self-center"
+							expand
+						>
+							<h2 className="mb-0">{proposal.title}</h2>
+						</ClayLayout.ContentCol>
 
-							<ClayLayout.ContentCol expand>
-								<ClayButton
-									// @ts-ignore
-									displayType={isStaged ? 'success' : 'secondary'}
-									onClick={() => {
-										postStaged(!isStaged, proposal.id);
+						<ClayLayout.ContentCol className="mr-2" expand>
+							<ClayLink
+								button
+								displayType="secondary"
+								href="#"
+								style={{marginLeft: 'auto'}}
+							>
+								{'Download Report'}
+							</ClayLink>
+						</ClayLayout.ContentCol>
 
-										const newArray = [...stagedChanges];
+						<ClayLayout.ContentCol>
+							<ClayButton onClick={() => alert(`Sending a PR`)}>
+								{isLocalInstance
+									? 'Merge Proposed Changes'
+									: 'Send Pull Request'}
+							</ClayButton>
+						</ClayLayout.ContentCol>
+					</ClayLayout.ContentRow>
 
-										if (isStaged) {
-											newArray.splice(
-												newArray.indexOf(proposal.id),
-												1
-											);
-										} else {
-											newArray.push(proposal.id);
-										}
-
-										handleStagedChanges(newArray);
-									}}
-									small
-									style={{
-										marginLeft: 'auto',
-									}}
-								>
-									{isStaged ? 'Staged' : 'Stage Change'}
-
-									{isStaged && (
-										<ClayIcon className="ml-1" symbol="check" />
-									)}
-								</ClayButton>
-							</ClayLayout.ContentCol>
-						</ClayLayout.ContentRow>
-					</ClayPanel.Header>
-
-					<DiffBlock
-						diffContent={proposal.diffContent}
-					/>
+					<ClayLayout.ContentRow>
+						<ClayLayout.ContentCol expand>
+							<DiffBlock diffContent={proposal.diffContent} />
+						</ClayLayout.ContentCol>
+					</ClayLayout.ContentRow>
 				</>
-				
+			) : (
+				<p className="mt-2">
+					{'There are no proposals for this task.'}
+				</p>
 			)}
-
-			{!proposal && <p>No Recommendations</p>}
-		</>
+		</div>
 	);
 };
 

@@ -22,9 +22,13 @@ export default function Tasks({
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
 					<h1>
-						<a href={project.url} target="blank">
-							{project.name}
-						</a>
+						{project.url ? (
+							<a href={project.url} target="blank">
+								{project.name}
+							</a>
+						) : (
+							<span>{project.name}</span>
+						)}
 					</h1>
 
 					<ClayLayout.ContentRow
@@ -58,7 +62,6 @@ export default function Tasks({
 
 						<TaskFilter
 							states={states}
-							tasks={tasks}
 							taskStateFilter={taskStateFilter}
 						/>
 					</ClayLayout.ContentRow>
@@ -90,9 +93,8 @@ export default function Tasks({
 }
 
 export async function getServerSideProps(context) {
-	const {completedTasks, lugbot, pendingTasks, projects, runningTasks} = await fetch(`${API_ENDPOINT}/status`).then((res) =>
-		res.json()
-	);
+	const {completedTasks, lugbot, pendingTasks, projects, runningTasks} =
+		await fetch(`${API_ENDPOINT}/status`).then((res) => res.json());
 
 	const states = await fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
 		res.json()
@@ -104,7 +106,8 @@ export async function getServerSideProps(context) {
 			project: projects[0],
 			states: {
 				byName: states,
-				byState: Object.values(states).reduce((acc, state) => {
+				byState: Object.values(states).reduce((acc, state: object) => {
+					// @ts-ignore: state.state is not properly recognised
 					acc[state.state] = state;
 
 					return acc;

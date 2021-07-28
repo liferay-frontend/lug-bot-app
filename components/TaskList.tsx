@@ -21,8 +21,12 @@ const TaskList = ({initialTasks, states, taskStateFilter}) => {
 	const isPendingStateRoute = taskStateFilter === states.pendingState.state;
 	const isRunningStateRoute = taskStateFilter === states.runningState.state;
 
-	const completedSuccessTasks = tasks.completedTasks.filter(task => task.state === states.completedSuccessState.state);
-	const completedFailureTasks = tasks.completedTasks.filter(task => task.state === states.completedFailureState.state);
+	const completedSuccessTasks = tasks.completedTasks.filter(
+		(task) => task.state === states.completedSuccessState.state
+	);
+	const completedFailureTasks = tasks.completedTasks.filter(
+		(task) => task.state === states.completedFailureState.state
+	);
 
 	return (
 		<ClayLayout.ContentRow>
