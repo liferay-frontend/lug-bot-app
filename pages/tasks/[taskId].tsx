@@ -14,7 +14,6 @@ import cancelTask from '../../utils/cancelRunningTask';
 const fetcher = (args) => fetch(args).then((res) => res.json());
 
 export default function Task({lugbot, project, states, task, taskLog}) {
-	const [stagedChanges, setStagedChanges] = useState([]);
 	const terminalRef = useRef(null);
 
 	const {data: log} = useSWR(
@@ -30,13 +29,6 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 
 	const isCompleted = task.state === states.byName.completedSuccess.state;
 	const isLocalInstance = lugbot.mode === 'LOCAL';
-
-	function postStaged(add, locator) {
-		fetch(`${API_ENDPOINT}/tasks/${task.id}/staged`, {
-			body: JSON.stringify({add, locator}),
-			method: 'POST',
-		});
-	}
 
 	useEffect(() => {
 		if (!isCompleted) {
@@ -87,25 +79,10 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 						</ClayLayout.ContentCol>
 
 						<ClayLayout.ContentCol style={{marginLeft: 4}}>
-							<ClayButton
-								disabled={!stagedChanges.length}
-								// @ts-ignore
-								displayType={
-									stagedChanges.length
-										? 'success'
-										: 'secondary'
-								}
-								onClick={() =>
-									alert(
-										`Sending PR with the following changes:\n ${stagedChanges.join(
-											'\n'
-										)}`
-									)
-								}
-							>
+							<ClayButton onClick={() => alert(`Sending a PR`)}>
 								{isLocalInstance
-									? `Merge (${stagedChanges.length})`
-									: 'Send Pull Request (${stagedChanges.length})'}
+									? 'Merge Proposed Changes'
+									: 'Send Pull Request'}
 							</ClayButton>
 						</ClayLayout.ContentCol>
 					</>
@@ -151,12 +128,7 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 
 				{isCompleted && (
 					<ClayLayout.ContentCol expand>
-						<TaskProposal
-							proposal={task.proposal}
-							postStaged={postStaged}
-							stagedChanges={stagedChanges}
-							handleStagedChanges={setStagedChanges}
-						/>
+						<TaskProposal proposal={task.proposal} />
 					</ClayLayout.ContentCol>
 				)}
 			</ClayLayout.ContentRow>
