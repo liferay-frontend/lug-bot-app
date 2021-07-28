@@ -45,16 +45,22 @@ const TaskFilter = ({states, taskStateFilter}) => {
 						{Object.values(states.byState).map((state) => {
 							return (
 								<ClayLink
+									// @ts-ignore: state.state is not properly recognised
 									href={`${basepath}?status=${state.state}`}
+									// @ts-ignore: state.state is not properly recognised
 									key={state.state}
 								>
 									<ClayDropDown.Item
 										symbolRight={
+											// @ts-ignore: state.state is not properly recognised
 											taskStateFilter === state.state &&
 											'check'
 										}
 									>
-										{state.label}
+										{
+											// @ts-ignore: state.state is not properly recognised
+											state.label
+										}
 									</ClayDropDown.Item>
 								</ClayLink>
 							);

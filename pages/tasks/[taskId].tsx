@@ -141,6 +141,7 @@ export async function getServerSideProps(context) {
 			states: {
 				byName: states,
 				byState: Object.values(states).reduce((acc, state) => {
+					// @ts-ignore: state.state is not properly recognised
 					acc[state.state] = state;
 
 					return acc;
