@@ -62,7 +62,6 @@ export default function Tasks({
 
 						<TaskFilter
 							states={states}
-							tasks={tasks}
 							taskStateFilter={taskStateFilter}
 						/>
 					</ClayLayout.ContentRow>
@@ -107,7 +106,8 @@ export async function getServerSideProps(context) {
 			project: projects[0],
 			states: {
 				byName: states,
-				byState: Object.values(states).reduce((acc, state) => {
+				byState: Object.values(states).reduce((acc, state: object) => {
+					// @ts-ignore: state.state is not properly recognised
 					acc[state.state] = state;
 
 					return acc;

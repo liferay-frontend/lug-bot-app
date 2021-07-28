@@ -1,9 +1,8 @@
 import ClayBreadcrumb from '@clayui/breadcrumb';
-import ClayButton from '@clayui/button';
 import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
 import ClayLink from '@clayui/link';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import Terminal from 'react-console-emulator';
 import useSWR from 'swr';
 
@@ -16,6 +15,8 @@ const fetcher = (args) => fetch(args).then((res) => res.json());
 export default function Task({lugbot, project, states, task, taskLog}) {
 	const terminalRef = useRef(null);
 
+	const {displayType, label} = states.byState[task.state];
+
 	const {data: log} = useSWR(
 		`${API_ENDPOINT}/tasks/${task.id}/log`,
 		fetcher,
@@ -25,10 +26,7 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 		}
 	);
 
-	const {displayType, label} = states.byState[task.state];
-
 	const isCompleted = task.state === states.byName.completedSuccess.state;
-	const isLocalInstance = lugbot.mode === 'LOCAL';
 
 	useEffect(() => {
 		if (!isCompleted) {
@@ -60,33 +58,21 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 
-			<ClayLayout.ContentRow containerElement="h1" float>
+			<ClayLayout.ContentRow
+				className="mt-1 mb-3"
+				containerElement="h1"
+				float
+				verticalAlign="center"
+			>
 				<ClayLayout.ContentCol expand>
 					{task.name}
 				</ClayLayout.ContentCol>
 
-				{isCompleted && (
-					<>
-						<ClayLayout.ContentCol expand>
-							<ClayLink
-								button
-								displayType="secondary"
-								href="#"
-								style={{marginLeft: 'auto'}}
-							>
-								{'Download Report'}
-							</ClayLink>
-						</ClayLayout.ContentCol>
-
-						<ClayLayout.ContentCol style={{marginLeft: 4}}>
-							<ClayButton onClick={() => alert(`Sending a PR`)}>
-								{isLocalInstance
-									? 'Merge Proposed Changes'
-									: 'Send Pull Request'}
-							</ClayButton>
-						</ClayLayout.ContentCol>
-					</>
-				)}
+				<ClayLayout.ContentCol>
+					<ClayLabel displayType={displayType} large>
+						{label}
+					</ClayLabel>
+				</ClayLayout.ContentCol>
 
 				{!isCompleted && (
 					<ClayLayout.ContentCol>
@@ -102,16 +88,17 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 				)}
 			</ClayLayout.ContentRow>
 
-			<ClayLayout.ContentRow style={{marginBottom: 4}}>
-				<ClayLayout.ContentCol>
-					<ClayLabel displayType={displayType} large>
-						{label}
-					</ClayLabel>
-				</ClayLayout.ContentCol>
-			</ClayLayout.ContentRow>
-
 			<ClayLayout.ContentRow>
-				{!isCompleted && (
+				{isCompleted ? (
+					<>
+						<ClayLayout.ContentCol expand>
+							<TaskProposal
+								lugbot={lugbot}
+								proposal={task.proposal}
+							/>
+						</ClayLayout.ContentCol>
+					</>
+				) : (
 					<ClayLayout.ContentCol expand>
 						<Terminal
 							commands={{}}
@@ -123,12 +110,6 @@ export default function Task({lugbot, project, states, task, taskLog}) {
 							}}
 							welcomeMessage="Running..."
 						/>
-					</ClayLayout.ContentCol>
-				)}
-
-				{isCompleted && (
-					<ClayLayout.ContentCol expand>
-						<TaskProposal proposal={task.proposal} />
 					</ClayLayout.ContentCol>
 				)}
 			</ClayLayout.ContentRow>

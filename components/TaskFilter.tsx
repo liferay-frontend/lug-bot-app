@@ -6,7 +6,7 @@ import ClayLink from '@clayui/link';
 import {useRouter} from 'next/router';
 import React, {useState} from 'react';
 
-const TaskFilter = ({states, taskStateFilter, tasks}) => {
+const TaskFilter = ({states, taskStateFilter}) => {
 	const [filterOpen, setFilterOpen] = useState(false);
 
 	const router = useRouter();
@@ -42,19 +42,19 @@ const TaskFilter = ({states, taskStateFilter, tasks}) => {
 							</ClayDropDown.Item>
 						</ClayLink>
 
-						{Object.values(states.byName).map((state) => {
+						{Object.values(states.byState).map((state) => {
 							return (
 								<ClayLink
-									href={`${basepath}?status=${state?.state}`}
-									key={state?.state}
+									href={`${basepath}?status=${state.state}`}
+									key={state.state}
 								>
 									<ClayDropDown.Item
 										symbolRight={
-											taskStateFilter === state?.state &&
+											taskStateFilter === state.state &&
 											'check'
 										}
 									>
-										{state?.label}
+										{state.label}
 									</ClayDropDown.Item>
 								</ClayLink>
 							);
