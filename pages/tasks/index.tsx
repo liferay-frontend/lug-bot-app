@@ -45,13 +45,15 @@ export default function Tasks({lugbot, project, states, tasks}) {
 							<ClayButton
 								className="btn-danger mr-2"
 								onClick={() => {
-									const currentlyRunningTasks = fetch(
+									fetch(
 										`${API_ENDPOINT}/tasks?state=${states.runningState.state}`
-									).then((res) => res.json());
-
-									currentlyRunningTasks.forEach((task) => {
-										cancelRunningTask(task.id);
-									});
+									)
+										.then((res) => res.json())
+										.then((tasks) =>
+											tasks.forEach((task) => {
+												cancelRunningTask(task.id);
+											})
+										);
 								}}
 								small
 							>
