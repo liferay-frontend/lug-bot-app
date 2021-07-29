@@ -1,0 +1,51 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+
+env:
+  LC_ALL: en_US.UTF-8
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  lugbot_app_publish:
+    if: (github.repository == 'liferay-frontend/lug-bot-app')
+    name: Lugbot App Docker Publish
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - name: Yarn cache
+      uses: actions/cache@v2
+      id: yarn-cache
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
+    - name: Get git sha
+      id: git-sha
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+    - name: Build and Publish Lugbot App Docker Image
+      run: >
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u lugbot --password-stdin;
+        export SHORT_VERSION=$(cat version.txt);
+        export VERSION=${SHORT_VERSION}-${{ steps.git-sha.outputs.sha_short }};
+        ./publishLugbotApp.sh
