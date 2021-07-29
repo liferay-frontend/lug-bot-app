@@ -1,6 +1,5 @@
 import ClayButton from '@clayui/button';
 import ClayLayout from '@clayui/layout';
-import ClayLink from '@clayui/link';
 import React from 'react';
 
 import DiffBlock from './DiffBlock';
@@ -18,17 +17,6 @@ const TaskProposal = ({lugbot, proposal}) => {
 							expand
 						>
 							<h2 className="mb-0">{proposal.title}</h2>
-						</ClayLayout.ContentCol>
-
-						<ClayLayout.ContentCol className="mr-2" expand>
-							<ClayLink
-								button
-								displayType="secondary"
-								href="#"
-								style={{marginLeft: 'auto'}}
-							>
-								{'Download Report'}
-							</ClayLink>
 						</ClayLayout.ContentCol>
 
 						<ClayLayout.ContentCol>
