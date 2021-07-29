@@ -4,7 +4,6 @@ import {ClayIconSpriteContext} from '@clayui/icon';
 import {ClayLinkContext} from '@clayui/link';
 import Head from 'next/head';
 import Link from 'next/link';
-import {useRouter} from 'next/router';
 import React from 'react';
 
 import Footer from '../components/Footer';
@@ -18,20 +17,12 @@ const NextLink = ({href, ...otherProps}: any) => (
 );
 
 export default function Lugbot({Component, pageProps}) {
-	const router = useRouter();
-
-	const currentRoute = router.asPath;
-
-	const title = currentRoute.substr(1);
-
-	const capitalizedTitle = title
-		? title.charAt(0).toUpperCase() + title.slice(1)
-		: 'Dashboard';
+	const {task} = pageProps;
 
 	return (
 		<>
 			<Head>
-				<title>{capitalizedTitle}</title>
+				<title>{task ? task.name : 'Tasks'}</title>
 
 				<meta
 					content="Liferay automatic code improvement tool"
