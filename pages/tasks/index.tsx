@@ -19,11 +19,11 @@ export default function Tasks({
 
 	return (
 		<ClayLayout.ContainerFluid view>
-			<ClayLayout.ContentRow>
+			<ClayLayout.ContentRow className="mb-2">
 				<ClayLayout.ContentCol expand>
 					<h1>
-						{project.url ? (
-							<a href={project.url} target="blank">
+						{project.htmlUrl ? (
+							<a href={project.htmlUrl} target="blank">
 								{project.name}
 							</a>
 						) : (
@@ -31,16 +31,16 @@ export default function Tasks({
 						)}
 					</h1>
 
-					<ClayLayout.ContentRow
-						className={
-							isLocalInstance ? 'justify-content-end mb-3' : ''
-						}
-					>
-						{!isLocalInstance && (
-							<ClayLayout.ContentCol expand>
-								<p>Git: {project.location}</p>
-							</ClayLayout.ContentCol>
-						)}
+					<ClayLayout.ContentRow verticalAlign="center">
+						<ClayLayout.ContentCol expand>
+							<small>
+								<span className="inline-item inline-item-before">
+									<ClayIcon symbol="code" />
+								</span>
+
+								{project.cloneUrl}
+							</small>
+						</ClayLayout.ContentCol>
 
 						<ClayLayout.ContentCol>
 							<ClayButton
