@@ -1,6 +1,7 @@
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import ClayLayout from '@clayui/layout';
+import {useRouter} from 'next/router';
 import React from 'react';
 
 import TaskFilter from '../../components/TaskFilter';
@@ -8,14 +9,12 @@ import TaskList from '../../components/TaskList';
 import API_ENDPOINT from '../../constants/apiEndpoint';
 import cancelRunningTask from '../../utils/cancelRunningTask';
 
-export default function Tasks({
-	lugbot,
-	project,
-	states,
-	taskStateFilter,
-	tasks,
-}) {
+export default function Tasks({lugbot, project, states, tasks}) {
 	const isLocalInstance = lugbot.mode === 'LOCAL';
+
+	const router = useRouter();
+
+	const taskStateFilter = router.query.status || '';
 
 	return (
 		<ClayLayout.ContainerFluid view>
@@ -45,11 +44,15 @@ export default function Tasks({
 						<ClayLayout.ContentCol>
 							<ClayButton
 								className="btn-danger mr-2"
-								onClick={() =>
-									tasks.runningTasks.forEach((task) => {
+								onClick={() => {
+									const currentlyRunningTasks = fetch(
+										`${API_ENDPOINT}/tasks?state=${states.runningState.state}`
+									).then((res) => res.json());
+
+									currentlyRunningTasks.forEach((task) => {
 										cancelRunningTask(task.id);
-									})
-								}
+									});
+								}}
 								small
 							>
 								<span className="inline-item inline-item-before">
@@ -92,7 +95,7 @@ export default function Tasks({
 	);
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps() {
 	const {completedTasks, lugbot, pendingTasks, projects, runningTasks} =
 		await fetch(`${API_ENDPOINT}/status`).then((res) => res.json());
 
@@ -102,6 +105,7 @@ export async function getServerSideProps(context) {
 
 	return {
 		props: {
+			fallback: false,
 			lugbot,
 			project: projects[0],
 			states: {
@@ -117,7 +121,6 @@ export async function getServerSideProps(context) {
 				pendingState: states.pending,
 				runningState: states.running,
 			},
-			taskStateFilter: context.query.status || '',
 			tasks: {
 				completedTasks,
 				pendingTasks,
