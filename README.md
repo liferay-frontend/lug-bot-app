@@ -70,6 +70,8 @@ To see the representation of the API you should go [to this Confluence document]
 
 ## Learn More
 
+To learn about our initial efforts to make this app, check out this [knowledge transfer Confluence doc](https://liferay.atlassian.net/wiki/spaces/LUGBOT/pages/1794900017/Lugbot+Frontend+Knowledge+Transfer).
+
 To learn more about Next.js, take a look at the following resources:
 
 -   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
