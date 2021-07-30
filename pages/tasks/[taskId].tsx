@@ -130,10 +130,27 @@ export async function getServerSideProps(context) {
 		(res) => res.json()
 	);
 
+	const states = await fetch(`${API_ENDPOINT}/taskStateUI`).then((res) =>
+		res.json()
+	);
+
 	return {
 		props: {
 			lugbot,
 			project: projects[0],
+			states: {
+				byName: states,
+				byState: Object.values(states).reduce((acc, state: object) => {
+					// @ts-ignore: state.state is not properly recognised
+					acc[state.state] = state;
+
+					return acc;
+				}, {}),
+				completedFailureState: states.completedFailure,
+				completedSuccessState: states.completedSuccess,
+				pendingState: states.pending,
+				runningState: states.running,
+			},
 			task,
 			taskLog,
 		},
